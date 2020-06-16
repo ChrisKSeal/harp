@@ -1,0 +1,510 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<root version="2.0">
+	<windowclass name="item_spells">
+		<sheetdata>		  
+			<stringcontrolX name="spell_label">
+				<anchored>
+					<left>
+						<anchor>left</anchor>
+						<offset>7</offset>
+					</left>
+					<top>
+						<anchor>top</anchor>
+						<offset>15</offset>
+					</top>
+					<size>
+						<width>90</width>
+						<height>13</height>
+					</size>
+				</anchored>
+				<font>sheetlabelsmallbold</font>
+				<static>Magic/Quality</static>
+			</stringcontrolX>
+			
+			<!-- Magic Info -->
+			<numberfieldX name="spell_adder">
+				<anchored>
+					<left>
+						<anchor>left</anchor>
+						<offset>15</offset>
+					</left>
+					<top>
+						<parent>spell_label</parent>
+						<anchor>bottom</anchor>
+						<offset>19</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<gmonly/>
+				<script>
+		  			function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>spell_adder</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Spl Add</static>
+			</stringcontrolX>
+			
+			<numberfieldX name="pp_adder">
+				<anchored>
+					<left>
+						<parent>spell_adder</parent>
+						<anchor>right</anchor>
+						<offset>15</offset>
+					</left>
+					<top>
+						<parent>spell_adder</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>pp_adder</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>PP Add</static>
+			</stringcontrolX>
+			
+			<numberfieldX name="item_charges">
+				<anchored>
+					<left>
+						<parent>pp_adder</parent>
+						<anchor>right</anchor>
+						<offset>15</offset>
+					</left>
+					<top>
+						<parent>spell_adder</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>item_charges</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Charges</static>
+			</stringcontrolX>
+			
+			<stringcontrolX name="spell_charge_label">
+				<anchored>
+					<left>
+						<anchor>left</anchor>
+						<offset>7</offset>
+					</left>
+					<top>
+						<parent>spell_adder</parent>
+						<anchor>bottom</anchor>
+						<offset>19</offset>
+					</top>
+					<size>
+						<width>200</width>
+						<height>13</height>
+					</size>
+				</anchored>
+				<font>sheetlabelsmallbold</font>
+				<static>Spells &amp; spell-like abilities</static>
+			</stringcontrolX>
+		
+			<sortablelist name="spell_charge">
+				<anchored>
+					<left>
+						<anchor>left</anchor>
+						<offset>7</offset>
+					</left>
+					<right>
+						<anchor>right</anchor>
+						<offset>-20</offset>
+					</right>
+					<top>
+						<parent>spell_charge_label</parent>
+						<anchor>bottom</anchor>
+						<offset>7</offset>
+					</top>
+					<bottom>
+						<parent>spell_charge_label</parent>
+						<anchor>bottom</anchor>
+						<offset>95</offset>
+					</bottom>
+				</anchored>
+				<datasource>.spells.charge</datasource>
+				<class>item_bound_spell_listitem</class>
+				<script file="campaign/scripts/campaign_items_spell_bonuslist.lua" />
+			</sortablelist>
+			<scrollbar>
+				<anchored>
+					<to>spell_charge</to>
+					<position>right</position>
+					<offset>1,-4</offset>
+				</anchored>
+			<target>spell_charge</target>
+			</scrollbar>
+			<stringcontrolX>
+				<anchored>
+					<to>spell_charge</to>
+					<position>aboveleft</position>
+					<offset>155,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Bonus</static>
+			</stringcontrolX>
+			<stringcontrolX>
+				<anchored>
+					<to>spell_charge</to>
+					<position>aboveleft</position>
+					<offset>195,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Cost/Use</static>
+			</stringcontrolX>
+			
+			<stringcontrolX name="spell_daily_label">
+				<anchored>
+					<left>
+						<anchor>left</anchor>
+						<offset>7</offset>
+					</left>
+					<top>
+						<parent>spell_charge</parent>
+						<anchor>bottom</anchor>
+						<offset>19</offset>
+					</top>
+					<size>
+						<width>90</width>
+						<height>13</height>
+					</size>
+				</anchored>
+				<font>sheetlabelsmallbold</font>
+				<static>Daily spells</static>
+			</stringcontrolX>
+		
+			<sortablelist name="spell_daily">
+				<anchored>
+					<left>
+						<anchor>left</anchor>
+						<offset>7</offset>
+					</left>
+					<right>
+						<anchor>right</anchor>
+						<offset>-20</offset>
+					</right>
+					<top>
+						<parent>spell_daily_label</parent>
+						<anchor>bottom</anchor>
+						<offset>7</offset>
+					</top>
+					<bottom>
+						<parent>spell_daily_label</parent>
+						<anchor>bottom</anchor>
+						<offset>95</offset>
+					</bottom>
+				</anchored>
+				<datasource>.spells.daily</datasource>
+				<class>item_daily_spell_listitem</class>
+				<script file="campaign/scripts/campaign_items_spell_bonuslist.lua" />
+			</sortablelist>
+			<scrollbar>
+				<anchored>
+					<to>spell_daily</to>
+					<position>right</position>
+					<offset>1,-4</offset>
+				</anchored>
+			<target>spell_daily</target>
+			</scrollbar>
+			<stringcontrolX>
+				<anchored>
+					<to>spell_daily</to>
+					<position>aboveleft</position>
+					<offset>155,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Bonus</static>
+			</stringcontrolX>
+			<stringcontrolX>
+				<anchored>
+					<to>spell_daily</to>
+					<position>aboveleft</position>
+					<offset>195,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Use/Day</static>
+			</stringcontrolX>
+		</sheetdata>
+	</windowclass>
+	
+	<windowclass name="item_bound_spell_listitem">
+		<script file="campaign/scripts/campaign_items_spell_bonusitem.lua" />
+		<sheetdata>
+			<windowreferencecontrol name="open">
+				<bounds>0,2,14,14</bounds>
+				<icon>
+					<normal>button_openwindow</normal>
+					<pressed>button_openwindow</pressed>
+				</icon>
+				<class>bound_spell</class>
+				<description>
+					<field>name</field>
+				</description>
+			</windowreferencecontrol>
+			<stringfieldX name="name">
+				<bounds>15,0,120,17</bounds>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>textline</name>
+					<offset>0,1,0,0</offset>
+				</frame>
+				<keyeditframe>
+					<name>shadeline</name>
+					<offset>0,1,0,0</offset>
+				</keyeditframe>
+			</stringfieldX>
+			<numberfieldX name="cast_bonus">
+				<anchored>
+					<left>
+						<parent>name</parent>
+						<anchor>right</anchor>
+						<offset>15</offset>
+					</left>
+					<top>
+						<parent>name</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+					end
+				</script>
+			</numberfieldX>
+			<numberfieldX name="cost">
+				<anchored>
+					<left>
+						<parent>cast_bonus</parent>
+						<anchor>right</anchor>
+						<offset>5</offset>
+					</left>
+					<top>
+						<parent>name</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+					end
+				</script>
+			</numberfieldX>
+		</sheetdata>
+	</windowclass>
+
+	<windowclass name="item_daily_spell_listitem">
+		<script file="campaign/scripts/campaign_items_spell_bonusitem.lua" />
+		<sheetdata>
+			<windowreferencecontrol name="open">
+				<bounds>0,2,14,14</bounds>
+				<icon>
+					<normal>button_openwindow</normal>
+					<pressed>button_openwindow</pressed>
+				</icon>
+				<class>daily_bound_spell</class>
+				<description>
+					<field>name</field>
+				</description>
+			</windowreferencecontrol>
+			<stringfieldX name="name">
+				<bounds>15,0,120,17</bounds>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>textline</name>
+					<offset>0,1,0,0</offset>
+				</frame>
+				<keyeditframe>
+					<name>shadeline</name>
+					<offset>0,1,0,0</offset>
+				</keyeditframe>
+			</stringfieldX>
+			<numberfieldX name="cast_bonus">
+				<anchored>
+					<left>
+						<parent>name</parent>
+						<anchor>right</anchor>
+						<offset>15</offset>
+					</left>
+					<top>
+						<parent>name</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+					end
+				</script>
+			</numberfieldX>
+			<numberfieldX name="uses_per_day">
+				<anchored>
+					<left>
+						<parent>cast_bonus</parent>
+						<anchor>right</anchor>
+						<offset>5</offset>
+					</left>
+					<top>
+						<parent>name</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+					end
+				</script>
+			</numberfieldX>
+		</sheetdata>
+	</windowclass>
+</root>

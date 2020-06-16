@@ -1,0 +1,580 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root version="2.0">
+  
+	<windowclass name="combatpanel_defence">
+		<sizelimits>
+			<minimum>
+				<height>17</height>
+			</minimum>
+		</sizelimits>
+		<script file="ct/scripts/ct_defence.lua" />
+		<sheetdata>
+			<stringcontrolX name="armour_label">
+				<anchored>
+					<left>
+						<anchor>left</anchor>
+						<offset>58</offset>
+					</left>
+					<top>
+						<anchor>top</anchor>
+						<offset>7</offset>
+					</top>
+					<size>
+						<width>50</width>
+						<height>21</height>
+					</size>
+				</anchored>
+				<font>sheetlabel</font>
+				<static>Armour:</static>
+			</stringcontrolX>
+			<numberfieldX name="armour_db" source="defence.armour">
+				<anchored>
+					<left>
+						<parent>armour_label</parent>
+						<anchor>right</anchor>
+						<relation>relative</relation>
+						<offset>5</offset>
+					</left>
+					<bottom>
+						<parent>armour_label</parent>
+						<anchor>bottom</anchor>
+						<offset>-7</offset>
+					</bottom>
+					<size>
+						<width>25</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>textline</name>
+					<offset>0,1,0,0</offset>
+				</frame>
+				<keyeditframe>
+					<name>shadeline</name>
+					<offset>0,1,0,0</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit() then
+							super.onInit();
+						end
+						setEnabled(false);
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX name="shield_label">
+				<anchored>
+					<left>
+						<parent>armour_db</parent>
+						<anchor>right</anchor>
+						<relation>relative</relation>
+						<offset>15</offset>
+					</left>
+					<top>
+						<anchor>top</anchor>
+						<offset>7</offset>
+					</top>
+					<size>
+						<width>45</width>
+						<height>21</height>
+					</size>
+				</anchored>
+				<font>sheetlabel</font>
+				<static>Shield:</static>
+			</stringcontrolX>
+			<numberfieldX name="shield_db" source="defence.shield">
+				<anchored>
+					<left>
+						<parent>shield_label</parent>
+						<anchor>right</anchor>
+						<relation>relative</relation>
+						<offset>5</offset>
+					</left>
+					<bottom>
+						<parent>armour_label</parent>
+						<anchor>bottom</anchor>
+						<offset>-7</offset>
+					</bottom>
+					<size>
+						<width>25</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>textline</name>
+					<offset>0,1,0,0</offset>
+				</frame>
+				<keyeditframe>
+					<name>shadeline</name>
+					<offset>0,1,0,0</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit() then
+							super.onInit();
+						end
+						setEnabled(false);
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX name="spell_label">
+				<anchored>
+					<left>
+						<parent>shield_db</parent>
+						<anchor>right</anchor>
+						<relation>relative</relation>
+						<offset>15</offset>
+					</left>
+					<top>
+						<anchor>top</anchor>
+						<offset>7</offset>
+					</top>
+					<size>
+						<width>35</width>
+						<height>21</height>
+					</size>
+				</anchored>
+				<font>sheetlabel</font>
+				<static>Spell:</static>
+			</stringcontrolX>
+			<numberfieldX name="spell_db" source="defence.spell">
+				<anchored>
+					<left>
+						<parent>spell_label</parent>
+						<anchor>right</anchor>
+						<relation>relative</relation>
+						<offset>5</offset>
+					</left>
+					<bottom>
+						<parent>armour_label</parent>
+						<anchor>bottom</anchor>
+						<offset>-7</offset>
+					</bottom>
+					<size>
+						<width>25</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>textline</name>
+					<offset>0,1,0,0</offset>
+				</frame>
+				<keyeditframe>
+					<name>shadeline</name>
+					<offset>0,1,0,0</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit() then
+							super.onInit();
+						end
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX name="res_label">
+				<anchored>
+					<left>
+						<parent>spell_db</parent>
+						<anchor>right</anchor>
+						<offset>15</offset>
+					</left>
+					<top>
+						<anchor>top</anchor>
+						<offset>7</offset>
+					</top>
+					<size>
+						<width>65</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheetlabel</font>
+				<static>Res. Rolls:</static>
+			</stringcontrolX>
+			
+			<numberfieldX name="magic_rr" source="defence.magic_rr">
+				<anchored>
+					<left>
+						<parent>res_label</parent>
+						<anchor>right</anchor>
+						<relation>relative</relation>
+						<offset>5</offset>
+					</left>
+					<bottom>
+						<parent>armour_label</parent>
+						<anchor>bottom</anchor>
+						<offset>-7</offset>
+					</bottom>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>textline</name>
+					<offset>0,1,0,0</offset>
+				</frame>
+				<keyeditframe>
+					<name>shadeline</name>
+					<offset>0,1,0,0</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit() then
+							super.onInit();
+						end
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX name="magic_rr_label">
+				<anchored>
+					<to>magic_rr</to>
+					<position>below</position>
+					<offset>0</offset>
+			    </anchored>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Magic</static>
+				<center/>
+			</stringcontrolX>
+			
+			<stringcontrolX name="spell_duration_label">
+				<anchored>
+					<right>
+						<parent>magic_rr_label</parent>
+						<anchor>left</anchor>
+						<offset>5</offset>
+					</right>
+					<top>
+						<parent>magic_rr_label</parent>
+						<anchor>top</anchor>
+					</top>
+					<size>
+						<width>55</width>
+					</size>
+			    </anchored>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Durn.</static>
+				<center/>
+			</stringcontrolX>
+			<stringcontrolX name="spell_db_label">
+				<anchored>
+					<right>
+						<parent>spell_duration_label</parent>
+						<anchor>left</anchor>
+						<offset>5</offset>
+					</right>
+					<top>
+						<parent>magic_rr_label</parent>
+						<anchor>top</anchor>
+					</top>
+					<size>
+						<width>50</width>
+					</size>
+			    </anchored>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>DB</static>
+				<center/>
+			</stringcontrolX>
+			
+			<numberfieldX name="stamina_rr" source="defence.stamina_rr">
+				<anchored>
+					<left>
+						<parent>magic_rr</parent>
+						<anchor>right</anchor>
+						<relation>relative</relation>
+						<offset>5</offset>
+					</left>
+					<bottom>
+						<parent>armour_label</parent>
+						<anchor>bottom</anchor>
+						<offset>-7</offset>
+					</bottom>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>textline</name>
+					<offset>0,1,0,0</offset>
+				</frame>
+				<keyeditframe>
+					<name>shadeline</name>
+					<offset>0,1,0,0</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit() then
+							super.onInit();
+						end
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX name="stamina_rr_Label">
+				<anchored>
+					<to>stamina_rr</to>
+					<position>below</position>
+					<offset>0</offset>
+			    </anchored>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Stam.</static>
+				<center/>
+			</stringcontrolX>
+			
+			<numberfieldX name="will_rr" source="defence.will_rr">
+				<anchored>
+					<left>
+						<parent>stamina_rr</parent>
+						<anchor>right</anchor>
+						<relation>relative</relation>
+						<offset>5</offset>
+					</left>
+					<bottom>
+						<parent>armour_label</parent>
+						<anchor>bottom</anchor>
+						<offset>-7</offset>
+					</bottom>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>textline</name>
+					<offset>0,1,0,0</offset>
+				</frame>
+				<keyeditframe>
+					<name>shadeline</name>
+					<offset>0,1,0,0</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit() then
+							super.onInit();
+						end
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX name="will_rr_Label">
+				<anchored>
+					<to>will_rr</to>
+					<position>below</position>
+					<offset>0</offset>
+			    </anchored>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Will</static>
+				<center/>
+			</stringcontrolX>
+			
+			<windowlist name="spell_defences_panel">
+				<anchored>
+					<top>
+						<parent>armour_label</parent>
+						<anchor>bottom</anchor>
+						<offset>5</offset>
+					</top>
+					<left>
+						<parent>armour_label</parent>
+						<anchor>left</anchor>
+						<offset>0</offset>
+					</left>
+					<right>
+						<anchor>right</anchor>
+					</right>
+				</anchored>
+				<class>subpanel_defensive_magic</class>
+				<datasource>.spells</datasource>
+				<noscroll/>
+				<skipempty />
+				<script>
+					function onInit()
+						if getWindowCount() &lt; 1 then
+							local win = createWindow();
+						end
+					end
+				</script>
+			</windowlist>
+			
+		</sheetdata>
+	</windowclass>
+	
+	<windowclass name="subpanel_defensive_magic">
+		<sizelimits>
+			<minimum>
+				<height>17</height>
+			</minimum>
+		</sizelimits>
+		<!--script file="ct/scripts/ct_magic_defence.lua" /-->
+		<sheetdata>
+		<stringfieldX name="description">
+        <bounds>0,4,240,17</bounds>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+		<tooltip />
+        <script>
+			function onInit()
+				setTooltipText(getValue());
+			end
+
+			function onValueChanged()
+				setTooltipText(getValue());
+			end
+			
+          function onDeleteDown()
+            window.deleteDown();
+          end
+          
+          function onDeleteUp()
+            window.deleteUp();
+          end
+
+          function onEnter()
+            window.testNew();
+          end
+          
+          function onDrop(x, y, draginfo)
+            return window.onDrop(x, y, draginfo);
+          end
+        </script>
+      </stringfieldX>
+	  <numberfieldX name="db">
+        <anchored>
+          <to>description</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>40</width>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+        <script>
+          function onDrop(x, y, draginfo)
+            return window.onDrop(x, y, draginfo);
+          end
+        </script>
+      </numberfieldX>
+      <numberfieldX name="duration">
+        <anchored>
+          <to>db</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>40</width>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+        <script>
+          function onDrop(x, y, draginfo)
+            return window.onDrop(x, y, draginfo);
+          end
+        </script>
+      </numberfieldX>
+	  <numberfieldX name="magic">
+        <anchored>
+          <to>duration</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>40</width>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+        <script>
+          function onDrop(x, y, draginfo)
+            return window.onDrop(x, y, draginfo);
+          end
+        </script>
+      </numberfieldX>
+	  <numberfieldX name="stamina">
+        <anchored>
+          <to>magic</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>40</width>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+        <script>
+          function onDrop(x, y, draginfo)
+            return window.onDrop(x, y, draginfo);
+          end
+        </script>
+      </numberfieldX>
+	  <numberfieldX name="will">
+        <anchored>
+          <to>stamina</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>40</width>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+        <script>
+          function onDrop(x, y, draginfo)
+            return window.onDrop(x, y, draginfo);
+          end
+        </script>
+      </numberfieldX>
+		</sheetdata>
+	</windowclass>
+	
+</root>

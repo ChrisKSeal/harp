@@ -1,0 +1,880 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<root version="2.0">
+
+  <windowclass name="charsheet_inventory">
+    <placement>
+      <size>
+        <width>525</width>
+        <height>611</height>
+      </size>
+    </placement>
+    <nodelete />
+    <sheetdata>
+      <!-- EQUIPMENT -->
+      <genericcontrol name="inventoryframe">
+        <bounds>15,20,480,399</bounds>
+        <frame>
+          <name>sheetgroup</name>
+        </frame>
+      </genericcontrol>
+      <numberfieldX name="totweight" source="enc.load">
+        <anchored>
+          <to>inventoryframe</to>
+          <position>insidebottomright</position>
+          <offset>15,15</offset>
+          <size>
+            <height>18</height>
+            <width>40</width>
+          </size>
+        </anchored>
+        <font>sheettext</font>
+        <frame>
+          <name>modifier</name>
+          <offset>4,4,4,4</offset>
+        </frame>
+        <readonly/>
+      </numberfieldX>
+      <stringcontrolX>
+        <anchored>
+          <to>totweight</to>
+          <position>leftlow</position>
+          <offset>5,1</offset>
+        </anchored>
+        <font>sheetlabelsmall</font>
+        <static>Total Weight</static>
+      </stringcontrolX>
+      <stringcontrolX>
+        <anchored>
+          <to>inventoryframe</to>
+          <position>insidetopleft</position>
+          <offset>30,10</offset>
+        </anchored>
+        <font>sheetlabel</font>
+        <static>Equipment</static>
+        <tooltip>
+          <text>Click to sort by Name</text>
+          <anchor>control</anchor>
+          <align>topleft</align>
+          <position>
+            <x>30</x>   
+            <y>-29</y>   
+          </position>
+        </tooltip>
+        <script>
+          function onClickDown(button, x, y)
+            return true;
+          end
+
+          function onClickRelease(button, x, y)
+            window.inventory.sortBy("name");
+            return true;
+          end        
+        </script>
+      </stringcontrolX>
+      <stringcontrolX>
+        <anchored>
+          <to>inventoryframe</to>
+          <position>insidetopleft</position>
+          <offset>270,12</offset>
+        </anchored>
+        <font>sheetlabelsmall</font>
+        <static>Location</static>
+        <tooltip>
+          <text>Click to sort by Location</text>
+          <anchor>control</anchor>
+          <align>topleft</align>
+          <position>
+            <x>30</x>
+            <y>-29</y>
+          </position>
+        </tooltip>
+        <script>
+          function onClickDown(button, x, y)
+            return true;
+          end
+
+          function onClickRelease(button, x, y)
+            window.inventory.sortBy("location");
+            return true;
+          end        
+        </script>
+      </stringcontrolX>
+      <stringcontrolX>
+        <anchored>
+          <to>inventoryframe</to>
+          <position>insidetopleft</position>
+          <offset>395,12</offset>
+          <size>
+            <width>25</width>
+          </size>
+        </anchored>
+        <center />
+        <font>sheetlabelsmall</font>
+        <static>Enc?</static>
+        <tooltip>
+          <text>Click to sort by Enc?</text>
+          <anchor>control</anchor>
+          <align>topleft</align>
+          <position>
+            <x>30</x>   
+            <y>-29</y>   
+         </position>
+        </tooltip>
+        <script>
+          function onClickDown(button, x, y)
+            return true;
+          end
+
+          function onClickRelease(button, x, y)
+            window.inventory.sortBy("enc");
+            return true;
+          end        
+        </script>
+      </stringcontrolX>
+      <stringcontrolX>
+        <anchored>
+          <to>inventoryframe</to>
+          <position>insidetopleft</position>
+          <offset>425,12</offset>
+          <size>
+            <width>40</width>
+          </size>
+        </anchored>
+        <center />
+        <font>sheetlabelsmall</font>
+        <static>Weight</static>
+        <tooltip>   
+         <text>Click to sort by Weight</text>
+         <anchor>control</anchor> 
+         <align>topleft</align>
+         <position>
+           <x>30</x>   
+           <y>-29</y>   
+         </position>  
+        </tooltip>
+        <script>
+          function onClickDown(button, x, y)
+            return true;
+          end
+
+          function onClickRelease(button, x, y)
+            window.inventory.sortBy("weight");
+            return true;
+          end        
+        </script>
+      </stringcontrolX>
+      <sortablelist name="inventory">
+        <anchored>
+          <top>
+            <parent>inventoryframe</parent>
+            <anchor>top</anchor>
+            <offset>24</offset>
+          </top>
+          <bottom>
+            <parent>inventoryframe</parent>
+            <anchor>bottom</anchor>
+            <offset>-38</offset>
+          </bottom>
+          <left>
+            <parent>inventoryframe</parent>
+            <anchor>left</anchor>
+            <offset>15</offset>
+          </left>
+          <right>
+            <parent>inventoryframe</parent>
+            <anchor>right</anchor>
+            <offset>-15</offset>
+          </right>
+        </anchored>
+        <datasource>.inventory.equipment</datasource>
+        <class>charsheet_inventorywindow</class>		
+        <allowcreate />
+		<allowdelete/>
+        <defaultsort>	
+          <fieldname>name</fieldname>
+        </defaultsort>
+
+		<script file="charsheet/scripts/charsheet_inventorylist.lua" />
+        <sortfield>
+          <fieldname>name</fieldname>
+          <menuname>Description</menuname>
+        </sortfield>
+        <sortfield>
+          <fieldname>location</fieldname>
+          <menuname>Location</menuname>
+        </sortfield>
+        <sortfield>
+          <fieldname>enc</fieldname>
+          <menuname>Enc?</menuname>
+        </sortfield>
+        <sortfield>
+          <fieldname>weight</fieldname>
+          <menuname>Weight</menuname>
+        </sortfield>
+        <script>
+          function update()
+            local tot = 0;
+            for i,win in ipairs(getWindows()) do
+              tot = tot + win.getWeight();
+            end
+            window.totweight.setValue(tot);
+          end
+          
+          function onInit()
+            if super and super.onInit then
+              super.onInit();
+            end
+            getDatabaseNode().onChildUpdate = update;
+            update();
+          end
+        </script>
+      </sortablelist>
+		<scrollbar>
+			<anchored>
+				<to>inventory</to>
+				<position>right</position>
+				<offset>1,-4</offset>
+			</anchored>
+			<target>inventory</target>
+		</scrollbar>
+
+      <!-- BASIC MOVEMENT RATE -->
+      <genericcontrol name="bmrframe">
+        <anchored>
+          <to>inventoryframe</to>
+          <position>belowleft</position>
+          <offset>282,0</offset>
+          <size>
+            <width>197</width>
+            <height>85</height>
+          </size>
+        </anchored>
+        <frame>
+          <name>sheetgroup</name>
+        </frame>
+      </genericcontrol>
+      <stringcontrolX>
+        <anchored>
+          <to>bmrframe</to>
+          <position>insidetopleft</position>
+          <offset>15,10</offset>
+        </anchored>
+        <font>sheetlabel</font>
+        <static>Basic Movement Rate</static>
+      </stringcontrolX>
+      <numberfieldX name="bmrrace">
+        <anchored>
+          <to>bmrframe</to>
+          <position>insidetopleft</position>
+          <offset>15,37</offset>
+          <size>
+            <width>42</width>
+            <height>18</height>
+          </size>
+        </anchored>
+        <font>sheettext</font>
+        <frame>
+          <name>modifier</name>
+          <offset>4,4,4,4</offset>
+        </frame>
+        <keyeditframe>
+          <name>sheetfocus</name>
+          <offset>4,4,4,4</offset>
+        </keyeditframe>
+		<script>
+			function onInit()
+				window.getDatabaseNode().getChild("appearance").getChild("height").onUpdate = refresh;
+				refresh();
+			end
+			
+			function refresh()
+				local str = window.getDatabaseNode().getChild("appearance").getChild("height").getValue();
+				setValue(Rules_PC.GetBMRFromHeight(str));
+			end
+		</script>
+      </numberfieldX>
+      <stringcontrolX>
+        <anchored>
+          <to>bmrrace</to>
+          <position>above</position>
+          <offset>3</offset>
+        </anchored>
+        <center />
+        <font>sheetlabelsmall</font>
+        <static>Race/Strd.</static>
+      </stringcontrolX>
+      <numberfieldX name="bmrstat">
+        <anchored>
+          <to>bmrrace</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>38</width>
+          </size>
+        </anchored>
+        <font>sheettext</font>
+        <frame>
+          <name>modifier</name>
+          <offset>4,4,4,4</offset>
+        </frame>
+        <readonly/>
+        <displaysign/>
+      </numberfieldX>
+      <stringcontrolX>
+        <anchored>
+          <to>bmrstat</to>
+          <position>above</position>
+          <offset>3</offset>
+        </anchored>
+        <center />
+        <font>sheetlabelsmall</font>
+        <static>Stat.</static>
+      </stringcontrolX>
+      <numberfieldX name="bmrmisc" source="bmr.misc">
+        <anchored>
+          <to>bmrstat</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>38</width>
+          </size>
+        </anchored>
+        <font>sheettext</font>
+        <frame>
+          <name>modifier</name>
+          <offset>4,4,4,4</offset>
+        </frame>
+        <keyeditframe>
+          <name>sheetfocus</name>
+          <offset>4,4,4,4</offset>
+        </keyeditframe>
+        <displaysign/>
+      </numberfieldX>
+      <stringcontrolX>
+        <anchored>
+          <to>bmrmisc</to>
+          <position>above</position>
+          <offset>3</offset>
+        </anchored>
+        <center />
+        <font>sheetlabelsmall</font>
+        <static>Misc.</static>
+      </stringcontrolX>
+      <numberfieldX name="bmrtotal" source="bmr.total">
+        <anchored>
+          <to>bmrmisc</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>38</width>
+          </size>
+        </anchored>
+        <font>sheettext</font>
+        <frame>
+          <name>modifier</name>
+          <offset>4,4,4,4</offset>
+        </frame>
+        <readonly/>
+        <script>
+          function refresh()
+			window.bmrstat.setValue(Rules_PC.BMRStatBonus(window.getDatabaseNode()));
+            local tot = window.bmrrace.getValue() + window.bmrstat.getValue() + window.bmrmisc.getValue();
+            setValue(tot);
+          end
+          
+          function onInit()
+            if super and super.onInit then
+				super.onInit();
+            end
+            window.bmrrace.getDatabaseNode().onUpdate = refresh;
+            Rules_PC.BMRStatNode(window.getDatabaseNode()).onUpdate = refresh;
+			window.getDatabaseNode().getChild("appearance").getChild("height").onUpdate = refresh;
+            window.bmrmisc.getDatabaseNode().onUpdate = refresh;
+            refresh();
+          end
+        </script>
+      </numberfieldX>
+      <stringcontrolX>
+        <anchored>
+          <to>bmrtotal</to>
+          <position>above</position>
+          <offset>3</offset>
+        </anchored>
+        <center />
+        <font>sheetlabelsmall</font>
+        <static>Total</static>
+      </stringcontrolX>
+
+      <!-- ENCUMBRANCE -->
+      <genericcontrol name="encframe">
+        <anchored>
+          <to>bmrframe</to>
+          <position>below</position>
+          <offset>0</offset>
+          <size>
+            <height>85</height>
+          </size>
+        </anchored>
+        <frame>
+          <name>sheetgroup</name>
+        </frame>
+      </genericcontrol>
+      <stringcontrolX>
+        <anchored>
+          <to>encframe</to>
+          <position>insidetopleft</position>
+          <offset>15,10</offset>
+        </anchored>
+        <font>sheetlabel</font>
+        <static>Encumbrance</static>
+      </stringcontrolX>
+	  <numberfieldX name="encstat">
+        <anchored>
+          <to>encframe</to>
+          <position>insidetopleft</position>
+          <offset>15,37</offset>
+          <size>
+            <width>38</width>
+            <height>18</height>
+          </size>
+        </anchored>
+        <frame>
+          <name>modifier</name>
+          <offset>4,4,4,4</offset>
+        </frame>
+        <font>sheettext</font>
+        <displaysign/>
+        <readonly/>
+		<script>
+			function refresh()
+				setValue(Rules_PC.EncumbranceStatBonus(window.getDatabaseNode()));
+			end
+			
+			function onInit()
+				Rules_PC.EncumbranceStatNode(window.getDatabaseNode()).onUpdate = refresh;
+				refresh();
+			end
+		</script>
+      </numberfieldX>
+      <stringcontrolX>
+        <anchored>
+          <to>encstat</to>
+          <position>above</position>
+          <offset>3</offset>
+        </anchored>
+        <center />
+        <font>sheetlabelsmall</font>
+        <static>Stat.</static>
+      </stringcontrolX>
+	  <numberfieldX name="encmisc" source="enc.misc">
+        <anchored>
+          <to>encstat</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>38</width>
+          </size>
+        </anchored>
+        <frame>
+          <name>modifier</name>
+          <offset>4,4,4,4</offset>
+        </frame>
+        <keyeditframe>
+          <name>sheetfocus</name>
+          <offset>4,4,4,4</offset>
+        </keyeditframe>
+        <font>sheettext</font>
+        <displaysign/>
+      </numberfieldX>
+      <stringcontrolX>
+        <anchored>
+          <to>encmisc</to>
+          <position>above</position>
+          <offset>3</offset>
+        </anchored>
+        <center />
+        <font>sheetlabelsmall</font>
+        <static>Misc.</static>
+      </stringcontrolX>
+      <numberfieldX name="encload" source="enc.load">
+        <anchored>
+          <to>encmisc</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>38</width>
+          </size>
+        </anchored>
+        <frame>
+          <name>modifier</name>
+          <offset>4,4,4,4</offset>
+        </frame>
+        <font>sheettext</font>
+        <readonly/>
+      </numberfieldX>
+      <stringcontrolX>
+        <anchored>
+          <to>encload</to>
+          <position>above</position>
+          <offset>3</offset>
+        </anchored>
+        <center />
+        <font>sheetlabelsmall</font>
+        <static>Load</static>
+      </stringcontrolX>
+      <numberfieldX name="encpen" source="enc.penalty">
+        <anchored>
+          <to>encload</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>38</width>
+          </size>
+        </anchored>
+        <frame>
+          <name>modifier</name>
+          <offset>4,4,4,4</offset>
+        </frame>
+        <font>sheettext</font>
+        <displaysign/>
+        <readonly/>
+		<script>
+          function refresh()
+            local pen = 0;
+			local mod_load = window.encload.getValue() - window.encstat.getValue();
+			local incs = math.ceil((mod_load)/30);
+			if incs &lt; 1 then
+				incs = 1;
+			end
+			incs = incs - 1;
+			if incs == 1 then
+				pen = -10;
+			elseif incs == 2 then
+				pen = -20;
+			elseif incs == 3 then
+				pen = -30;
+			elseif incs &gt; 3 then
+				pen = -30;
+				local mod_incs = incs - 3;
+				for i=1,mod_incs do
+					pen = pen * 2;
+				end
+			end
+			setValue(pen);
+          end
+          
+          function onInit()
+            local node;
+            if super and super.onInit then
+              super.onInit();
+            end
+            window.encload.getDatabaseNode().onUpdate = refresh;
+            window.encstat.getDatabaseNode().onUpdate = refresh;
+            window.encmisc.getDatabaseNode().onUpdate = refresh;
+            refresh();
+          end
+          
+          function onDragStart(button,x,y,dragData)
+            dragData.setType("number");
+            dragData.setSlot(1);
+            dragData.setNumberData(getValue());
+            dragData.setDescription("Encumbrance penalty");
+            return true;
+          end
+        </script>
+      </numberfieldX>
+      <stringcontrolX>
+        <anchored>
+          <to>encpen</to>
+          <position>above</position>
+          <offset>3</offset>
+        </anchored>
+        <center />
+        <font>sheetlabelsmall</font>
+        <static>Penalty</static>
+      </stringcontrolX>
+      
+
+      <!-- TREASURE -->
+      <genericcontrol name="treasureframe">
+        <anchored>
+          <to>inventoryframe</to>
+          <position>belowleft</position>
+          <offset>0,0</offset>
+          <size>
+            <width>100</width>
+            <height>171</height>
+          </size>
+        </anchored>
+        <frame>
+          <name>sheetgroup</name>
+        </frame>
+      </genericcontrol>
+      <stringcontrolX>
+        <anchored>
+          <to>treasureframe</to>
+          <position>insidetopleft</position>
+          <offset>15,10</offset>
+        </anchored>
+        <font>sheetlabel</font>
+        <static>Coins</static>
+      </stringcontrolX>
+      <windowlist name="coins">
+        <anchored>
+          <top>
+            <parent>treasureframe</parent>
+            <anchor>top</anchor>
+            <offset>24</offset>
+          </top>
+          <bottom>
+            <parent>treasureframe</parent>
+            <anchor>bottom</anchor>
+            <offset>-10</offset>
+          </bottom>
+          <left>
+            <parent>treasureframe</parent>
+            <anchor>left</anchor>
+            <offset>15</offset>
+          </left>
+        </anchored>
+        <datasource>.treasure.coins</datasource>
+        <class>charsheet_coinwindow</class>
+        <allowcreate/>
+        <allowdelete/>
+        <skipempty/>
+        <script>
+          function onInit()
+            if super and super.onInit then
+              super.onInit();
+            end
+            if #(getWindows())==0 then
+              --[[ create some default coins ]]
+              addCoin("MP");
+              addCoin("GP");
+              addCoin("SP");
+              addCoin("BP");
+              addCoin("CP");
+              addCoin("TP");
+              addCoin("IP");
+            end
+          end
+          
+          function addCoin(name)
+            win = createWindow();
+            win.name.setValue(name);
+          end
+        </script>
+      </windowlist>
+ 		<scrollbar>
+			<anchored>
+				<to>coins</to>
+				<position>right</position>
+				<offset>1,-4</offset>
+			</anchored>
+			<target>coins</target>
+		</scrollbar>
+
+	  
+<!------------------- Transport FRAME HERE---------->
+
+ <genericcontrol name="transportframe">
+        <anchored>
+          <to>inventoryframe</to>
+          <position>belowleft</position>
+          <offset>100,0</offset>
+          <size>
+            <width>183</width>
+            <height>171</height>
+          </size>
+        </anchored>
+        <frame>
+          <name>sheetgroup</name>
+        </frame>
+      </genericcontrol>
+	  <stringcontrolX>
+        <anchored>
+          <to>transportframe</to>
+          <position>insidetopleft</position>
+          <offset>20,10</offset>
+        </anchored>
+        <font>sheetlabel</font>
+        <static>Mounts and Transport</static>
+        <tooltip>
+          <text>Click to sort by Name</text>
+          <anchor>control</anchor>
+          <align>topleft</align>
+          <position>
+            <x>30</x>   
+            <y>-29</y>   
+          </position>
+        </tooltip>
+        <script>
+          function onClickDown(button, x, y)
+            return true;
+          end
+
+          function onClickRelease(button, x, y)
+            window.transport.sortBy("name");
+            return true;
+          end        
+        </script>
+      </stringcontrolX>
+
+	  
+	  <!--------PART TWO Transportation---------------------->
+	  
+	  <sortablelist name="transport">
+        <anchored>
+          <top>
+            <parent>transportframe</parent>
+            <anchor>top</anchor>
+            <offset>25</offset>
+          </top>
+          <bottom>
+            <parent>transportframe</parent>
+            <anchor>bottom</anchor>
+            <offset>-15</offset>
+          </bottom>
+          <left>
+            <parent>transportframe</parent>
+            <anchor>left</anchor>
+            <offset>15</offset>
+          </left>
+          <right>
+            <parent>transportframe</parent>
+            <anchor>right</anchor>
+            <offset>-15</offset>
+          </right>
+        </anchored>
+        <datasource>.inventory.transport</datasource>
+        <class>charsheet_transportwindow</class>		
+        <allowcreate />
+		<allowdelete/>
+        <defaultsort>	
+          <fieldname>name</fieldname>
+        </defaultsort>
+
+	<script file="charsheet/scripts/charsheet_transportlist.lua" />
+       
+ 
+      </sortablelist>
+ 		<scrollbar>
+			<anchored>
+				<to>transport</to>
+				<position>right</position>
+				<offset>1,-4</offset>
+			</anchored>
+			<target>transport</target>
+		</scrollbar>
+	  
+	  <!------------------- HERBS FRAME HERE---------
+
+ <genericcontrol name="herbframe">
+        <anchored>
+          <to>bmrframe</to>
+          <position>belowleft</position>
+          <offset>298,0</offset>
+          <size>
+            <width>182</width>
+            <height>171</height>
+          </size>
+        </anchored>
+        <frame>
+          <name>sheetgroup</name>
+        </frame>
+      </genericcontrol>
+	  <stringcontrolX>
+        <anchored>
+          <to>herbframe</to>
+          <position>insidetopleft</position>
+          <offset>20,10</offset>
+        </anchored>
+        <font>sheetlabel</font>
+        <static>Herbs, Potions &amp; Poisons.</static>
+        <tooltip>
+          <text>Click to sort by Name</text>
+          <anchor>control</anchor>
+          <align>topleft</align>
+          <position>
+            <x>30</x>   
+            <y>-29</y>   
+          </position>
+        </tooltip>
+        <script>
+          function onClickDown(button, x, y)
+            return true;
+          end
+
+          function onClickRelease(button, x, y)
+            window.herbs.sortBy("name");
+            return true;
+          end        
+        </script>
+      </stringcontrolX>
+
+	  <stringcontrolX>
+        <anchored>
+          <to>herbframe</to>
+          <position>insidetopleft</position>
+          <offset>130,22</offset>
+        </anchored>
+        <font>sheetlabelsmall</font>
+		<color>#E0786147</color>
+		<center/>
+        <static>Effect</static>
+ 
+      </stringcontrolX>
+	  
+	  <!--------PART TWO HERBS ---------------------
+	  
+	  <sortablelist name="herbs">
+        <anchored>
+          <top>
+            <parent>herbframe</parent>
+            <anchor>top</anchor>
+            <offset>36</offset>
+          </top>
+          <bottom>
+            <parent>herbframe</parent>
+            <anchor>bottom</anchor>
+            <offset>-20</offset>
+          </bottom>
+          <left>
+            <parent>herbframe</parent>
+            <anchor>left</anchor>
+            <offset>15</offset>
+          </left>
+          <right>
+            <parent>herbframe</parent>
+            <anchor>right</anchor>
+            <offset>-15</offset>
+          </right>
+        </anchored>
+        <datasource>.items.consumables</datasource>
+        <class>charsheet_herbwindow</class>		
+        <allowcreate />
+		<allowdelete/>
+        <defaultsort>	
+          <fieldname>name</fieldname>
+        </defaultsort>
+
+	<script file="charsheet/scripts/charsheet_herblist.lua" />
+       
+ 
+      </sortablelist>
+ 		<scrollbar>
+			<anchored>
+				<to>herbs</to>
+				<position>right</position>
+				<offset>1,-4</offset>
+			</anchored>
+			<target>herbs</target>
+		</scrollbar>-->
+	 
+	  
+	  
+
+    </sheetdata>
+  </windowclass>
+
+</root>

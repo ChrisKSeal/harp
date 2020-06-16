@@ -1,0 +1,549 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<root version="2.0">
+  <windowclass name="charsheet_spells">
+    <placement>
+      <size>
+        <width>252</width>
+        <height>611</height>
+      </size>
+    </placement>
+    <nodelete />
+    <sheetdata>
+	<numberfieldX name="spellSheetChgFlg">
+	<bounds>0,0,0,0</bounds>
+	<invisible />
+	<script>
+		function onInit()
+			setValue(0);
+			local node = DB.getPath(getDatabaseNode());
+			DB.addHandler(node, "onUpdate", refresh);
+		end
+		
+		function refresh()
+			window.powerpointadder.refresh();
+			window.spelladder.refresh();
+			window.castingpenalty.refresh();
+			window.totalcastshift.refresh();
+			setValue(0);
+		end
+		</script>
+		</numberfieldX>
+      <!-- SPELLS -->
+      <genericcontrol name="spellframe">
+        <bounds>15,20,280,570</bounds>
+        <frame>
+          <name>sheetgroup</name>
+        </frame>
+      </genericcontrol>
+
+      <!-- Headings -->
+      <stringcontrolX>
+        <anchored>
+          <to>spellframe</to>
+          <position>insidetopleft</position>
+          <offset>30,10</offset>
+          <size>
+            <width>170</width>
+          </size>
+        </anchored>
+        <font>sheetlabel</font>
+        <static>Spells</static>
+        <tooltip>
+          <text>Click to sort by Spell</text>
+          <anchor>control</anchor>
+          <align>topleft</align>
+          <position >
+            <x>30</x>
+            <y>-29</y>
+          </position>
+        </tooltip>
+        <script>
+          function onInit()
+            if super 
+            and super.onInit then
+              super.onInit();
+            end
+          end
+          
+          function onClickDown(button, x, y)
+            return true;
+          end
+          function onClickRelease(button, x, y)
+            window.spells.sortBy("name");
+            return true;
+          end        
+        </script>
+      </stringcontrolX>
+      <stringcontrolX>
+        <anchored>
+          <to>spellframe</to>
+          <position>insidetopleft</position>
+          <offset>170,12</offset>
+          <size>
+            <width>125</width>
+          </size>
+        </anchored>
+        <font>sheetlabelsmall</font>
+        <static>Type</static>
+        <tooltip>
+          <text>Click to sort by Type</text>
+          <anchor>control</anchor>
+          <align>topleft</align>
+          <position >
+            <x>30</x>
+            <y>-29</y>
+          </position>
+        </tooltip>
+        <script>
+          function onInit()
+            if super 
+            and super.onInit then
+              super.onInit();
+            end
+          end
+          
+          function onClickDown(button, x, y)
+            return true;
+          end
+          function onClickRelease(button, x, y)
+            window.spells.sortBy("class");
+            return true;
+          end        
+        </script>
+      </stringcontrolX>
+      <stringcontrolX>
+        <anchored>
+          <to>spellframe</to>
+          <position>insidetopleft</position>
+          <offset>215,12</offset>
+          <size>
+            <width>35</width>
+          </size>
+        </anchored>
+        <center/>
+        <font>sheetlabelsmall</font>
+        <static>Cast</static>
+        <script>
+          function onInit()
+            if super 
+            and super.onInit then
+              super.onInit();
+            end
+          end      
+        </script>
+      </stringcontrolX>
+
+      <!-- Spell list -->
+      <sortablelist name="spells">
+        <anchored>
+          <top>
+            <parent>spellframe</parent>
+            <anchor>top</anchor>
+            <offset>25</offset>
+          </top>
+          <bottom>
+            <parent>spellframe</parent>
+            <anchor>bottom</anchor>
+            <offset>-24</offset>
+          </bottom>
+          <left>
+            <parent>spellframe</parent>
+            <anchor>left</anchor>
+            <offset>15</offset>
+          </left>
+          <right>
+            <parent>spellframe</parent>
+            <anchor>right</anchor>
+            <offset>-15</offset>
+          </right>
+        </anchored>
+        <allowdelete />
+        <datasource>.spells</datasource>
+        <class>charsheet_spellwindow</class>
+        <defaultsort>
+          <fieldname>name</fieldname>
+        </defaultsort>
+        <sortfield>
+          <fieldname>name</fieldname>
+        </sortfield>
+        <sortfield>
+          <fieldname>class</fieldname>
+        </sortfield>
+        <script file="charsheet/scripts/charsheet_spelllist.lua" />
+      </sortablelist>
+ 		<scrollbar>
+			<anchored>
+				<to>spells</to>
+				<position>right</position>
+				<offset>1,-4</offset>
+			</anchored>
+			<target>spells</target>
+		</scrollbar>
+		
+		<genericcontrol name="summaryframe">
+        <bounds>295,20,200,150</bounds>
+        <frame>
+          <name>sheetgroup</name>
+        </frame>
+      </genericcontrol>
+	  <stringcontrolX>
+	  <anchored>
+          <to>summaryframe</to>
+          <position>insidetopleft</position>
+          <offset>30,10</offset>
+          <size>
+            <width>170</width>
+          </size>
+        </anchored>
+        <font>sheetlabel</font>
+        <static>Casting Summary</static>
+		</stringcontrolX>
+	  <numberfieldX name="powerpointadder">
+	    <anchored>
+		  <to>summaryframe</to>
+		  <position>insidetopleft</position>
+          <offset>125,30</offset>
+		  <size>
+						<width>40</width>
+						<height>17</height>
+			</size>
+        </anchored>
+		<font>sheettextsmall</font>
+				<center/>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+		<script>
+		  function onInit()
+				if super and super.onInit then
+							super.onInit();
+				end
+				setReadOnly(true);
+				refresh();
+			end
+			
+			function refresh()
+				local node = window.getDatabaseNode();
+				local topnode = window.getDatabaseNode().getParent().getParent();
+				for k,skl in pairs(node.getChild("ppadders").getChildren()) do
+					if skl.getChild("isused") then
+					    if skl.createChild("isused").getValue() == 1 then
+							setValue(skl.createChild("ppadd").getValue());
+						end
+					end
+				end
+			end
+		</script>
+		</numberfieldX>
+		<stringcontrolX>
+        <anchored>
+          <to>powerpointadder</to>
+          <position>left</position>
+          <offset>5,-2</offset>
+          <size>
+            <width>110</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <font>sheetlabelsmallbold</font>
+        <static>PP Adder</static>
+      </stringcontrolX>
+	  <numberfieldX name="spelladder">
+	    <anchored>
+		  <to>summaryframe</to>
+		  <position>insidetopleft</position>
+          <offset>125,55</offset>
+		  <size>
+						<width>40</width>
+						<height>17</height>
+			</size>
+        </anchored>
+		<font>sheettextsmall</font>
+				<center/>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+		<script>
+		  function onInit()
+				if super and super.onInit then
+							super.onInit();
+				end
+				setReadOnly(true);
+				refresh();
+			end
+			
+			function refresh()
+				local node = window.getDatabaseNode();
+				local topnode = window.getDatabaseNode().getParent().getParent();
+				for k,skl in pairs(node.getChild("spadders").getChildren()) do
+					if skl.getChild("isused") then
+					    if skl.createChild("isused").getValue() == 1 then
+							setValue(skl.createChild("spadd").getValue());
+						end
+					end
+				end
+			end
+		</script>
+		</numberfieldX>
+		<stringcontrolX>
+        <anchored>
+          <to>spelladder</to>
+          <position>left</position>
+          <offset>5,-2</offset>
+          <size>
+            <width>110</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <font>sheetlabelsmallbold</font>
+        <static>Spell Adder</static>
+      </stringcontrolX>
+	  <numberfieldX name="castingpenalty">
+	    <anchored>
+		  <to>summaryframe</to>
+		  <position>insidetopleft</position>
+          <offset>125,80</offset>
+		  <size>
+						<width>40</width>
+						<height>17</height>
+			</size>
+        </anchored>
+		<font>sheettextsmall</font>
+				<center/>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+		<script>
+		  function onInit()
+				if super and super.onInit then
+							super.onInit();
+				end
+				setReadOnly(true);
+				refresh();
+			end
+			
+			function refresh()
+				local node = window.getDatabaseNode();
+				if node.getChild("harnesscastpenalty") then
+					setValue(node.createChild("harnesscastpenalty").getValue());
+				end
+			end
+		</script>
+		</numberfieldX>
+		<stringcontrolX>
+        <anchored>
+          <to>castingpenalty</to>
+          <position>left</position>
+          <offset>5,-2</offset>
+          <size>
+            <width>110</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <font>sheetlabelsmallbold</font>
+        <static>Armour Penalty</static>
+      </stringcontrolX>
+	  <numberfieldX name="totalcastshift">
+	    <anchored>
+		  <to>summaryframe</to>
+		  <position>insidetopleft</position>
+          <offset>125,110</offset>
+		  <size>
+						<width>40</width>
+						<height>17</height>
+			</size>
+        </anchored>
+		<font>sheettextsmall</font>
+				<center/>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+		<script>
+		  function onInit()
+				if super and super.onInit then
+							super.onInit();
+				end
+				setReadOnly(true);
+				refresh();
+			end
+			
+			function refresh()
+				local finalmod = window.castingpenalty.getValue()-window.powerpointadder.getValue();
+				setValue(finalmod);
+				if finalmod &lt; 0 then
+				  setValid();
+				else
+				  setInvalid()
+				end
+			end
+		</script>
+		</numberfieldX>
+		<stringcontrolX>
+        <anchored>
+          <to>totalcastshift</to>
+          <position>left</position>
+          <offset>5,-2</offset>
+          <size>
+            <width>110</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <font>sheetlabelsmallbold</font>
+        <static>Total PP mod.</static>
+      </stringcontrolX>
+	  
+	  
+	  
+	  <genericcontrol name="ppadditemsframe">
+        <bounds>295,170,200,110</bounds>
+        <frame>
+          <name>sheetgroup</name>
+        </frame>
+      </genericcontrol>
+	  <stringcontrolX>
+	  <anchored>
+          <to>ppadditemsframe</to>
+          <position>insidetopleft</position>
+          <offset>30,10</offset>
+          <size>
+            <width>170</width>
+          </size>
+        </anchored>
+        <font>sheetlabel</font>
+        <static>Power Point Adders</static>
+		</stringcontrolX>
+		<sortablelist name="ppadders">
+        <anchored>
+          <top>
+            <parent>ppadditemsframe</parent>
+            <anchor>top</anchor>
+            <offset>25</offset>
+          </top>
+          <bottom>
+            <parent>ppadditemsframe</parent>
+            <anchor>bottom</anchor>
+            <offset>-24</offset>
+          </bottom>
+          <left>
+            <parent>ppadditemsframe</parent>
+            <anchor>left</anchor>
+            <offset>15</offset>
+          </left>
+          <right>
+            <parent>ppadditemsframe</parent>
+            <anchor>right</anchor>
+            <offset>-15</offset>
+          </right>
+        </anchored>
+        <allowdelete />
+        <datasource>.ppadders</datasource>
+		<class>charsheet_ppadders</class>
+        <script file="charsheet/scripts/charsheet_ppadditemslist.lua" />
+      </sortablelist>
+ 		<scrollbar>
+			<anchored>
+				<to>ppadders</to>
+				<position>right</position>
+				<offset>1,-4</offset>
+			</anchored>
+			<target>ppadders</target>
+		</scrollbar>
+	
+
+	  <genericcontrol name="spadditemsframe">
+        <bounds>295,280,200,110</bounds>
+        <frame>
+          <name>sheetgroup</name>
+        </frame>
+      </genericcontrol>
+	  <stringcontrolX>
+	  <anchored>
+          <to>spadditemsframe</to>
+          <position>insidetopleft</position>
+          <offset>30,10</offset>
+          <size>
+            <width>170</width>
+          </size>
+        </anchored>
+        <font>sheetlabel</font>
+        <static>Spell Adders</static>
+		</stringcontrolX>
+	  <sortablelist name="spadders">
+        <anchored>
+          <top>
+            <parent>spadditemsframe</parent>
+            <anchor>top</anchor>
+            <offset>25</offset>
+          </top>
+          <bottom>
+            <parent>spadditemsframe</parent>
+            <anchor>bottom</anchor>
+            <offset>-24</offset>
+          </bottom>
+          <left>
+            <parent>spadditemsframe</parent>
+            <anchor>left</anchor>
+            <offset>15</offset>
+          </left>
+          <right>
+            <parent>spadditemsframe</parent>
+            <anchor>right</anchor>
+            <offset>-15</offset>
+          </right>
+        </anchored>
+        <allowdelete />
+        <datasource>.spadders</datasource>
+		<class>charsheet_spadders</class>
+        <script file="charsheet/scripts/charsheet_spadditemslist.lua" />
+      </sortablelist>
+ 		<scrollbar>
+			<anchored>
+				<to>spadders</to>
+				<position>right</position>
+				<offset>1,-4</offset>
+			</anchored>
+			<target>spadders</target>
+		</scrollbar>
+	  
+	  <genericcontrol name="scrollsframe">
+        <bounds>295,390,200,200</bounds>
+        <frame>
+          <name>sheetgroup</name>
+        </frame>
+      </genericcontrol>
+	  <stringcontrolX>
+	  <anchored>
+          <to>scrollsframe</to>
+          <position>insidetopleft</position>
+          <offset>30,10</offset>
+          <size>
+            <width>170</width>
+          </size>
+        </anchored>
+        <font>sheetlabel</font>
+        <static>Runes, Charms &amp; Potions</static>
+		</stringcontrolX>
+	  
+    </sheetdata>
+  </windowclass>
+</root>

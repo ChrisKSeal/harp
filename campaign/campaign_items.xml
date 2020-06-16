@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- 
+  Please see the license.html file included with this distribution for 
+  attribution and copyright information.
+-->
+
+<root>
+  
+	<windowclass name="itemsmall">
+		<sizelimits>
+			<minimum>
+				<height>10</height>
+			</minimum>
+		</sizelimits>
+		<sheetdata>
+			<windowreferencecontrol name="open">
+				<bounds>0,0,20,20</bounds>
+				<icon>
+					<normal>button_openwindow</normal>
+					<pressed>button_emptytarget</pressed>
+				</icon>
+				<class>item_general</class>
+				<description>
+					<field>name</field>
+				</description>
+			</windowreferencecontrol>
+			<linkstringfield name="name">
+				<bounds>25,1,-1,20</bounds>
+				<empty>&#171; New Item &#187;</empty>
+				<selectioncolor>#90ffffff</selectioncolor>
+				<font>sheettext</font>
+				<linktarget>open</linktarget>
+			</linkstringfield>
+		</sheetdata>
+	</windowclass>
+	
+	<windowclass name="weaponsmall">
+		<sizelimits>
+			<minimum>
+				<height>10</height>
+			</minimum>
+		</sizelimits>
+		<sheetdata>
+			<windowreferencecontrol name="open">
+				<bounds>0,0,20,20</bounds>
+				<icon>
+					<normal>button_openwindow</normal>
+					<pressed>button_emptytarget</pressed>
+				</icon>
+				<class>item_weapon</class>
+				<description>
+					<field>name</field>
+				</description>
+			</windowreferencecontrol>
+			<linkstringfield name="name">
+				<bounds>25,1,-1,20</bounds>
+				<empty>&#171; New Weapon &#187;</empty>
+				<selectioncolor>#90ffffff</selectioncolor>
+				<font>sheettext</font>
+				<linktarget>open</linktarget>
+			</linkstringfield>
+		</sheetdata>
+	</windowclass>
+	
+	<windowclass name="defencesmall">
+		<sizelimits>
+			<minimum>
+				<height>10</height>
+			</minimum>
+		</sizelimits>
+		<sheetdata>
+			<windowreferencecontrol name="open">
+				<bounds>0,0,20,20</bounds>
+				<icon>
+					<normal>button_openwindow</normal>
+					<pressed>button_emptytarget</pressed>
+				</icon>
+				<class>item_defence</class>
+				<description>
+					<field>name</field>
+				</description>
+			</windowreferencecontrol>
+			<linkstringfield name="name">
+				<bounds>25,1,-1,20</bounds>
+				<empty>&#171; New Defence &#187;</empty>
+				<selectioncolor>#90ffffff</selectioncolor>
+				<font>sheettext</font>
+				<linktarget>open</linktarget>
+			</linkstringfield>
+		</sheetdata>
+	</windowclass>
+	
+	<windowclass name="consumablesmall">
+		<sizelimits>
+			<minimum>
+				<height>10</height>
+			</minimum>
+		</sizelimits>
+		<sheetdata>
+			<windowreferencecontrol name="open">
+				<bounds>0,0,20,20</bounds>
+				<icon>
+					<normal>button_openwindow</normal>
+					<pressed>button_emptytarget</pressed>
+				</icon>
+				<class>item_consumable</class>
+				<description>
+					<field>name</field>
+				</description>
+			</windowreferencecontrol>
+			<linkstringfield name="name">
+				<bounds>25,1,-1,20</bounds>
+				<empty>&#171; New Consumable &#187;</empty>
+				<selectioncolor>#90ffffff</selectioncolor>
+				<font>sheettext</font>
+				<linktarget>open</linktarget>
+			</linkstringfield>
+		</sheetdata>
+	</windowclass>
+  
+	<windowclass name="itemlist">
+		<frame>scrollbox</frame>
+		<placement>
+			<size>
+				<width>275</width>
+				<height>500</height>
+			</size>
+		</placement>
+		<sizelimits>
+			<dynamic />
+			<minimum>
+				<width>275</width>
+				<height>500</height>
+			</minimum>
+		</sizelimits>
+		<softclose />
+		<nodelete />
+		<sheetdata>
+			<banner_campaign name="banner_items">
+				<icon>title_items</icon>
+			</banner_campaign>
+			
+			<buttongroup_tabs name="tabs">
+				<anchored>
+					<right><offset>-5</offset></right>
+				</anchored>
+				<tab>
+					<icon>tab_weapon</icon>
+					<subwindow>banner_items,list_weapons,category_weapon</subwindow>
+				</tab>
+				<tab>
+					<icon>tab_defences</icon>
+					<subwindow>banner_items,list_defences,category_defence</subwindow>
+				</tab>
+				<tab>
+					<icon>tab_consumables</icon>
+					<subwindow>banner_items,list_consumables,category_consumable</subwindow>
+				</tab>
+				<tab>
+					<icon>tab_general</icon>
+					<subwindow>banner_items,list_general,category_general</subwindow>
+				</tab>
+			</buttongroup_tabs>
+
+			<list_campaign_tabbed name="list_weapons">
+				<datasource>.weapons</datasource>
+				<class>weaponsmall</class>
+				<acceptdrop>
+					<class>item_weapon</class>
+					<field>*</field>
+				</acceptdrop>
+				<invisible />
+				<script>
+					function onSortCompare(w1, w2)
+						return w1.name.getValue() &gt; w2.name.getValue();
+					end;
+				  
+					function onFilter(w)
+						local f = string.lower(window.filter.getValue());
+						
+						if f == "" then
+							return true;
+						end
+						
+						if string.find(string.lower(w.name.getValue()), f, 0, true) then
+							return true;
+						end
+						
+						return false;
+					end
+				</script>
+			</list_campaign_tabbed>
+			<scrollbar_campaign_tabbed>
+				<target>list_weapons</target>
+			</scrollbar_campaign_tabbed>
+
+			<list_campaign_tabbed name="list_defences">
+				<datasource>.defences</datasource>
+				<class>defencesmall</class>
+				<acceptdrop>
+					<class>item_defence</class>
+					<field>*</field>
+				</acceptdrop>
+				<invisible />
+				<script>
+					function onSortCompare(w1, w2)
+						return w1.name.getValue() &gt; w2.name.getValue();
+					end;
+				  
+					function onFilter(w)
+						local f = string.lower(window.filter.getValue());
+						
+						if f == "" then
+							return true;
+						end
+						
+						if string.find(string.lower(w.name.getValue()), f, 0, true) then
+							return true;
+						end
+						
+						return false;
+					end
+				</script>
+			</list_campaign_tabbed>
+			<scrollbar_campaign_tabbed>
+				<target>list_defences</target>
+			</scrollbar_campaign_tabbed>
+			
+			<list_campaign_tabbed name="list_consumables">
+				<datasource>.consumables</datasource>
+				<class>consumablesmall</class>
+				<acceptdrop>
+					<class>item_consumable</class>
+					<field>*</field>
+				</acceptdrop>
+				<invisible />
+				<script>
+					function onSortCompare(w1, w2)
+						return w1.name.getValue() &gt; w2.name.getValue();
+					end;
+				  
+					function onFilter(w)
+						local f = string.lower(window.filter.getValue());
+						
+						if f == "" then
+							return true;
+						end
+						
+						if string.find(string.lower(w.name.getValue()), f, 0, true) then
+							return true;
+						end
+						
+						return false;
+					end
+				</script>
+			</list_campaign_tabbed>
+			<scrollbar_campaign_tabbed>
+				<target>list_consumables</target>
+			</scrollbar_campaign_tabbed>
+			
+			<list_campaign_tabbed name="list_general">
+				<datasource>.items</datasource>
+				<class>itemsmall</class>
+				<acceptdrop>
+					<class>item_general</class>
+					<field>*</field>
+				</acceptdrop>
+				<invisible />
+				<script>
+					function onSortCompare(w1, w2)
+						return w1.name.getValue() &gt; w2.name.getValue();
+					end;
+				  
+					function onFilter(w)
+						local f = string.lower(window.filter.getValue());
+						
+						if f == "" then
+							return true;
+						end
+						
+						if string.find(string.lower(w.name.getValue()), f, 0, true) then
+							return true;
+						end
+						
+						return false;
+					end
+				</script>
+			</list_campaign_tabbed>
+			<scrollbar_campaign_tabbed>
+				<target>list_general</target>
+			</scrollbar_campaign_tabbed>
+
+			<categories name="category_weapon">
+				<targetcontrol>list_weapons</targetcontrol>
+				<invisible />
+			</categories>
+			<categories name="category_defence">
+				<targetcontrol>list_defences</targetcontrol>
+				<invisible />
+			</categories>
+			<categories name="category_consumable">
+				<targetcontrol>list_consumables</targetcontrol>
+				<invisible />
+			</categories>
+			<categories name="category_general">
+				<targetcontrol>list_general</targetcontrol>
+				<invisible />
+			</categories>
+
+			<button_new name="button_new">
+				<script>
+					function onButtonPress()
+						if User.isHost() then
+							local nIndex = window.tabs.getIndex();
+
+							local node = window.getDatabaseNode();
+							local sClass = "item_general";
+							if nIndex == 1 then
+								targnode = node.createChild("weapons");
+								sClass = "item_weapon";
+							elseif nIndex == 2 then
+								targnode = node.createChild("defences");
+								sClass = "item_defence";
+							elseif nIndex == 3 then
+								targnode = node.createChild("consumables");
+								sClass = "item_consumable";
+							else
+								targnode = node.createChild("items");
+								sClass = "item_general";
+							end
+
+							local nodeChild = nil;
+							if targnode then
+								nodeChild = targnode.createChild();
+							end
+							if nodeChild then
+								nodeChild.createChild("item_type","number").setValue(nIndex); 
+								local w = Interface.openWindow(sClass, nodeChild.getNodeName());
+								if w and w.name then
+									w.name.setFocus();
+								end
+							end
+						end
+					end
+				</script>
+			</button_new>
+
+			<filter_campaign name="filter" />
+			<filtertrigger_campaign name="filtertrigger" />
+			
+			<resize_scrollboxfortabs />
+			<close_scrollbox />	  
+
+			
+		</sheetdata>
+	</windowclass>
+</root>

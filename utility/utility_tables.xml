@@ -1,0 +1,967 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root version="2.0">
+
+  <!-- Show a simple view of a table (attack or critical) -->
+  <windowclass name="tablebrowser">
+    <frame>charsheet</frame>
+    <nodelete/>
+    <placement>
+      <size>
+        <width>400</width>
+        <height>400</height>
+      </size>
+    </placement>
+    <sizelimits>
+      <minimum>
+        <width>245</width>
+        <height>293</height>
+      </minimum>
+      <dynamic />
+    </sizelimits>
+    <sheetdata>
+      <!-- NAME -->
+      <genericcontrol name="nameframe">
+        <bounds>10,20,-10,35</bounds>
+        <frame>
+          <name>sheetgroup</name>
+        </frame>
+      </genericcontrol>
+      <windowopencontrol name="open">
+        <anchored>
+          <to>nameframe</to>
+          <position>insidetopleft</position>
+          <offset>13,8</offset>
+          <size>
+            <width>20</width>
+            <height>20</height>
+          </size>
+        </anchored>
+        <icon>
+          <normal>button_openwindow</normal>
+          <pressed>button_emptytarget</pressed>
+        </icon>
+        <class>tablebrowser</class>
+        <description>
+          <field>name</field>
+        </description>
+        <closetoggle/>
+        <script>
+          function onDragStart(button,x,y,dragdata)
+            local customData = {};
+            local tablename = window.grid.getTableName();
+            local tableid = window.grid.getTableID();
+            local tabletype = window.grid.getTableType();
+            if tablename=="" or tableid=="" then
+              return;
+            end
+            if not dragdata.getCustomData() then
+              dragdata.setType("string")
+              dragdata.setStringData(tablename); 
+              customData.type = "RMCTable";
+              customData.tableID = tableid;
+              customData.tableName = tablename;
+              dragdata.setCustomData(customData);
+            end
+            return true;
+          end
+        </script>
+      </windowopencontrol>
+      <stringcontrolX name="name">
+        <anchored>
+          <top>
+            <parent>nameframe</parent>
+            <anchor>top</anchor>
+            <offset>9</offset>
+          </top>
+          <left>
+            <parent>nameframe</parent>
+            <anchor>left</anchor>
+            <offset>35</offset>
+          </left>
+          <right>
+            <parent>nameframe</parent>
+            <anchor>right</anchor>
+            <offset>-15</offset>
+          </right>
+        </anchored>
+        <font>sheettext</font>
+        <script>
+          function onDragStart(...)
+            return window.open.onDragStart(...);
+          end
+        </script>
+        <static/>
+        <empty>(none)</empty>
+      </stringcontrolX>
+      <!-- TABLE -->
+      <genericcontrol name="contentframe">
+        <bounds>10,54,-10,-13</bounds>
+        <frame>
+          <name>sheetgroup</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+      </genericcontrol>
+      <tableview name="grid">
+        <anchored>
+          <left>
+            <parent>contentframe</parent>
+            <anchor>left</anchor>
+            <offset>15</offset>
+          </left>
+          <right>
+            <parent>contentframe</parent>
+            <anchor>right</anchor>
+            <offset>-7</offset>
+          </right>
+          <top>
+            <parent>contentframe</parent>
+            <anchor>top</anchor>
+            <offset>15</offset>
+          </top>
+          <bottom>
+            <parent>contentframe</parent>
+            <anchor>bottom</anchor>
+            <offset>-7</offset>
+          </bottom>
+        </anchored>
+        <notitle/>
+        <script>
+          function bound(tablenode)
+            local newname = TableManager.getTableName(tablenode);
+            window.name.setValue(newname);
+          end
+          
+          function instanceCreated(source)
+            setActive(false);
+          end
+        </script>
+      </tableview>
+		<close_adventure />
+    </sheetdata>
+  </windowclass>
+
+  <!-- Allow a roll to be resolved -->
+  <windowclass name="tableresolver">
+    <frame>charsheet</frame>
+    <nodelete/>
+    <placement>
+      <size>
+        <width>516</width>
+        <height>549</height>
+      </size>
+    </placement>
+    <sizelimits>
+      <minimum>
+        <width>380</width>
+        <height>517</height>
+      </minimum>
+      <dynamic />
+    </sizelimits>
+    <script>
+      local fudgemod = nil;
+      
+      function setFudge(newtotal)
+        local delta = newtotal - total.getValue();
+        if fudgemod then
+          delta = delta + fudgemod.bonus.getValue();
+        end
+        if not fudgemod then
+          fudgemod = modlist.createWindow();
+          fudgemod.label.setValue("Fudge");
+        end
+        if delta then
+          fudgemod.bonus.setValue(delta);
+          fudgemod.include.setState(true);
+        else
+          fudgemod.close();
+          fudgemod = nil;
+        end
+      end
+      
+      function checkFudge()
+        if not fudgemod then
+          return;
+        end
+        for i,win in ipairs(modlist.getWindows()) do
+          if win==fudgemod then
+            return;
+          end
+        end
+        fudgemod = nil;
+      end
+      
+      function onInit()
+        if not User.isHost() or not StackManager.isActive() then
+          modlist.setAnchor("bottom","contentframe","bottom","absolute",-7);
+          stack.setVisible(false);
+          stackscroller.setVisible(false);
+        end
+      end
+      
+      function setResultVisible(status)
+        resultgrid.setVisible(status);
+        if status then
+          attackgrid.setResizePending();
+          attackgrid.setAnchor("bottom","contentframe","bottom","absolute",-225);
+          attackgrid.showSelection();
+        else
+          attackgrid.setResizePending();
+          attackgrid.setAnchor("bottom","contentframe","bottom","absolute",-7);
+        end
+      end
+      
+      function resolve(customData,entry)
+        local tableid = customData.tableID;
+		local size = customData.size;
+		local rollType = customData.rollType;
+        local node = TableManager.getNode(tableid);
+		local clearentry = PreferenceManager.load(Preferences.ResolveClearsStackPref);
+        if not node then
+          ChatManager.addMessage({text="Unable to find attack table",font="systemfont"});
+          return;
+        end
+        --[[ change the window title ]]
+        name.setValue(customData.title);
+        --[[ clear the results grid ]]
+        resultgrid.bind(nil);
+        --[[ bind the attack grid to this table ]]
+        attackgrid.bind(node);
+        --[[ set the basic roll ]]
+		roll.setValue(customData.dieResult);
+		--[[ add items in the modifier stack ]]
+        if not customData.modifiers then
+          customData.modifiers = {};
+        end
+        if not ModifierStack.isEmpty() then
+          local mods = ModifierStack.getModifiers();
+          for i = 1, #mods do
+            table.insert(customData.modifiers, mods[i]);
+          end
+          --[[ clear the modifier stack ]]
+          ModifierStack.reset();
+        end
+        --[[ add modifiers to the modifier list ]]
+        fudgemod = nil;
+        modlist.closeAll();
+        for i,mod in ipairs(customData.modifiers) do
+          local win = modlist.createWindow();
+          win.label.setValue(mod.description);
+          win.bonus.setValue(mod.value);
+          win.include.setState(true);
+        end
+		if rollType == 3 then
+		  total.recalc();
+		  if total.getValue() > 0 then
+			if size == 1 then
+				local win = modlist.createWindow();
+				win.label.setValue("Size: Tiny");
+				win.bonus.setValue(-20);
+				win.include.setState(true);
+			elseif size == 2 then
+				local win = modlist.createWindow();
+				win.label.setValue("Size: Small");
+				win.bonus.setValue(-10);
+				win.include.setState(true);
+			elseif size == 3 then
+				local win = modlist.createWindow();
+				win.label.setValue("Size: Medium");
+				win.bonus.setValue(0);
+				win.include.setState(true);
+			elseif size == 4 then
+				local win = modlist.createWindow();
+				win.label.setValue("Size: Large");
+				win.bonus.setValue(10);
+				win.include.setState(true);
+			else
+				local win = modlist.createWindow();
+				win.label.setValue("Size: Huge");
+				win.bonus.setValue(20);
+				win.include.setState(true);
+			end
+		  end
+		end
+        --[[ select the armour type ]]
+        if customData.armorType then
+          attackgrid.selectColumn(customData.armorType);
+          attackgrid.showSelection();
+        end
+        --[[ clear the stack entry ]]
+        if entry and clearentry and clearentry==Preferences.Yes then
+          entry.deleteflag.setValue(1);
+          stack.applyFilter();
+        end
+		if attackgrid.getTableID() == Rules_Constants.RRTableID and Rules_Combat.getLevelActor() &gt; 0 then
+			attackgrid.selectRow(Rules_Combat.getLevelActor(),Rules_Combat.getLevelActor());
+			attackgrid.selectColumn(Rules_Combat.getLevelActor());
+		end
+      end
+    </script>
+    <sheetdata>
+		<windowtitlebar name="titlebar">
+			<title>
+				<text>Table Resolver</text>
+			</title>
+		</windowtitlebar>
+ 
+
+     <!-- NAME -->
+      <genericcontrol name="nameframe">
+        <bounds>10,40,-10,35</bounds>
+        <frame>
+          <name>sheetgroup</name>
+        </frame>
+      </genericcontrol>
+      <windowopencontrol name="open">
+        <anchored>
+          <to>nameframe</to>
+          <position>insidetopleft</position>
+          <offset>13,8</offset>
+          <size>
+            <width>20</width>
+            <height>20</height>
+          </size>
+        </anchored>
+        <icon>
+          <normal>button_openwindow</normal>
+          <pressed>button_emptytarget</pressed>
+        </icon>
+        <class>tableresolver</class>
+        <description>
+          <field>name</field>
+        </description>
+        <closetoggle/>
+      </windowopencontrol>
+      <stringcontrolX name="name">
+        <anchored>
+          <top>
+            <parent>nameframe</parent>
+            <anchor>top</anchor>
+            <offset>9</offset>
+          </top>
+          <left>
+            <parent>nameframe</parent>
+            <anchor>left</anchor>
+            <offset>35</offset>
+          </left>
+          <right>
+            <parent>nameframe</parent>
+            <anchor>right</anchor>
+            <offset>-15</offset>
+          </right>
+        </anchored>
+        <font>sheettext</font>
+        <static/>
+        <empty>Table Resolver</empty>
+      </stringcontrolX>
+      <!-- WINDOW CONTENT -->
+      <genericcontrol name="contentframe">
+        <bounds>10,74,-10,-13</bounds>
+        <frame>
+          <name>sheetgroup</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+      </genericcontrol>
+      <!-- ROLL, MOD AND TOTAL -->
+	  <stringcontrolX name="result">
+		  <anchored>
+          <to>contentframe</to>
+          <position>insidetopleft</position>
+          <offset>35,13</offset>
+          <size>
+            <width>100</width>
+            <height>18</height>
+          </size>
+        </anchored>
+	  </stringcontrolX>
+      <numbercontrolX name="roll">
+        <anchored>
+          <to>contentframe</to>
+          <position>insidetopleft</position>
+          <offset>21,45</offset>
+          <size>
+            <width>35</width>
+            <height>18</height>
+          </size>
+        </anchored>
+        <font>sheettext</font>
+        <frame>
+          <name>modifier</name>
+          <offset>4,4,4,4</offset>
+        </frame>
+        <keyeditframe>
+          <name>sheetfocus</name>
+          <offset>4,4,4,4</offset>
+        </keyeditframe>
+        <script>
+          function onValueChanged()
+            if super.onValueChanged then
+              super.onValueChanged();
+            end
+            if window.total and window.total.recalc then
+              window.total.recalc();
+            end
+          end
+        </script>
+      </numbercontrolX>
+      <stringcontrol>
+        <anchored>
+          <to>roll</to>
+          <position>above</position>
+          <offset>3</offset>
+        </anchored>
+        <font>sheetlabelsmall</font>
+        <static>ROLL</static>
+        <center/>
+      </stringcontrol>
+      <numbercontrolX name="mods">
+        <anchored>
+          <to>roll</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>35</width>
+          </size>
+        </anchored>
+        <displaysign/>
+        <readonly/>
+        <font>sheettext</font>
+        <frame>
+          <name>modifier</name>
+          <offset>4,4,4,4</offset>
+        </frame>
+      </numbercontrolX>
+      <stringcontrol>
+        <anchored>
+          <to>mods</to>
+          <position>above</position>
+          <offset>3</offset>
+        </anchored>
+        <font>sheetlabelsmall</font>
+        <static>MODS</static>
+        <center/>
+      </stringcontrol>
+      <numbercontrolX name="total">
+        <anchored>
+          <to>mods</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>35</width>
+          </size>
+        </anchored>
+        <readonly/>
+        <font>sheettext</font>
+        <frame>
+          <name>modifier</name>
+          <offset>4,4,4,4</offset>
+        </frame>
+        <script>
+          local oldtot = 0;
+          
+          function onInit()
+            if super.onInit then
+              super.onInit();
+            end
+          end
+          
+          function recalc()
+            local base = window.roll.getValue();
+            local tot  = base + window.mods.getValue();
+            setValue(tot);
+            --[[ update the attack grid highlighting ]]
+            if window.attackgrid and oldtot~=tot then
+              oldtot = tot;
+			  window.attackgrid.selectRow(base, tot);
+              window.attackgrid.showSelection();
+            end
+			if tot &gt; 100 then
+				window.result.setValue("Success");
+			else
+				window.result.setValue("Failure");
+			end
+          end
+        </script>
+      </numbercontrolX>
+      <stringcontrol>
+        <anchored>
+          <to>total</to>
+          <position>above</position>
+          <offset>3</offset>
+        </anchored>
+        <font>sheetlabelsmall</font>
+        <static>TOTAL</static>
+        <center/>
+      </stringcontrol>
+      <!-- ROLL STACK -->
+      <windowlist name="stack">
+        <frame>
+          <name>rowshade</name>
+        </frame>
+        <datasource>stack</datasource>
+        <class>tableview_stackentry</class>
+        <anchored>
+          <left>
+            <parent>contentframe</parent>
+            <anchor>left</anchor>
+            <offset>10</offset>
+          </left>
+          <bottom>
+            <parent>contentframe</parent>
+            <anchor>bottom</anchor>
+            <offset>-7</offset>
+          </bottom>
+          <size>
+            <width>139</width>
+            <height>252</height>
+          </size>
+        </anchored>
+        <allowdelete/>
+        <skipempty/>
+        <script>
+          function onInit()
+            for k,node in pairs(getDatabaseNode().getChildren()) do
+              if node.getChild("deleteflag") and node.getChild("deleteflag").getValue()==1 then
+                node.delete();
+              end
+            end
+            checkMenu();
+          end
+          
+          function checkMenu()
+            resetMenuItems();
+            if #(getWindows())~=0 then
+              registerMenuItem("Clear Stack","clearstack",7);
+            end
+          end
+          
+          function onListRearranged(changed)
+            if changed then
+              checkMenu();
+            end
+          end
+          
+          function onMenuSelection(level1)
+            if level1==7 then
+              for k,node in pairs(getDatabaseNode().getChildren()) do
+                node.delete();
+              end
+            end
+          end
+          
+          function onFilter(win)
+            if win.deleteflag.getValue()==1 then
+              return false;
+            else
+              return true;
+            end
+          end
+        </script>
+      </windowlist>
+ 		<scrollbar name="stackscroller">
+			<anchored>
+				<to>stack</to>
+				<position>right</position>
+				<offset>-9,-4</offset>
+			</anchored>
+			<target>stack</target>
+		</scrollbar>
+      <!-- MODIFIER LIST -->
+      <windowlist name="modlist">
+        <frame>
+          <name>rowshade</name>
+        </frame>
+        <anchored>
+          <to>contentframe</to>
+          <position>insidetopleft</position>
+          <offset>10,70</offset>
+          <bottom>
+            <parent>stack</parent>
+            <anchor>top</anchor>
+            <offset>-1</offset>
+          </bottom>
+          <size>
+            <width>139</width>
+          </size>
+        </anchored>
+        <class>tableview_modentry</class>
+        <sortfields>label</sortfields>
+        <allowcreate />
+        <allowdelete />
+        <script>
+          function onInit()
+            update();
+          end
+          
+          function onMenuSelection(level1)
+            if level1==7 then
+              closeAll();
+            end
+          end
+
+          function update()
+            resetMenuItems();
+            if #(getWindows())~=0 then
+              registerMenuItem("Clear All","clearall",7);
+            end
+            --[[ recalc the modlist total ]]
+            local total = 0;
+            for i,mod in ipairs(getWindows()) do
+              if mod.include.getState() then
+                total = total + mod.bonus.getValue();
+              end
+            end
+            window.mods.setValue(total);
+            window.total.recalc();
+          end
+          
+          function onListRearranged(changed)
+            if changed then
+              window.checkFudge();
+              update();
+            end
+          end
+		  
+		function onDrop(x,y,dragdata)
+			if dragdata.isType("number") then
+			
+				local win = createWindow();
+				if dragdata.getNumberData() then
+					win.bonus.setValue(dragdata.getNumberData());
+				end
+				if dragdata.getDescription() then
+					win.label.setValue(dragdata.getDescription());
+				elseif dragdata.getStringData() then
+					win.label.setValue(dragdata.getStringData());
+				end
+				win.include.setState(true);
+				return true;
+			else
+				return false;
+			end
+        end
+
+        </script>
+      </windowlist>
+ 		<scrollbar name="modscroller">
+			<anchored>
+				<to>modlist</to>
+				<position>right</position>
+				<offset>-9,-4</offset>
+			</anchored>
+			<target>modlist</target>
+		</scrollbar>
+      <!-- ATTACK TABLE -->
+      <tableview name="attackgrid">
+        <anchored>
+          <left>
+            <parent>contentframe</parent>
+            <anchor>left</anchor>
+            <offset>150</offset>
+          </left>
+          <right>
+            <parent>contentframe</parent>
+            <anchor>right</anchor>
+            <offset>-7</offset>
+          </right>
+          <top>
+            <parent>contentframe</parent>
+            <anchor>top</anchor>
+            <offset>8</offset>
+          </top>
+          <bottom>
+            <parent>contentframe</parent>
+            <anchor>bottom</anchor>
+            <offset>-225</offset>
+          </bottom>
+        </anchored>
+        <script>
+          local tabledata = nil;
+          
+          function bound(tablenode)
+            window.setResultVisible(false);
+            tabledata = getTableData();
+          end
+          
+          function instanceCreated(source)
+            setActive(true);
+          end
+          
+          function rowSelected(roll)
+            --[[ amend the modifier list to reflect the new roll ]]
+            window.setFudge(roll);
+          end
+          
+          function criticalSelected(crit)
+            if not crit then
+              return;
+            end
+			
+            if crit and crit.Name=="Fumble" and tabledata and tabledata.Fumble then
+              local node = TableManager.getNode(tabledata.Fumble.ResultTable);
+              local column = tabledata.Fumble.ColumnTitle;
+              if node then
+                window.resultgrid.bind(node);
+                --[[ select initial fumble column ]]
+                window.resultgrid.selectColumn(column);
+                window.resultgrid.showSelection();
+              end
+            elseif crit.ResultTable then
+              local node = TableManager.getNode(crit.ResultTable);
+              if node then
+                window.resultgrid.bind(node);
+                --[[ select initial severity column ]]
+                window.resultgrid.selectColumn(crit.Severity);
+				if crit.ResultTable == Rules_Constants.RRTableID then
+					window.resultgrid.selectRow(Rules_Combat.getLevelDefender(),Rules_Combat.getLevelDefender());
+				end
+                window.resultgrid.showSelection();
+              end
+            end
+          end
+        </script>
+      </tableview>
+      <!-- RESULT TABLE -->
+      <tableview name="resultgrid">
+        <anchored>
+          <left>
+            <parent>contentframe</parent>
+            <anchor>left</anchor>
+            <offset>150</offset>
+          </left>
+          <right>
+            <parent>contentframe</parent>
+            <anchor>right</anchor>
+            <offset>-7</offset>
+          </right>
+          <top>
+            <parent>contentframe</parent>
+            <anchor>bottom</anchor>
+            <offset>-224</offset>
+          </top>
+          <bottom>
+            <parent>contentframe</parent>
+            <anchor>bottom</anchor>
+            <offset>-7</offset>
+          </bottom>
+        </anchored>
+        <script>
+          function bound(tablenode)
+            if tablenode then
+              window.setResultVisible(true);
+            else
+              window.setResultVisible(false);
+            end
+          end
+          
+          function rowSelected(roll)
+            selectRow(roll,roll);
+            showSelection();
+          end
+          
+          function instanceCreated(source)
+            setActive(true);
+          end
+        </script>
+      </tableview>
+		<close_adventure />
+    </sheetdata>
+  </windowclass>
+
+  <windowclass name="tableview_stackentry">
+    <sizelimits>
+      <minimum>
+        <height>63</height>
+        <width>139</width>
+      </minimum>
+      <maximum>
+        <height>63</height>
+        <width>139</width>
+      </maximum>
+    </sizelimits>
+    <script file="utility/scripts/tableview_stackentry.lua" />
+    <frame>ghost</frame>
+    <sheetdata>
+      <numberfield name="deleteflag">
+        <bounds>0,0,0,0</bounds>
+        <invisible/>
+      </numberfield>
+      <genericcontrol name="token">
+        <anchored>
+          <position>insidetopleft</position>
+          <offset>5,5</offset>
+          <size>
+            <width>23</width>
+            <height>23</height>
+          </size>
+        </anchored>
+        <icon>indicator_emptytoken</icon>
+      </genericcontrol>
+      <stringcontrolX name="name">
+        <bounds>31,7,-5,17</bounds>
+        <font>sheettextsmall</font>
+        <static/>
+      </stringcontrolX>
+      <genericcontrol name="diepicture">
+        <anchored>
+          <position>insidebottomleft</position>
+          <offset>4,8</offset>
+          <size>
+            <width>25</width>
+            <height>25</height>
+          </size>
+        </anchored>
+        <icon>icon_dieresult</icon>
+      </genericcontrol>
+      <numbercontrol name="result">
+        <anchored>
+          <to>diepicture</to>
+          <position>over</position>
+        </anchored>
+        <font>dieresult</font>
+        <readonly/>
+      </numbercontrol>
+      <stringcontrolX name="title">
+        <bounds>31,26,-5,-5</bounds>
+        <font>sheettextsmall</font>
+        <multilinespacing>14</multilinespacing>
+        <static/>
+        <readonly/>
+      </stringcontrolX>
+      <genericcontrol>
+        <bounds>0,0,-1,-1</bounds>
+        <script>
+          function onDoubleClick(...)
+            window.resolve();
+          end
+        </script>
+      </genericcontrol>
+    </sheetdata>
+  </windowclass>
+  
+  <windowclass name="tableview_modentry">
+    <sizelimits>
+      <maximum>
+        <height>18</height>
+      </maximum>
+      <minimum>
+        <height>18</height>
+      </minimum>
+    </sizelimits>
+    <script>
+      function update()
+        if windowlist and windowlist.update then
+          windowlist.update();
+        end
+      end
+    </script>
+    <sheetdata>
+      <stringcontrol name="label">
+        <bounds>0,4,90,13</bounds>
+        <font>sheetlabelsmall</font>
+        <static/>
+        <empty>Modifier</empty>
+      </stringcontrol>
+      <numberfieldX name="bonus">
+        <anchored>
+          <to>label</to>
+          <position>right</position>
+          <offset>3</offset>
+          <size>
+            <width>30</width>
+          </size>
+        </anchored>
+        <displaysign/>
+        <frame>
+          <name>textline</name>
+          <offset>0,5,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,5,0,0</offset>
+        </keyeditframe>
+        <font>sheetlabelsmall</font>
+        <script>
+          function onValueChanged()
+            window.update();
+          end
+        </script>
+      </numberfieldX>
+      <checkbox name="include">
+        <bounds>122,4,12,12</bounds>
+        <tooltip>
+          <text>Include in modifier total?</text>
+        </tooltip>
+        <script>
+          function onValueChanged()
+            if super.onValueChanged then
+              super.onValueChanged();
+            end
+            window.update();
+          end
+        </script>
+      </checkbox>
+    </sheetdata>
+  </windowclass>
+
+  <!-- subwindow which displays the actual table contents -->
+  <windowclass name="tableview_window">
+    <script file="utility/scripts/tableview_window.lua"/>
+    <sheetdata>
+      <stringcontrol name="titlebar">
+        <frame>
+          <name>rowshade</name>
+          <offset>0,0,0,-1</offset>
+        </frame>
+        <anchored>
+          <top>
+            <anchor>top</anchor>
+          </top>
+          <left>
+            <anchor>left</anchor>
+          </left>
+          <right>
+            <anchor>right</anchor>
+          </right>
+          <size>
+            <height>13</height>
+          </size>
+        </anchored>
+        <font>sheetlabelsmall</font>
+        <center/>
+        <static/>
+      </stringcontrol>
+      <genericcontrol name="grid">
+        <frame>
+          <name>rowshade</name>
+        </frame>
+        <anchored>
+          <top>
+            <parent>titlebar</parent>
+            <anchor>bottom</anchor>
+            <relation>relative</relation>
+          </top>
+          <left>
+            <anchor>left</anchor>
+          </left>
+          <right>
+            <anchor>right</anchor>
+            <offset>-15</offset>
+          </right>
+          <bottom>
+            <anchor>bottom</anchor>
+            <offset>-15</offset>
+          </bottom>
+        </anchored>
+		<disabled />
+	  </genericcontrol>
+      <scrollbar2 name="vbar">
+        <target>grid</target>
+      </scrollbar2>
+      <scrollbar2 name="hbar">
+        <target>grid</target>
+        <horizontal/>
+      </scrollbar2>
+    </sheetdata>
+  </windowclass>
+
+</root>

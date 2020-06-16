@@ -1,0 +1,559 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<root version="2.0">
+  <windowclass name="charsheet_weaponwindow">
+    <!--
+          Weapon type:
+          1 = 1HS one-handed slashing
+          2 = 1HC one-handed concussion
+          3 = 2H  two-handed
+          4 = PA  polearm
+          5 = MIS missile weapon
+          6 = TH  thrown weapon
+          7 = SH  shield
+          8 = NAT natural weapon, such as a claw
+          9 = EL  elemental attack, such as bolts and balls
+          10= SP  special attack
+    -->
+    <sizelimits>
+      <maximum>
+        <height>18</height>
+      </maximum>
+      <minimum>
+        <height>18</height>
+      </minimum>
+    </sizelimits>
+    <script>
+	  function onInit()
+		if super and super.onInit then
+		  super.onInit();
+		end
+		if category1.getState() &lt; 1 then
+		  category1.setState(1);
+		elseif category1.getState() &gt; 18 then
+		  category1.setState(1);
+		end
+		if category2.getState() &lt; 1 then
+		  category2.setState(1);
+		elseif category2.getState() &gt; 19 then
+		  category2.setState(1);
+		end
+	  end
+	
+      function isEquipped()
+        return isequipped.getState();
+      end
+
+	  function is1Ranged()
+		if category1.getState() &gt; 6 and category1.getState() &lt; 13 then
+		  return true;
+		elseif category1.getState() &gt; 17 then
+		  return true;
+		else
+		  return false;
+		end
+	  end
+	  
+	  function is2Ranged()
+		if category2.getState() &gt; 6 and category2.getState() &lt; 13 then
+		  return true;
+		elseif category2.getState() &gt; 17 then
+		  return true;
+		else
+		  return false;
+		end
+	  end
+      
+      function testDelete()
+        local win = windowlist.getPrevWindow(self);
+        if name.getValue()~="" then
+          return;
+        end
+        if #(windowlist.getWindows())==1 then
+          return;
+        end
+        if not win then
+          win = windowlist.getNextWindow(self);
+        end
+        win.name.setFocus();
+        getDatabaseNode().delete();
+      end
+      
+      function testNew()
+        local win = windowlist.getNextWindow(self);
+        if name.getValue()=="" then
+          return;
+        end
+        if not win then
+          win = windowlist.createWindow();
+        end
+		win.type.setState(1);
+        win.name.setFocus();
+      end
+    </script>
+    <sheetdata>
+      <!-- Hidden fields -->
+      <numberfieldX name="multiattack">
+        <bounds>0,0,0,0</bounds>
+        <invisible/>
+		<script>
+		  function onValueChanged()
+		    if getValue() == 0 then
+			  window.ob2.setVisible(false);
+			  window.fumble2.setVisible(false);
+			  window.pbrng2.setVisible(false);
+              window.rnginc2.setVisible(false);
+              window.pbbonus2.setVisible(false);
+			elseif getValue() == 1 then
+			  window.ob2.setVisible(true);
+			  window.fumble2.setVisible(true);
+			  window.pbrng2.setVisible(true);
+              window.rnginc2.setVisible(true);
+              window.pbbonus2.setVisible(true);
+			end
+		  end
+		</script>
+      </numberfieldX>
+      <multitext name="category1">
+        <bounds>0,0,0,0</bounds>
+        <invisible/>
+        <statelabels>
+          <state>Axes</state>
+		  <state>Long Blades</state>
+		  <state>Short Blades</state>
+		  <state>Thrusting Blades</state>
+		  <state>Chains Plus</state>
+		  <state>Clubs</state>
+		  <state>Polearms Thrown</state>
+		  <state>Thrown Blades</state>
+		  <state>Thrown Projectiles</state>
+		  <state>Bows</state>
+		  <state>Crossbows</state>
+		  <state>Slings</state>
+	      <state>Polearms</state>
+		  <state>Great Blades</state>
+		  <state>Great Chains</state>
+		  <state>Long Spikes</state>
+		  <state>Staves</state>
+		  <state>Pistols</state>
+		  <state>Long Guns</state>
+        </statelabels>
+		<script>
+          function onStateChanged()
+            local iswpn = window.is1Ranged();
+            window.pbrng1.setVisible(iswpn);
+            window.rnginc1.setVisible(iswpn);
+            window.pbbonus1.setVisible(iswpn);
+          end
+        </script>
+		<readonly />
+	</multitext>
+	<multitext name="category2">
+        <bounds>0,0,0,0</bounds>
+        <invisible/>
+        <statelabels>
+          <state>Axes</state>
+		  <state>Long Blades</state>
+		  <state>Short Blades</state>
+		  <state>Thrusting Blades</state>
+		  <state>Chains Plus</state>
+		  <state>Clubs</state>
+		  <state>Polearms Thrown</state>
+		  <state>Thrown Blades</state>
+		  <state>Thrown Projectiles</state>
+		  <state>Bows</state>
+		  <state>Crossbows</state>
+		  <state>Slings</state>
+	      <state>Polearms</state>
+		  <state>Great Blades</state>
+		  <state>Great Chains</state>
+		  <state>Long Spikes</state>
+		  <state>Staves</state>
+		  <state>Pistols</state>
+		  <state>Long Guns</state>
+        </statelabels>
+		<script>
+          function onStateChanged()
+            local iswpn = window.is2Ranged();
+            window.pbrng2.setVisible(iswpn);
+            window.rnginc2.setVisible(iswpn);
+            window.pbbonus2.setVisible(iswpn);
+          end
+        </script>
+		<readonly />
+	</multitext>
+	<numberfieldX name="obbonus">
+        <bounds>0,0,0,0</bounds>
+        <invisible/>
+      </numberfieldX>
+      <stringfieldX name="table">
+        <bounds>0,0,0,0</bounds>
+        <invisible/>
+      </stringfieldX>
+      <!-- Visible fields -->
+      <windowreferencecontrol name="open">
+        <bounds>0,2,14,14</bounds>
+        <icon>
+          <normal>button_openwindow</normal>
+          <pressed>button_openwindow</pressed>
+        </icon>
+        <class>weapon</class>
+        <description>
+          <field>name</field>
+        </description>
+      </windowreferencecontrol>
+      <textlistitemvalue name="name">
+        <bounds>15,0,65,17</bounds>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+        <font>sheettextsmall</font>
+        <script>
+          function onDeleteDown()
+            window.testDelete();
+          end
+          
+          function onDeleteUp()
+            window.testDelete();
+          end
+          
+          function onEnter()
+            window.testNew();
+          end
+        </script>
+        <tabtarget>
+          <next>ob1</next>
+          <prev>fumble1</prev>
+        </tabtarget>
+      </textlistitemvalue>
+
+      <numberfieldX name="ob2">
+        <bounds>265,4,30,13</bounds>
+		<font>sheetlabelsmall</font>
+        <hideonvalue>0</hideonvalue>
+        <frame>
+          <name>textlinedice</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+        <script>
+          function onInit()
+            if super and super.onInit then
+              super.onInit();
+            end
+          end
+		  
+		  function onDoubleClick()
+			local path = DB.getPath(getDatabaseNode().getParent());
+			local charnode = window.getDatabaseNode().getParent().getParent();
+			local node = charnode.createChild("current_attack");
+			local exWin = Interface.openWindow("attack_selector",node);
+			exWin.attacknode.setValue(path);
+			exWin.secondary_weapon.setState(true);
+		  end
+        </script>
+      </numberfieldX>
+
+      <numberfieldX name="fumble2">
+        <anchored>
+          <to>ob2</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>30</width>
+          </size>
+        </anchored>
+        <frame>
+          <name>textline</name>
+          <offset>0,5,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,5,0,0</offset>
+        </keyeditframe>
+        <font>sheetlabelsmall</font>
+        <script>
+          function onInit()
+            if super and super.onInit then
+              super.onInit();
+            end
+          end
+        </script>
+        <tabtarget>
+          <next>name</next>
+          <prev>ob1</prev>
+        </tabtarget>
+      </numberfieldX>
+	  
+	  <numberfieldX name="rnginc2">
+        <anchored>
+          <to>fumble2</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>30</width>
+          </size>
+        </anchored>
+        <frame>
+          <name>textline</name>
+          <offset>0,5,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,5,0,0</offset>
+        </keyeditframe>
+        <font>sheetlabelsmall</font>
+        <script>
+          function onInit()
+            if super and super.onInit then
+              super.onInit();
+            end
+          end
+        </script>
+        <tabtarget>
+          <next>name</next>
+          <prev>ob1</prev>
+        </tabtarget>
+      </numberfieldX>
+	  <numberfieldX name="pbbonus2">
+        <anchored>
+          <to>rnginc2</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>30</width>
+          </size>
+        </anchored>
+        <frame>
+          <name>textline</name>
+          <offset>0,5,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,5,0,0</offset>
+        </keyeditframe>
+        <font>sheetlabelsmall</font>
+        <script>
+          function onInit()
+            if super and super.onInit then
+              super.onInit();
+            end
+          end
+        </script>
+        <tabtarget>
+          <next>name</next>
+          <prev>ob1</prev>
+        </tabtarget>
+      </numberfieldX>
+	  <numberfieldX name="pbrng2">
+        <anchored>
+          <to>pbbonus2</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>30</width>
+          </size>
+        </anchored>
+        <frame>
+          <name>textline</name>
+          <offset>0,5,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,5,0,0</offset>
+        </keyeditframe>
+        <font>sheetlabelsmall</font>
+        <script>
+          function onInit()
+            if super and super.onInit then
+              super.onInit();
+            end
+          end
+        </script>
+        <tabtarget>
+          <next>name</next>
+          <prev>ob1</prev>
+        </tabtarget>
+      </numberfieldX>
+      
+	  <numberfieldX name="ob1">
+        <bounds>85,4,30,13</bounds>
+        <font>sheetlabelsmall</font>
+        <hideonvalue>0</hideonvalue>
+        <frame>
+          <name>textlinedice</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+        <script>
+          function onInit()
+            if super and super.onInit then
+              super.onInit();
+            end
+          end
+		  
+		  function onDoubleClick()
+			Debug.chat("Start");
+			Debug.chat(getDatabaseNode());
+			local path = DB.getPath(getDatabaseNode().getParent());
+			Debug.chat(path);
+			local charnode = window.getDatabaseNode().getParent().getParent();
+			local node = charnode.createChild("current_attack");
+			local exWin = Interface.openWindow("attack_selector",node);
+			exWin.attacknode.setValue(path);
+			exWin.primary_weapon.setState(true);
+		  end
+        </script>
+      </numberfieldX>
+
+      <numberfieldX name="fumble1">
+        <anchored>
+          <to>ob1</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>30</width>
+          </size>
+        </anchored>
+        <frame>
+          <name>textline</name>
+          <offset>0,5,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,5,0,0</offset>
+        </keyeditframe>
+        <font>sheetlabelsmall</font>
+        <script>
+          function onValueChanged()
+            if getValue() &lt; 0 or getValue() &gt; 100 then
+              setInvalid();
+            else
+              setValid();
+            end
+          end
+
+          function onInit()
+            if super and super.onInit then
+              super.onInit();
+            end
+            onValueChanged();
+          end
+        </script>
+        <tabtarget>
+          <next>name</next>
+          <prev>ob1</prev>
+        </tabtarget>
+      </numberfieldX>
+	  
+	  <numberfieldX name="rnginc1">
+        <anchored>
+          <to>fumble1</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>30</width>
+          </size>
+        </anchored>
+        <frame>
+          <name>textline</name>
+          <offset>0,5,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,5,0,0</offset>
+        </keyeditframe>
+        <font>sheetlabelsmall</font>
+        <script>
+          function onInit()
+            if super and super.onInit then
+              super.onInit();
+            end
+          end
+        </script>
+        <tabtarget>
+          <next>name</next>
+          <prev>ob1</prev>
+        </tabtarget>
+      </numberfieldX>
+	  <numberfieldX name="pbbonus1">
+        <anchored>
+          <to>rnginc1</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>30</width>
+          </size>
+        </anchored>
+        <frame>
+          <name>textline</name>
+          <offset>0,5,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,5,0,0</offset>
+        </keyeditframe>
+        <font>sheetlabelsmall</font>
+        <script>
+          function onInit()
+            if super and super.onInit then
+              super.onInit();
+            end
+          end
+        </script>
+        <tabtarget>
+          <next>name</next>
+          <prev>ob1</prev>
+        </tabtarget>
+      </numberfieldX>
+	  <numberfieldX name="pbrng1">
+        <anchored>
+          <to>pbbonus1</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>30</width>
+          </size>
+        </anchored>
+        <frame>
+          <name>textline</name>
+          <offset>0,5,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,5,0,0</offset>
+        </keyeditframe>
+        <font>sheetlabelsmall</font>
+        <script>
+          function onInit()
+            if super and super.onInit then
+              super.onInit();
+            end
+          end
+        </script>
+        <tabtarget>
+          <next>name</next>
+          <prev>ob1</prev>
+        </tabtarget>
+      </numberfieldX>
+	  
+      <checkbox name="isequipped">
+        <bounds>438,4,12,12</bounds>
+        <tooltip>
+          <text>Equipped?</text>
+        </tooltip>
+      </checkbox>
+    </sheetdata>
+  </windowclass>
+
+</root>

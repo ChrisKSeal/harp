@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<root version="2.0">
+
+	<icon name="cs_logo" file="graphics/icons/harp_logo.png" />
+	
+	<icon name="routine" file="graphics/icons/ice_logo_routine.png" />
+	<icon name="easy" file="graphics/icons/ice_logo_easy.png" />
+	<icon name="light" file="graphics/icons/ice_logo_light.png" />
+	<icon name="medium" file="graphics/icons/ice_logo_medium.png" />
+	<icon name="hard" file="graphics/icons/ice_logo_hard.png" />
+	<icon name="vhard" file="graphics/icons/ice_logo_vhard.png" />
+	<icon name="ehard" file="graphics/icons/ice_logo_ehard.png" />
+	<icon name="folly" file="graphics/icons/ice_logo_folly.png" />
+	<icon name="absurd" file="graphics/icons/ice_logo_absurd.png" />
+	<icon name="castbutton" file="graphics/icons/cast.png" />
+	<icon name="ctbutton" file="graphics/icons/CT.png" />
+	<icon name="spellindicator" file="graphics/icons/indicator_casterprep.png" />
+	
+	<icon name="lightwound" file="graphics/icons/smallwound.png" />
+	<icon name="largewound" file="graphics/icons/largewound.png" />
+	<icon name="nowound" file="graphics/icons/nowound.png" />
+	<icon name="healthbar" file="graphics/icons/healthbar.png" />
+	<icon name="dead" file="graphics/icons/dead.png" />
+	
+	<icon name="tab_weapon" file="graphics/tabs/tab_weapon.png" />
+	<icon name="tab_magic" file="graphics/tabs/tab_magic.png" />
+	<icon name="tab_general" file="graphics/tabs/tab_general.png" />
+	<icon name="tab_defences" file="graphics/tabs/tab_defences.png" />
+	<icon name="tab_consumables" file="graphics/tabs/tab_consumables.png" />
+	<icon name="portraittoken_base" file="graphics/icons/portrait_token.png" />
+	<icon name="portraittoken_mask" file="graphics/icons/portrait_token_mask.png" />
+	<icon name="icon_arrow_down" file="graphics/icons/arrow_down_small.png"/>
+	<icon name="icon_arrow_up" file="graphics/icons/arrow_up_small.png"/>
+
+</root>

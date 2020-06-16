@@ -1,0 +1,1300 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<root version="2.0">
+
+	<windowclass name="item_consumable">
+		<frame>charsheet</frame>
+			<placement>
+				<size>
+					<width>320</width>
+					<height>450</height>
+				</size>
+			</placement>
+			<sizelimits>
+				<dynamic />
+				<minimum>
+					<width>320</width>
+					<height>450</height>
+				</minimum>
+			</sizelimits>
+			<minimize>minimized_item</minimize>
+			<sharable>
+				<shareas>item_consumable_client</shareas>
+			</sharable>
+			<tooltip>
+				<field>name</field>
+			</tooltip>
+			<nodelete/>
+			<sheetdata>
+			<!-- NAME -->
+				<genericcontrol name="nameframe">
+					<bounds>10,20,-20,35</bounds>
+					<frame>
+						<name>sheetgroup</name>
+					</frame>
+				</genericcontrol>
+				<windowopencontrol>
+					<anchored>
+						<to>nameframe</to>
+						<position>insidetopleft</position>
+						<offset>13,8</offset>
+						<size>
+							<width>20</width>
+							<height>20</height>
+						</size>
+					</anchored>
+					<icon>
+						<normal>button_openwindow</normal>
+						<pressed>button_emptytarget</pressed>
+					</icon>
+					<class>item_consumable</class>
+					<description>
+						<field>name</field>
+					</description>
+				</windowopencontrol>
+				<stringfieldX name="name">
+					<anchored>
+						<top>
+							<parent>nameframe</parent>
+							<anchor>top</anchor>
+							<offset>9</offset>
+						</top>
+						<left>
+							<parent>nameframe</parent>
+							<anchor>left</anchor>
+							<offset>35</offset>
+						</left>
+						<right>
+							<parent>nameframe</parent>
+							<anchor>right</anchor>
+							<offset>-15</offset>
+						</right>
+					</anchored>
+					<empty>&#171; New Consumable &#187;</empty>
+					<font>sheettext</font>
+				</stringfieldX>
+
+				<!-- Frame -->    
+				<genericcontrol name="contentframe">
+					<bounds>10,54,-25,-13</bounds>
+					<frame>
+						<name>sheetgroup</name>
+						<offset>0,1,0,0</offset>
+					</frame>
+				</genericcontrol>
+
+
+				<!-- Subwindows -->
+				<subwindow name="main">
+					<bounds>22,64,-35,-23</bounds>
+					<class>item_consumable_main</class>
+					<activate />
+				</subwindow>
+				<scrollbar name="main_scroller">
+					<anchored>
+						<to>main</to>
+						<position>right</position>
+						<offset>-5,-4</offset>
+					</anchored>
+					<target>main</target>
+				</scrollbar>
+
+				<!--<subwindow name="magic">
+					<bounds>22,64,-35,-23</bounds>
+					<class>item_magic</class>
+				</subwindow>
+				<scrollbar name="magic_scroller">
+					<anchored>
+						<to>magic</to>
+						<position>right</position>
+						<offset>-5,-4</offset>
+					</anchored>
+					<target>magic</target>
+				</scrollbar>
+				
+				<subwindow name="spells">
+					<bounds>22,64,-35,-23</bounds>
+					<class>item_spells</class>
+				</subwindow>
+				<scrollbar name="spell_scroller">
+					<anchored>
+						<to>spells</to>
+						<position>right</position>
+						<offset>-5,-4</offset>
+					</anchored>
+					<target>spells</target>
+				</scrollbar>
+
+			<!-- Tabs 
+			<tabcontrol name="tabs">
+				<bounds>-22,50,18,220</bounds>
+				<tab>
+					<icon>tab_main</icon>
+					<subwindow>main</subwindow>
+					<scroller>main_scroller</scroller>
+				</tab>
+				<tab>
+					<icon>tab_magic</icon>
+					<subwindow>magic</subwindow>
+					<scroller>magic_scroller</scroller>
+				</tab>
+				<tab>
+					<icon>tab_spells</icon>
+					<subwindow>spells</subwindow>
+					<scroller>spell_scroller</scroller>
+				</tab>
+				<activate>1</activate>
+			</tabcontrol>-->
+		
+			<close_adventure />
+		</sheetdata>
+	</windowclass>
+	
+	<windowclass name="item_consumable_client">
+		<frame>charsheet</frame>
+			<placement>
+				<size>
+					<width>320</width>
+					<height>450</height>
+				</size>
+			</placement>
+			<sizelimits>
+				<dynamic />
+				<minimum>
+					<width>320</width>
+					<height>450</height>
+				</minimum>
+			</sizelimits>
+			<minimize>minimized_item</minimize>
+			<sharable>
+				<shareas>item_consumable_client</shareas>
+			</sharable>
+			<tooltip>
+				<field>name</field>
+			</tooltip>
+			<nodelete/>
+			<sheetdata>
+			<!-- NAME -->
+				<genericcontrol name="nameframe">
+					<bounds>10,20,-20,35</bounds>
+					<frame>
+						<name>sheetgroup</name>
+					</frame>
+				</genericcontrol>
+				<windowopencontrol>
+					<anchored>
+						<to>nameframe</to>
+						<position>insidetopleft</position>
+						<offset>13,8</offset>
+						<size>
+							<width>20</width>
+							<height>20</height>
+						</size>
+					</anchored>
+					<icon>
+						<normal>button_openwindow</normal>
+						<pressed>button_emptytarget</pressed>
+					</icon>
+					<class>item_consumable_client</class>
+					<description>
+						<field>name</field>
+					</description>
+				</windowopencontrol>
+				<stringfieldX name="name">
+					<anchored>
+						<top>
+							<parent>nameframe</parent>
+							<anchor>top</anchor>
+							<offset>9</offset>
+						</top>
+						<left>
+							<parent>nameframe</parent>
+							<anchor>left</anchor>
+							<offset>35</offset>
+						</left>
+						<right>
+							<parent>nameframe</parent>
+							<anchor>right</anchor>
+							<offset>-15</offset>
+						</right>
+					</anchored>
+					<empty>&#171; New Consumable &#187;</empty>
+					<font>sheettext</font>
+				</stringfieldX>
+
+				<!-- Frame -->    
+				<genericcontrol name="contentframe">
+					<bounds>10,54,-25,-13</bounds>
+					<frame>
+						<name>sheetgroup</name>
+						<offset>0,1,0,0</offset>
+					</frame>
+				</genericcontrol>
+
+
+				<!-- Subwindows -->
+				<subwindow name="main">
+					<bounds>22,64,-35,-23</bounds>
+					<class>item_consumable_main</class>
+					<activate />
+				</subwindow>
+				<scrollbar name="main_scroller">
+					<anchored>
+						<to>main</to>
+						<position>right</position>
+						<offset>-5,-4</offset>
+					</anchored>
+					<target>main</target>
+				</scrollbar>
+
+				<!--<subwindow name="magic">
+					<bounds>22,64,-35,-23</bounds>
+					<class>item_magic</class>
+				</subwindow>
+				<scrollbar name="magic_scroller">
+					<anchored>
+						<to>magic</to>
+						<position>right</position>
+						<offset>-5,-4</offset>
+					</anchored>
+					<target>magic</target>
+				</scrollbar>
+				
+				<subwindow name="spells">
+					<bounds>22,64,-35,-23</bounds>
+					<class>item_spells</class>
+				</subwindow>
+				<scrollbar name="spell_scroller">
+					<anchored>
+						<to>spells</to>
+						<position>right</position>
+						<offset>-5,-4</offset>
+					</anchored>
+					<target>spells</target>
+				</scrollbar>
+
+			<!-- Tabs 
+			<tabcontrol name="tabs">
+				<bounds>-22,50,18,230</bounds>
+				<tab>
+					<icon>tab_main</icon>
+					<subwindow>main</subwindow>
+					<scroller>main_scroller</scroller>
+				</tab>
+				<tab>
+					<icon>tab_magic</icon>
+					<subwindow>magic</subwindow>
+					<scroller>magic_scroller</scroller>
+				</tab>
+				<tab>
+					<icon>tab_spells</icon>
+					<subwindow>spells</subwindow>
+					<scroller>spell_scroller</scroller>
+				</tab>
+				<activate>1</activate>
+				<script>
+					local identifynode = nil;
+
+					function capture()
+						identifynode = getDatabaseNode().createChild("isidentified","number");
+						if identifynode then
+							getDatabaseNode().onChildUpdate = function () end;
+							identifynode.onUpdate = identifyUpdated;
+							identifyUpdated();
+						end
+					end
+
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						getDatabaseNode().onChildUpdate = capture;
+						capture();
+					end
+
+					function identifyUpdated()
+						if identifynode.getValue() ~= 0 then
+							nonidentified.setVisible(false);
+							identified.setVisible(true);
+							setVisible(true);
+						else
+							nonidentified.setVisible(true);
+							identified.setVisible(false);
+							setVisible(false);
+						end
+					end
+				</script>
+			</tabcontrol>-->
+		
+			<close_adventure />
+		</sheetdata>
+	</windowclass>
+
+	<windowclass name="item_consumable_main">
+		<sheetdata>
+			<stringcontrolX name="type_label">
+				<anchored>
+					<left>
+						<anchor>left</anchor>
+						<offset>7</offset>
+					</left>
+					<top>
+						<anchor>top</anchor>
+						<offset>15</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheetlabelsmallbold</font>
+				<static>Type:</static>
+			</stringcontrolX>
+			<multitext name="type">
+				<anchored>
+					<left>
+						<parent>type_label</parent>
+						<anchor>right</anchor>
+						<offset>5</offset>
+					</left>
+					<top>
+						<parent>type_label</parent>
+						<anchor>top</anchor>
+						<offset>-3</offset>
+					</top>
+					<size>
+						<width>150</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<statelabels>
+					<state>Herb</state>
+					<state>Poison</state>
+					<state>Potion</state>
+					<state>Rune</state>
+					<state>Crystal Rune</state>
+				</statelabels>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						update();
+					end
+					
+					function onValueChanged()
+						update();
+					end
+					
+					function update()
+						if getState() &lt; 3 then
+							window.herb_form.setVisible(true);
+							window.herb_form_label.setVisible(true);
+							window.herb_prep.setVisible(true);
+							window.herb_prep_label.setVisible(true);
+							window.herb_time.setVisible(true);
+							window.herb_time_label.setVisible(true);
+							window.herb_difficulty.setVisible(true);
+							window.herb_difficulty_label.setVisible(true);
+							window.herb_climate.setVisible(true);
+							window.herb_climate_label.setVisible(true);
+							window.herb_locale.setVisible(true);
+							window.herb_locale_label.setVisible(true);
+							if getState() == 2 then
+								window.poison_rr.setVisible(true);
+								window.poison_rr_label.setVisible(true);
+								window.poison_bonus.setVisible(true);
+								window.poison_bonus_label.setVisible(true);
+							else
+								window.poison_rr.setVisible(false);
+								window.poison_rr_label.setVisible(false);
+								window.poison_bonus.setVisible(false);
+								window.poison_bonus_label.setVisible(false);
+							end
+							window.rune_spells_label.setVisible(false);
+							window.rune_spells.setVisible(false);
+							window.crystal_rune_spells.setVisible(false);
+							window.crystal_rune_label.setVisible(false);
+							window.crystal_rune_pp_current.setVisible(false);
+							window.crystal_rune_pp_current_label.setVisible(false);
+							window.crystal_rune_pp.setVisible(false);
+							window.crystal_rune_pp_label.setVisible(false);
+							window.crystal_rune_recharges.setVisible(false);
+							window.crystal_rune_recharges_label.setVisible(false);
+						elseif getState() == 3 then
+							window.herb_form.setVisible(false);
+							window.herb_form_label.setVisible(false);
+							window.herb_prep.setVisible(false);
+							window.herb_prep_label.setVisible(false);
+							window.herb_time.setVisible(false);
+							window.herb_time_label.setVisible(false);
+							window.herb_difficulty.setVisible(false);
+							window.herb_difficulty_label.setVisible(false);
+							window.herb_climate.setVisible(false);
+							window.herb_climate_label.setVisible(false);
+							window.herb_locale.setVisible(false);
+							window.herb_locale_label.setVisible(false);
+							window.poison_rr.setVisible(false);
+							window.poison_rr_label.setVisible(false);
+							window.poison_bonus.setVisible(false);
+							window.poison_bonus_label.setVisible(false);
+							window.rune_spells_label.setVisible(false);
+							window.rune_spells.setVisible(false);
+							window.crystal_rune_spells.setVisible(false);
+							window.crystal_rune_label.setVisible(false);
+							window.crystal_rune_pp_current.setVisible(false);
+							window.crystal_rune_pp_current_label.setVisible(false);
+							window.crystal_rune_pp.setVisible(false);
+							window.crystal_rune_pp_label.setVisible(false);
+							window.crystal_rune_recharges.setVisible(false);
+							window.crystal_rune_recharges_label.setVisible(false);
+						else
+							if getState() == 5 then
+								window.rune_spells.setVisible(false);
+								window.crystal_rune_spells.setVisible(true);
+								window.crystal_rune_label.setVisible(true);
+								window.crystal_rune_pp_current.setVisible(true);
+								window.crystal_rune_pp_current_label.setVisible(true);
+								window.crystal_rune_pp.setVisible(true);
+								window.crystal_rune_pp_label.setVisible(true);
+								window.crystal_rune_recharges.setVisible(true);
+								window.crystal_rune_recharges_label.setVisible(true);
+							else
+								window.rune_spells.setVisible(true);
+								window.crystal_rune_spells.setVisible(false);
+								window.crystal_rune_label.setVisible(false);
+								window.crystal_rune_pp_current.setVisible(false);
+								window.crystal_rune_pp_current_label.setVisible(false);
+								window.crystal_rune_pp.setVisible(false);
+								window.crystal_rune_pp_label.setVisible(false);
+								window.crystal_rune_recharges.setVisible(false);
+								window.crystal_rune_recharges_label.setVisible(false);
+							end
+							window.herb_form.setVisible(false);
+							window.herb_form_label.setVisible(false);
+							window.herb_prep.setVisible(false);
+							window.herb_prep_label.setVisible(false);
+							window.herb_time.setVisible(false);
+							window.herb_time_label.setVisible(false);
+							window.herb_difficulty.setVisible(false);
+							window.herb_difficulty_label.setVisible(false);
+							window.herb_climate.setVisible(false);
+							window.herb_climate_label.setVisible(false);
+							window.herb_locale.setVisible(false);
+							window.herb_locale_label.setVisible(false);
+							window.poison_rr.setVisible(false);
+							window.poison_rr_label.setVisible(false);
+							window.poison_bonus.setVisible(false);
+							window.poison_bonus_label.setVisible(false);
+							window.rune_spells_label.setVisible(true);
+						end
+					end
+				</script>
+			</multitext>
+			
+			<stringcontrolX name="general_label">
+				<anchored>
+					<left>
+						<anchor>left</anchor>
+						<offset>7</offset>
+					</left>
+					<right>
+						<anchor>right</anchor>
+						<offset>-7</offset>
+					</right>
+					<top>
+						<parent>type_label</parent>
+						<anchor>bottom</anchor>
+						<offset>15</offset>
+					</top>
+				</anchored>
+				<font>sheetlabelsmallbold</font>
+				<static>Stats</static>
+			</stringcontrolX>
+			
+			<numberfieldX name="item_weight">
+				<anchored>
+					<left>
+						<parent>general_label</parent>
+						<anchor>left</anchor>
+						<offset>40</offset>
+					</left>
+					<top>
+						<parent>general_label</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						setVisible(true);
+						setEnabled(true);
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>item_weight</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Weight</static>
+			</stringcontrolX>
+			<numberfieldX name="item_length">
+				<anchored>
+					<left>
+						<parent>item_weight</parent>
+						<anchor>right</anchor>
+						<offset>15</offset>
+					</left>
+					<top>
+						<parent>item_weight</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						setVisible(true);
+						setEnabled(true);
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>item_length</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Length</static>
+			</stringcontrolX>
+			<numberfieldX name="item_value">
+				<anchored>
+					<left>
+						<parent>item_length</parent>
+						<anchor>right</anchor>
+						<offset>15</offset>
+					</left>
+					<top>
+						<parent>item_weight</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>item_value</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Value</static>
+			</stringcontrolX>
+
+			<stringfieldX name="nonidentified">
+				<anchored>
+					<left>
+						<anchor>left</anchor>
+						<offset>7</offset>
+					</left>
+					<right>
+						<anchor>right</anchor>
+						<offset>-7</offset>
+					</right>
+					<top>
+						<parent>item_weight</parent>
+						<anchor>bottom</anchor>
+						<offset>25</offset>
+					</top>
+				</anchored>
+				<frame>
+					<name>modifier</name>
+					<offset>7,5,7,5</offset>
+				</frame>
+				<font>sheettextsmall</font>
+				<multilinespacing>15</multilinespacing>
+			</stringfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>nonidentified</to>
+					<position>aboveleft</position>
+					<offset>0,1</offset>
+				</anchored>
+				<font>sheetlabelsmall</font>
+				<static>At a glance</static>
+			</stringcontrolX>
+
+		  <!-- Identified -->  
+			<stringfieldX name="identified">
+				<anchored>
+					<left>
+						<anchor>left</anchor>
+						<offset>7</offset>
+					</left>
+					<right>
+						<anchor>right</anchor>
+						<offset>-7</offset>
+					</right>
+					<top>
+						<parent>nonidentified</parent>
+						<anchor>bottom</anchor>
+						<offset>19</offset>
+					</top>
+				</anchored>
+				<frame>
+					<name>modifier</name>
+					<offset>7,5,7,5</offset>
+				</frame>
+				<font>sheettextsmall</font>
+				<multilinespacing>15</multilinespacing>
+			</stringfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>identified</to>
+					<position>aboveleft</position>
+					<offset>0,1</offset>
+				</anchored>
+				<font>sheetlabelsmall</font>
+				<static>When identified</static>
+			</stringcontrolX>
+			<checkbox name="isidentified">
+				<anchored>
+					<to>identified</to>
+					<position>aboveright</position>
+					<offset>0,1</offset>
+					<size>
+						<width>12</width>
+						<height>12</height>
+					</size>
+				</anchored>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+					end
+				</script>
+			</checkbox>
+			
+			<!-- Herbs and Poisons -->
+			<stringfieldX name="herb_form">
+				<anchored>
+					<left>
+						<anchor>left</anchor>
+						<offset>7</offset>
+					</left>
+					<top>
+						<parent>identified</parent>
+						<anchor>bottom</anchor>
+						<offset>15</offset>
+					</top>
+					<size>
+						<width>50</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+			</stringfieldX>
+			<stringcontrolX name="herb_form_label">
+				<anchored>
+					<to>herb_form</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Form</static>
+			</stringcontrolX>
+			<stringfieldX name="herb_prep">
+				<anchored>
+					<left>
+						<parent>herb_form</parent>
+						<anchor>right</anchor>
+						<offset>5</offset>
+					</left>
+					<top>
+						<parent>identified</parent>
+						<anchor>bottom</anchor>
+						<offset>15</offset>
+					</top>
+					<size>
+						<width>50</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+			</stringfieldX>
+			<stringcontrolX name="herb_prep_label">
+				<anchored>
+					<to>herb_prep</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Preparation</static>
+			</stringcontrolX>
+			<stringfieldX name="herb_time">
+				<anchored>
+					<left>
+						<parent>herb_prep</parent>
+						<anchor>right</anchor>
+						<offset>5</offset>
+					</left>
+					<top>
+						<parent>identified</parent>
+						<anchor>bottom</anchor>
+						<offset>15</offset>
+					</top>
+					<size>
+						<width>50</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+			</stringfieldX>
+			<stringcontrolX name="herb_time_label">
+				<anchored>
+					<to>herb_time</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Activation</static>
+			</stringcontrolX>
+			<multitext name="herb_difficulty">
+				<anchored>
+					<left>
+						<anchor>left</anchor>
+						<offset>7</offset>
+					</left>
+					<top>
+						<parent>herb_form</parent>
+						<anchor>bottom</anchor>
+						<offset>15</offset>
+					</top>
+					<size>
+						<width>65</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<statelabels>
+					<state>Routine</state>
+					<state>Easy</state>
+					<state>Light</state>
+					<state>Medium</state>
+					<state>Hard</state>
+					<state>Very Hard</state>
+					<state>Ext. Hard</state>
+					<state>Sheer Folly</state>
+					<state>Absurd</state>
+				</statelabels>
+			</multitext>
+			<stringcontrolX name="herb_difficulty_label">
+				<anchored>
+					<to>herb_difficulty</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Harvest</static>
+			</stringcontrolX>
+			<multitext name="herb_climate">
+				<anchored>
+					<left>
+						<parent>herb_difficulty</parent>
+						<anchor>right</anchor>
+						<offset>3</offset>
+					</left>
+					<top>
+						<parent>herb_form</parent>
+						<anchor>bottom</anchor>
+						<offset>15</offset>
+					</top>
+					<size>
+						<width>95</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<statelabels>
+					<state>Frigid</state>
+					<state>Cold</state>
+					<state>Cool Temperate</state>
+					<state>Mild Temperate</state>
+					<state>Semi-arid</state>
+					<state>Arid</state>
+					<state>Hot &amp; Humid</state>
+				</statelabels>
+			</multitext>
+			<stringcontrolX name="herb_climate_label">
+				<anchored>
+					<to>herb_climate</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Climate</static>
+			</stringcontrolX>
+			<multitext name="herb_locale">
+				<anchored>
+					<left>
+						<parent>herb_climate</parent>
+						<anchor>right</anchor>
+						<offset>3</offset>
+					</left>
+					<top>
+						<parent>herb_form</parent>
+						<anchor>bottom</anchor>
+						<offset>15</offset>
+					</top>
+					<size>
+						<width>90</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<statelabels>
+					<state>Mountains</state>
+					<state>Forests</state>
+					<state>Plains</state>
+					<state>Fresh water</state>
+					<state>Ocean coast</state>
+					<state>Underground</state>
+					<state>Desert/Waste</state>
+					<state>Volcano</state>
+					<state>Swamp/Marsh</state>
+					<state>Jungle</state>
+				</statelabels>
+			</multitext>
+			<stringcontrolX name="herb_locale_label">
+				<anchored>
+					<to>herb_locale</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Locale</static>
+			</stringcontrolX>
+			<numberfieldX name="poison_rr">
+				<anchored>
+					<left>
+						<parent>herb_time</parent>
+						<anchor>right</anchor>
+						<offset>5</offset>
+					</left>
+					<top>
+						<parent>identified</parent>
+						<anchor>bottom</anchor>
+						<offset>15</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+			</numberfieldX>
+			<stringcontrolX name="poison_rr_label">
+				<anchored>
+					<to>poison_rr</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Poi. RR</static>
+			</stringcontrolX>
+			<numberfieldX name="poison_bonus">
+				<anchored>
+					<left>
+						<parent>poison_rr</parent>
+						<anchor>right</anchor>
+						<offset>5</offset>
+					</left>
+					<top>
+						<parent>identified</parent>
+						<anchor>bottom</anchor>
+						<offset>15</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+			</numberfieldX>
+			<stringcontrolX name="poison_bonus_label">
+				<anchored>
+					<to>poison_bonus</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Poi. Bon.</static>
+			</stringcontrolX>
+			
+			<!-- Runes -->
+			<stringcontrolX name="rune_spells_label">
+				<anchored>
+					<left>
+						<anchor>left</anchor>
+						<offset>7</offset>
+					</left>
+					<top>
+						<parent>identified</parent>
+						<anchor>bottom</anchor>
+						<offset>15</offset>
+					</top>
+					<size>
+						<width>200</width>
+						<height>13</height>
+					</size>
+				</anchored>
+				<font>sheetlabelsmallbold</font>
+				<static>Spells:</static>
+			</stringcontrolX>
+		
+			<sortablelist name="rune_spells">
+				<anchored>
+					<left>
+						<anchor>left</anchor>
+						<offset>7</offset>
+					</left>
+					<right>
+						<anchor>right</anchor>
+						<offset>-20</offset>
+					</right>
+					<top>
+						<parent>rune_spells_label</parent>
+						<anchor>bottom</anchor>
+						<offset>7</offset>
+					</top>
+					<bottom>
+						<parent>rune_spells_label</parent>
+						<anchor>bottom</anchor>
+						<offset>95</offset>
+					</bottom>
+				</anchored>
+				<datasource>.spells</datasource>
+				<class>item_skill_bonus_listitem</class>
+				<!--script file="campaign/scripts/campaign_items_skill_bonuslist.lua" /-->
+			</sortablelist>
+			<scrollbar>
+				<anchored>
+					<to>rune_spells</to>
+					<position>right</position>
+					<offset>1,-4</offset>
+				</anchored>
+			<target>rune_spells</target>
+			</scrollbar>
+			
+			<sortablelist name="crystal_rune_spells">
+				<anchored>
+					<left>
+						<anchor>left</anchor>
+						<offset>7</offset>
+					</left>
+					<right>
+						<anchor>right</anchor>
+						<offset>-20</offset>
+					</right>
+					<top>
+						<parent>rune_spells_label</parent>
+						<anchor>bottom</anchor>
+						<offset>7</offset>
+					</top>
+					<bottom>
+						<parent>rune_spells_label</parent>
+						<anchor>bottom</anchor>
+						<offset>95</offset>
+					</bottom>
+				</anchored>
+				<datasource>.spells</datasource>
+				<class>item_skill_bonus_listitem</class>
+				<!--script file="campaign/scripts/campaign_items_skill_bonuslist.lua" /-->
+			</sortablelist>
+			<scrollbar>
+				<anchored>
+					<to>crystal_rune_spells</to>
+					<position>right</position>
+					<offset>1,-4</offset>
+				</anchored>
+			<target>crystal_rune_spells</target>
+			</scrollbar>
+			
+			<stringcontrolX name="crystal_rune_label">
+				<anchored>
+					<left>
+						<anchor>left</anchor>
+						<offset>7</offset>
+					</left>
+					<top>
+						<parent>crystal_rune_spells</parent>
+						<anchor>bottom</anchor>
+						<offset>15</offset>
+					</top>
+					<size>
+						<width>150</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheetlabelsmallbold</font>
+				<static>Crystal Runes</static>				
+			</stringcontrolX>
+			<numberfieldX name="crystal_rune_pp_current">
+				<anchored>
+					<left>
+						<anchor>left</anchor>
+						<offset>7</offset>
+					</left>
+					<top>
+						<parent>crystal_rune_label</parent>
+						<anchor>bottom</anchor>
+						<offset>15</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+			</numberfieldX>
+			<stringcontrolX name="crystal_rune_pp_current_label">
+				<anchored>
+					<to>crystal_rune_pp_current</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Curr. PP</static>
+			</stringcontrolX>
+			<numberfieldX name="crystal_rune_pp">
+				<anchored>
+					<left>
+						<parent>crystal_rune_pp_current</parent>
+						<anchor>right</anchor>
+						<offset>3</offset>
+					</left>
+					<top>
+						<parent>crystal_rune_label</parent>
+						<anchor>bottom</anchor>
+						<offset>15</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+			</numberfieldX>
+			<stringcontrolX name="crystal_rune_pp_label">
+				<anchored>
+					<to>crystal_rune_pp</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Max. PP</static>
+			</stringcontrolX>
+			<numberfieldX name="crystal_rune_recharges">
+				<anchored>
+					<left>
+						<parent>crystal_rune_pp</parent>
+						<anchor>right</anchor>
+						<offset>3</offset>
+					</left>
+					<top>
+						<parent>crystal_rune_label</parent>
+						<anchor>bottom</anchor>
+						<offset>15</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+			</numberfieldX>
+			<stringcontrolX name="crystal_rune_recharges_label">
+				<anchored>
+					<to>crystal_rune_recharges</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Recharge</static>
+			</stringcontrolX>
+			
+		</sheetdata>
+	</windowclass>
+</root>

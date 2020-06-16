@@ -1,0 +1,413 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<root version="2.0">
+  <windowclass name="charsheet_skills">
+    <placement>
+      <size>
+        <width>252</width>
+        <height>611</height>
+      </size>
+    </placement>
+    <nodelete />
+    <sheetdata>
+      <!-- Hidden fields -->
+      <stringfield name="profession">
+        <bounds>0,0,0,0</bounds>
+        <invisible/>
+      </stringfield>
+
+      <!-- SKILLS -->
+      <genericcontrol name="skillframe">
+        <bounds>15,20,480,535</bounds>
+        <frame>
+          <name>sheetgroup</name>
+        </frame>
+      </genericcontrol>
+
+      <!-- Headings -->
+      <stringcontrolX>
+        <anchored>
+          <to>skillframe</to>
+          <position>insidetopleft</position>
+          <offset>17,10</offset>
+        </anchored>
+        <font>sheetlabel</font>
+        <static>Skills</static>
+        <tooltip>
+          <text>Click to sort by Skill Name</text>
+          <anchor>control</anchor>
+          <align>topleft</align>
+          <position >
+            <x>30</x>
+            <y>-29</y>
+          </position>
+        </tooltip>
+        <script>
+          function onClickDown(button, x, y)
+            return true;
+          end
+          
+          function onClickRelease(button, x, y)
+            window.skills.sortBy("name");
+            return true;
+          end        
+        </script>
+      </stringcontrolX>
+      <stringcontrolX name="costlabel">
+        <anchored>
+          <to>skillframe</to>
+          <position>insidetopleft</position>
+          <offset>200,12</offset>
+          <size>
+            <width>20</width>
+          </size>
+        </anchored>
+        <center/>
+        <font>sheetlabelsmall</font>
+        <static>Cost</static>
+        <script>
+          function onClickDown(button, x, y)
+            return true;
+          end
+          
+          function onClickRelease(button, x, y)
+            window.skills.sortBy("cost");
+            return true;
+          end        
+        </script>
+      </stringcontrolX>
+      <stringcontrolX name="ranklabel">
+        <anchored>
+          <to>costlabel</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>20</width>
+          </size>
+        </anchored>
+        <center/>
+        <font>sheetlabelsmall</font>
+        <static>Rnk</static>
+        <script>
+          function onClickDown(button, x, y)
+            return true;
+          end
+          
+          function onClickRelease(button, x, y)
+            window.skills.sortBy("rank");
+            return true;
+          end        
+        </script>
+      </stringcontrolX>
+      <stringcontrolX name="rankbonuslabel">
+        <anchored>
+          <to>ranklabel</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>25</width>
+          </size>
+        </anchored>
+        <center/>
+        <font>sheetlabelsmall</font>
+        <static>RkBn</static>
+        <script>
+          function onClickDown(button, x, y)
+            return true;
+          end
+          
+          function onClickRelease(button, x, y)
+            window.skills.sortBy("rankbonus");
+            return true;
+          end        
+        </script>
+      </stringcontrolX>
+      <stringcontrolX name="statbonuslabel">
+        <anchored>
+          <to>rankbonuslabel</to>
+          <position>right</position>
+          <offset>2</offset>
+          <size>
+            <width>25</width>
+          </size>
+        </anchored>
+        <center/>
+        <font>sheetlabelsmall</font>
+        <static>Stat</static>
+        <script>
+          function onClickDown(button, x, y)
+            return true;
+          end
+          
+          function onClickRelease(button, x, y)
+            window.skills.sortBy("statbonus");
+            return true;
+          end        
+        </script>
+      </stringcontrolX>
+      <stringcontrolX name="professionlabel">
+        <anchored>
+          <to>statbonuslabel</to>
+          <position>right</position>
+          <offset>2</offset>
+          <size>
+            <width>23</width>
+          </size>
+        </anchored>
+        <center/>
+        <font>sheetlabelsmall</font>
+        <static>Prof</static>
+        <script>
+          function onClickDown(button, x, y)
+            return true;
+          end
+          
+          function onClickRelease(button, x, y)
+            window.skills.sortBy("profession");
+            return true;
+          end        
+        </script>
+      </stringcontrolX>
+      <stringcontrolX name="itemlabel">
+        <anchored>
+          <to>professionlabel</to>
+          <position>right</position>
+          <offset>2</offset>
+          <size>
+            <width>23</width>
+          </size>
+        </anchored>
+        <center/>
+        <font>sheetlabelsmall</font>
+        <static>Item</static>
+        <script>
+          function onClickDown(button, x, y)
+            return true;
+          end
+          
+          function onClickRelease(button, x, y)
+            window.skills.sortBy("item");
+            return true;
+          end        
+        </script>
+      </stringcontrolX>
+      <stringcontrolX name="speciallabel">
+        <anchored>
+          <to>itemlabel</to>
+          <position>right</position>
+          <offset>2</offset>
+          <size>
+            <width>23</width>
+          </size>
+        </anchored>
+        <center/>
+        <font>sheetlabelsmall</font>
+        <static>Spec</static>
+        <script>
+          function onClickDown(button, x, y)
+            return true;
+          end
+          
+          function onClickRelease(button, x, y)
+            window.skills.sortBy("special");
+            return true;
+          end        
+        </script>
+      </stringcontrolX>
+      <stringcontrolX name="misclabel">
+        <anchored>
+          <to>speciallabel</to>
+          <position>right</position>
+          <offset>2</offset>
+          <size>
+            <width>23</width>
+          </size>
+        </anchored>
+        <center/>
+        <font>sheetlabelsmall</font>
+        <static>Misc</static>
+        <script>
+          function onClickDown(button, x, y)
+            return true;
+          end
+          
+          function onClickRelease(button, x, y)
+            window.skills.sortBy("misc");
+            return true;
+          end        
+        </script>
+      </stringcontrolX>
+      <stringcontrolX name="totallabel">
+        <anchored>
+          <to>misclabel</to>
+          <position>right</position>
+          <offset>2</offset>
+          <size>
+            <width>28</width>
+          </size>
+        </anchored>
+        <center/>
+        <font>sheetlabelsmall</font>
+        <static>Total</static>
+        <script>
+          function onClickDown(button, x, y)
+            return true;
+          end
+          
+          function onClickRelease(button, x, y)
+            window.skills.sortBy("total");
+            return true;
+          end        
+        </script>
+      </stringcontrolX>
+
+      <!-- Skill list -->
+      <sortablelist name="skills">
+        <anchored>
+          <to>skillframe</to>
+          <position>over</position>
+          <offset>-15,-23</offset>
+          <top>
+            <parent>skillframe</parent>
+            <anchor>top</anchor>
+            <offset>25</offset>
+          </top>
+        </anchored>
+        <datasource>.skills</datasource>
+        <class>charsheet_skillwindow</class>
+        <acceptdrop>
+          <class>skill</class>
+          <field>name</field>
+          <field>fullname</field>
+		  <field>baseskill</field>
+		  <field>group</field>
+		  <field>specialization</field>
+          <field>stats</field>
+          <field>armorfactor</field>
+          <field>type</field>
+          <field>description</field>
+          <field>notes</field>
+          <field>locked</field>
+        </acceptdrop>
+        <defaultsort>
+          <fieldname>name</fieldname>
+        </defaultsort>
+        <sortfield>
+          <fieldname>name</fieldname>
+        </sortfield>
+        <sortfield>
+          <fieldname>cost</fieldname>
+        </sortfield>
+        <sortfield>
+          <fieldname>rank</fieldname>
+        </sortfield>
+        <sortfield>
+          <fieldname>rankbonus</fieldname>
+        </sortfield>
+        <sortfield>
+          <fieldname>statbonus</fieldname>
+        </sortfield>
+        <sortfield>
+          <fieldname>profession</fieldname>
+        </sortfield>
+        <sortfield>
+          <fieldname>item</fieldname>
+        </sortfield>
+        <sortfield>
+          <fieldname>special</fieldname>
+        </sortfield>
+        <sortfield>
+          <fieldname>misc</fieldname>
+        </sortfield>
+        <sortfield>
+          <fieldname>total</fieldname>
+        </sortfield>
+        <script file="charsheet/scripts/charsheet_skilllist.lua" />
+      </sortablelist>
+ 		<scrollbar>
+			<anchored>
+				<to>skills</to>
+				<position>right</position>
+				<offset>1,-4</offset>
+			</anchored>
+			<target>skills</target>
+		</scrollbar>
+		<buttoncontrol name="button_unlockall">
+			<anchored>
+				<to>skillframe</to>
+				<position>belowleft</position>
+				<offset>10,0</offset>
+				<size>
+					<width>44</width>
+					<height>42</height>
+				</size>
+			</anchored>
+			<icon>
+				<normal>button_skilldev_unlockall</normal>
+				<pressed>button_skilldev_unlockall_down</pressed>
+			</icon>
+			<tooltip>
+				<text>Unlock All Skills</text>
+			</tooltip>
+			<script>
+				function onButtonPress()
+					for i, win in ipairs(window.skills.getWindows()) do
+						if win.getClass() == "charsheet_skillwindow" then
+							win.locked.setValue(0);
+						end
+					end
+				end
+			</script>
+		</buttoncontrol>
+		<buttoncontrol name="button_lockall">
+			<anchored>
+				<to>button_unlockall</to>
+				<position>right</position>
+				<offset>10,0</offset>
+				<size>
+					<width>44</width>
+				</size>
+			</anchored>
+			<icon>
+				<normal>button_skilldev_lockall</normal>
+				<pressed>button_skilldev_lockall_down</pressed>
+			</icon>
+			<tooltip>
+				<text>Lock All Skills</text>
+			</tooltip>
+			<script>
+				function onButtonPress()
+					for i, win in ipairs(window.skills.getWindows()) do
+						if win.getClass() == "charsheet_skillwindow" then
+							win.locked.setValue(1);
+						end
+					end
+				end
+			</script>
+		</buttoncontrol>
+		<buttoncontrol name="button_skilldev_openwindow">
+        <anchored>
+          <to>skillframe</to>
+		  <position>belowright</position>
+  		  <offset>10,0</offset>
+          <size>
+            <width>44</width>
+          </size>
+        </anchored>
+        <icon>
+          <normal>button_skilldev_addprimary</normal>
+          <pressed>button_skilldev_addprimary_down</pressed>
+        </icon>
+        <tooltip>
+          <text>Add all skills</text>
+        </tooltip>
+        <script>
+          function onButtonPress()
+            Debug.chat('TODO: code to add skills from modules');
+          end
+        </script>
+      </buttoncontrol>
+		
+
+    </sheetdata>
+  </windowclass>
+</root>

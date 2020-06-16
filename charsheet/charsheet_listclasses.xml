@@ -1,0 +1,498 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<root version="2.0">
+ 
+  <windowclass name="charsheet_mawindow">
+    <!--
+          Martial arts type:
+          1 = SW/TH  Sweeps/Throws
+          2 = STR    Striking
+    -->
+    <script>
+      local stNode = nil;
+      local agNode = nil;
+      local initialised = false;
+      
+      function onInit()
+        stNode = getStatTotalNode("St");
+        if stNode then
+          stNode.onUpdate = refresh;
+        end
+        agNode = getStatTotalNode("Ag");
+        if agNode then
+          agNode.onUpdate = refresh;
+        end
+        initialised = true;
+        refresh();
+      end
+      
+      function refresh()
+        local stBonus = 0;
+        local agBonus = 0;
+        if not initialised then
+          return;
+        end
+        --[[ Fetch the current bonus values ]]
+        if stNode then
+          stBonus = stNode.getValue();
+        end
+        if agNode then
+          agBonus = agNode.getValue();
+        end
+        --[[ Set the bonus value ]]
+        if type.getState()==1 then
+          stats.setValue("Ag/Ag/St");
+          bonus.setValue(math.floor((agBonus+agBonus+stBonus)/3))
+        else
+          stats.setValue("Ag/St/St");
+          bonus.setValue(math.floor((agBonus+stBonus+stBonus)/3))
+        end
+      end
+      
+      function isEquipped()
+        return isequipped.getState();
+      end
+
+      function testDelete()
+        local win = windowlist.getPrevWindow(self);
+        if name.getValue()~="" then
+          return;
+        end
+        if #(windowlist.getWindows())==1 then
+          return;
+        end
+        if not win then
+          win = windowlist.getNextWindow(self);
+        end
+        win.name.setFocus();
+        getDatabaseNode().delete();
+      end
+      
+      function testNew()
+        local win = windowlist.getNextWindow(self);
+        if name.getValue()=="" then
+          return;
+        end
+        if not win then
+          win = windowlist.createWindow();
+        end
+        win.name.setFocus();
+      end
+
+      function getStatTotalNode(stat)
+        local n = string.len(stat);
+        stat = string.lower(stat);
+        if n~=2 then
+          return 0;
+        end
+        for key,node in pairs(windowlist.window.getDatabaseNode().getChild(".abilities").getChildren()) do
+          if string.lower(node.getChild("label").getValue()) == stat then
+            return node.getChild("total");
+          end
+        end
+        return nil;
+      end
+    </script>
+    <sizelimits>
+      <maximum>
+        <height>18</height>
+      </maximum>
+      <minimum>
+        <height>18</height>
+      </minimum>
+    </sizelimits>
+    <sheetdata>
+      <!-- Visible fields -->
+      <textlistitemvalue name="name">
+        <bounds>0,0,170,17</bounds>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+        <font>sheettextsmall</font>
+        <script>
+          function onDeleteDown()
+            window.testDelete();
+          end
+          
+          function onDeleteUp()
+            window.testDelete();
+          end
+          
+          function onEnter()
+            window.testNew();
+          end
+        </script>
+        <tabtarget>
+          <next>rank1</next>
+          <prev>rank4</prev>
+        </tabtarget>
+      </textlistitemvalue>
+      <multitext name="type">
+        <bounds>175,4,35,13</bounds>
+        <statelabels>
+          <state>Sw/Th</state>
+          <state>Strikes</state>
+        </statelabels>
+        <font>sheetlabelsmall</font>
+        <center/>
+        <script>
+          function onInit()
+            if super and super.onInit then
+              super.onInit();
+            end
+            if getState() &lt; 1 then
+              setState(1);
+            elseif getState() &gt; 2 then
+              setState(2);
+            end
+          end
+          
+          function onStateChanged()
+            window.refresh();
+          end
+        </script>
+      </multitext>
+      <stringfieldX name="stats">
+        <anchored>
+          <to>type</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>40</width>
+          </size>
+        </anchored>
+        <font>sheetlabelsmall</font>
+        <center/>
+        <readonly/>
+      </stringfieldX>
+      <numberfieldX name="bonus">
+        <anchored>
+          <to>stats</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>30</width>
+          </size>
+        </anchored>
+        <font>sheetlabelsmall</font>
+        <readonly/>
+        <displaysign/>
+        <hideonvalue>0</hideonvalue>
+      </numberfieldX>
+      <numberfieldX name="rank1">
+        <anchored>
+          <to>bonus</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>30</width>
+          </size>
+        </anchored>
+        <displaysign/>
+        <frame>
+          <name>textline</name>
+          <offset>0,5,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,5,0,0</offset>
+        </keyeditframe>
+        <font>sheetlabelsmall</font>
+        <script>
+          function onValueChanged()
+            if getValue() &lt; 0 then
+              setInvalid();
+            else
+              setValid();
+            end
+          end
+
+          function onInit()
+            if super and super.onInit then
+              super.onInit();
+            end
+            onValueChanged();
+          end
+        </script>
+        <tabtarget>
+          <next>rank2</next>
+          <prev>name</prev>
+        </tabtarget>
+      </numberfieldX>
+      <numberfieldX name="rank2">
+        <anchored>
+          <to>rank1</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>30</width>
+          </size>
+        </anchored>
+        <displaysign/>
+        <frame>
+          <name>textline</name>
+          <offset>0,5,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,5,0,0</offset>
+        </keyeditframe>
+        <font>sheetlabelsmall</font>
+        <script>
+          function onValueChanged()
+            if getValue() &lt; 0 or getValue() &gt; window.rank1.getValue() then
+              setInvalid();
+            else
+              setValid();
+            end
+          end
+
+          function onInit()
+            if super and super.onInit then
+              super.onInit();
+            end
+            onValueChanged();
+          end
+        </script>
+        <tabtarget>
+          <next>rank3</next>
+          <prev>rank1</prev>
+        </tabtarget>
+      </numberfieldX>
+      <numberfieldX name="rank3">
+        <anchored>
+          <to>rank2</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>30</width>
+          </size>
+        </anchored>
+        <displaysign/>
+        <frame>
+          <name>textline</name>
+          <offset>0,5,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,5,0,0</offset>
+        </keyeditframe>
+        <font>sheetlabelsmall</font>
+        <script>
+          function onValueChanged()
+            if getValue() &lt; 0 or getValue() &gt; window.rank2.getValue() then
+              setInvalid();
+            else
+              setValid();
+            end
+          end
+
+          function onInit()
+            if super and super.onInit then
+              super.onInit();
+            end
+            onValueChanged();
+          end
+        </script>
+        <tabtarget>
+          <next>rank4</next>
+          <prev>rank2</prev>
+        </tabtarget>
+      </numberfieldX>
+      <numberfieldX name="rank4">
+        <anchored>
+          <to>rank3</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>30</width>
+          </size>
+        </anchored>
+        <displaysign/>
+        <frame>
+          <name>textline</name>
+          <offset>0,5,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,5,0,0</offset>
+        </keyeditframe>
+        <font>sheetlabelsmall</font>
+        <script>
+          function onValueChanged()
+            if getValue() &lt; 0 or getValue() &gt; window.rank3.getValue() then
+              setInvalid();
+            else
+              setValid();
+            end
+          end
+
+          function onInit()
+            if super and super.onInit then
+              super.onInit();
+            end
+            onValueChanged();
+          end
+        </script>
+        <tabtarget>
+          <next>name</next>
+          <prev>rank3</prev>
+        </tabtarget>
+      </numberfieldX>
+      <checkbox name="isequipped">
+        <bounds>438,4,12,12</bounds>
+        <tooltip>
+          <text>In use?</text>
+        </tooltip>
+      </checkbox>
+    </sheetdata>
+  </windowclass>
+
+  
+     <!---------------GEMS---------->
+  
+    <windowclass name="charsheet_gemwindow">
+    <sizelimits>
+      <maximum>
+        <height>18</height>
+      </maximum>
+      <minimum>
+        <height>18</height>
+      </minimum>
+    </sizelimits>
+    <sheetdata>
+	      <windowreferencecontrol name="open">
+        <bounds>0,2,14,14</bounds>
+        <icon>
+          <normal>button_openwindow</normal>
+          <pressed>button_openwindow</pressed>
+        </icon>
+        <class>gem</class>
+        <description>
+          <field>name</field>
+        </description>
+      </windowreferencecontrol>
+
+      <textlistitemvalue name="name">
+        <bounds>15,0,235,17</bounds>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+        <font>sheettextsmall</font>
+
+      </textlistitemvalue>
+
+
+    </sheetdata>
+  </windowclass>
+  
+  
+  <!------Transport--------->
+  
+  <windowclass name="charsheet_transportwindow">
+    <sizelimits>
+      <maximum>
+        <height>18</height>
+      </maximum>
+      <minimum>
+        <height>18</height>
+      </minimum>
+    </sizelimits>
+    <sheetdata>
+	      <windowreferencecontrol name="open">
+        <bounds>0,2,14,14</bounds>
+        <icon>
+          <normal>button_openwindow</normal>
+          <pressed>button_openwindow</pressed>
+        </icon>
+        <class>transport</class>
+        <description>
+          <field>name</field>
+        </description>
+      </windowreferencecontrol>
+
+      <textlistitemvalue name="name">
+        <bounds>15,0,235,17</bounds>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+        <font>sheettextsmall</font>
+
+      </textlistitemvalue>
+
+
+    </sheetdata>
+  </windowclass>
+  
+  
+  <!------Herb/POison------->
+  
+  <windowclass name="charsheet_herbwindow">
+    <sizelimits>
+      <maximum>
+        <height>18</height>
+      </maximum>
+      <minimum>
+        <height>18</height>
+      </minimum>
+    </sizelimits>
+    <sheetdata>
+	 <windowreferencecontrol name="open">
+        <bounds>0,2,14,14</bounds>
+        <icon>
+          <normal>button_openwindow</normal>
+          <pressed>button_openwindow</pressed>
+        </icon>
+        <class>herb</class>
+        <description>
+          <field>name</field>
+        </description>
+      </windowreferencecontrol>
+
+      <textlistitemvalue name="name">
+        <bounds>15,0,85,17</bounds>
+        <frame>
+          <name>textline</name>
+          <offset>0,4,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,4,0,0</offset>
+        </keyeditframe>
+        <font>sheetlabelsmall</font>
+
+      </textlistitemvalue>
+	  <textlistitemvalue name="aoe">
+        <bounds>105,0,110,17</bounds>
+        <frame>
+          <name>textline</name>
+          <offset>0,4,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,4,0,0</offset>
+        </keyeditframe>
+        <font>sheetlabelsmall</font>
+
+      </textlistitemvalue>
+
+
+    </sheetdata>
+  </windowclass>
+
+  
+</root>

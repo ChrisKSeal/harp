@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<root version="2.0">
+
+<framedef name="helmpic">
+    <bitmap file="graphics/icons/Helm.png" />
+    <decal rect="1,1,80,80" />
+  </framedef>
+  <framedef name="chestpic">
+    <bitmap file="graphics/icons/harpchest.png" />
+    <decal rect="1,1,95,150" />
+  </framedef>
+  
+  <framedef name="castbt">
+  <bitmap file="graphics/icons/cast.png" />
+  <decal rect="1,1,40,40" />
+  </framedef>
+  
+  <framedef name="ctbt">
+  <bitmap file="graphics/icons/CT.png" />
+  <decal rect="1,1,40,40" />
+  </framedef>
+  
+  <framedef name="attackbt">
+  <bitmap file="graphics/icons/indicator_sword.png" />
+  <decal rect="1,1,20,20" />
+  </framedef>
+  
+</root>

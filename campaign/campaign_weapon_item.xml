@@ -1,0 +1,1708 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<root version="2.0">
+
+	<windowclass name="item_weapon">
+		<frame>charsheet</frame>
+			<placement>
+				<size>
+					<width>320</width>
+					<height>450</height>
+				</size>
+			</placement>
+			<sizelimits>
+				<dynamic />
+				<minimum>
+					<width>320</width>
+					<height>450</height>
+				</minimum>
+			</sizelimits>
+			<minimize>minimized_item</minimize>
+			<sharable>
+				<shareas>item_weapon_client</shareas>
+			</sharable>
+			<tooltip>
+				<field>name</field>
+			</tooltip>
+			<nodelete/>
+			<sheetdata>
+			<!-- NAME -->
+				<genericcontrol name="nameframe">
+					<bounds>10,20,-20,35</bounds>
+					<frame>
+						<name>sheetgroup</name>
+					</frame>
+				</genericcontrol>
+				<windowopencontrol>
+					<anchored>
+						<to>nameframe</to>
+						<position>insidetopleft</position>
+						<offset>13,8</offset>
+						<size>
+							<width>20</width>
+							<height>20</height>
+						</size>
+					</anchored>
+					<icon>
+						<normal>button_openwindow</normal>
+						<pressed>button_emptytarget</pressed>
+					</icon>
+					<class>item_weapon</class>
+					<description>
+						<field>name</field>
+					</description>
+				</windowopencontrol>
+				<stringfieldX name="name">
+					<anchored>
+						<top>
+							<parent>nameframe</parent>
+							<anchor>top</anchor>
+							<offset>9</offset>
+						</top>
+						<left>
+							<parent>nameframe</parent>
+							<anchor>left</anchor>
+							<offset>35</offset>
+						</left>
+						<right>
+							<parent>nameframe</parent>
+							<anchor>right</anchor>
+							<offset>-15</offset>
+						</right>
+					</anchored>
+					<empty>&#171; New Weapon &#187;</empty>
+					<font>sheettext</font>
+				</stringfieldX>
+
+				<!-- Frame -->    
+				<genericcontrol name="contentframe">
+					<bounds>10,54,-25,-13</bounds>
+					<frame>
+						<name>sheetgroup</name>
+						<offset>0,1,0,0</offset>
+					</frame>
+				</genericcontrol>
+
+
+				<!-- Subwindows -->
+				<subwindow name="main">
+					<bounds>22,64,-35,-23</bounds>
+					<class>item_weapon_main</class>
+				</subwindow>
+				<scrollbar name="main_scroller">
+					<anchored>
+						<to>main</to>
+						<position>right</position>
+						<offset>-5,-4</offset>
+					</anchored>
+					<target>main</target>
+				</scrollbar>
+
+				<subwindow name="magic">
+					<bounds>22,64,-35,-23</bounds>
+					<class>item_magic</class>
+				</subwindow>
+				<scrollbar name="magic_scroller">
+					<anchored>
+						<to>magic</to>
+						<position>right</position>
+						<offset>-5,-4</offset>
+					</anchored>
+					<target>magic</target>
+				</scrollbar>
+				
+				<subwindow name="spells">
+					<bounds>22,64,-35,-23</bounds>
+					<class>item_spells</class>
+				</subwindow>
+				<scrollbar name="spell_scroller">
+					<anchored>
+						<to>spells</to>
+						<position>right</position>
+						<offset>-5,-4</offset>
+					</anchored>
+					<target>spells</target>
+				</scrollbar>
+
+			<!-- Tabs -->
+			<tabcontrol name="tabs">
+				<bounds>-22,50,18,220</bounds>
+				<tab>
+					<icon>tab_main</icon>
+					<subwindow>main</subwindow>
+					<scroller>main_scroller</scroller>
+				</tab>
+				<tab>
+					<icon>tab_magic</icon>
+					<subwindow>magic</subwindow>
+					<scroller>magic_scroller</scroller>
+				</tab>
+				<tab>
+					<icon>tab_spells</icon>
+					<subwindow>spells</subwindow>
+					<scroller>spell_scroller</scroller>
+				</tab>
+				<activate>1</activate>
+			</tabcontrol>
+		
+			<close_adventure />
+		</sheetdata>
+	</windowclass>
+	
+	<windowclass name="item_weapon_client">
+		<frame>charsheet</frame>
+			<placement>
+				<size>
+					<width>320</width>
+					<height>450</height>
+				</size>
+			</placement>
+			<sizelimits>
+				<dynamic />
+				<minimum>
+					<width>320</width>
+					<height>450</height>
+				</minimum>
+			</sizelimits>
+			<minimize>minimized_item</minimize>
+			<sharable>
+				<shareas>item_weapon_client</shareas>
+			</sharable>
+			<tooltip>
+				<field>name</field>
+			</tooltip>
+			<nodelete/>
+			<sheetdata>
+			<!-- NAME -->
+				<genericcontrol name="nameframe">
+					<bounds>10,20,-20,35</bounds>
+					<frame>
+						<name>sheetgroup</name>
+					</frame>
+				</genericcontrol>
+				<windowopencontrol>
+					<anchored>
+						<to>nameframe</to>
+						<position>insidetopleft</position>
+						<offset>13,8</offset>
+						<size>
+							<width>20</width>
+							<height>20</height>
+						</size>
+					</anchored>
+					<icon>
+						<normal>button_openwindow</normal>
+						<pressed>button_emptytarget</pressed>
+					</icon>
+					<class>item_weapon_client</class>
+					<description>
+						<field>name</field>
+					</description>
+				</windowopencontrol>
+				<stringfieldX name="name">
+					<anchored>
+						<top>
+							<parent>nameframe</parent>
+							<anchor>top</anchor>
+							<offset>9</offset>
+						</top>
+						<left>
+							<parent>nameframe</parent>
+							<anchor>left</anchor>
+							<offset>35</offset>
+						</left>
+						<right>
+							<parent>nameframe</parent>
+							<anchor>right</anchor>
+							<offset>-15</offset>
+						</right>
+					</anchored>
+					<empty>&#171; New Weapon &#187;</empty>
+					<font>sheettext</font>
+				</stringfieldX>
+
+				<!-- Frame -->    
+				<genericcontrol name="contentframe">
+					<bounds>10,54,-25,-13</bounds>
+					<frame>
+						<name>sheetgroup</name>
+						<offset>0,1,0,0</offset>
+					</frame>
+				</genericcontrol>
+
+
+				<!-- Subwindows -->
+				<subwindow name="main">
+					<bounds>22,64,-35,-23</bounds>
+					<class>item_weapon_main</class>
+				</subwindow>
+				<scrollbar name="main_scroller">
+					<anchored>
+						<to>main</to>
+						<position>right</position>
+						<offset>-5,-4</offset>
+					</anchored>
+					<target>main</target>
+				</scrollbar>
+
+				<subwindow name="magic">
+					<bounds>22,64,-35,-23</bounds>
+					<class>item_magic</class>
+				</subwindow>
+				<scrollbar name="magic_scroller">
+					<anchored>
+						<to>magic</to>
+						<position>right</position>
+						<offset>-5,-4</offset>
+					</anchored>
+					<target>magic</target>
+				</scrollbar>
+				
+				<subwindow name="spells">
+					<bounds>22,64,-35,-23</bounds>
+					<class>item_spells</class>
+				</subwindow>
+				<scrollbar name="spell_scroller">
+					<anchored>
+						<to>spells</to>
+						<position>right</position>
+						<offset>-5,-4</offset>
+					</anchored>
+					<target>spells</target>
+				</scrollbar>
+
+			<!-- Tabs -->
+			<tabcontrol name="tabs">
+				<bounds>-22,50,18,230</bounds>
+				<tab>
+					<icon>tab_main</icon>
+					<subwindow>main</subwindow>
+					<scroller>main_scroller</scroller>
+				</tab>
+				<tab>
+					<icon>tab_magic</icon>
+					<subwindow>magic</subwindow>
+					<scroller>magic_scroller</scroller>
+				</tab>
+				<tab>
+					<icon>tab_spells</icon>
+					<subwindow>spells</subwindow>
+					<scroller>spell_scroller</scroller>
+				</tab>
+				<activate>1</activate>
+				<script>
+					local identifynode = nil;
+
+					function capture()
+						identifynode = getDatabaseNode().createChild("isidentified","number");
+						if identifynode then
+							getDatabaseNode().onChildUpdate = function () end;
+							identifynode.onUpdate = identifyUpdated;
+							identifyUpdated();
+						end
+					end
+
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						getDatabaseNode().onChildUpdate = capture;
+						capture();
+					end
+
+					function identifyUpdated()
+						if identifynode.getValue() ~= 0 then
+							nonidentified.setVisible(false);
+							identified.setVisible(true);
+							setVisible(true);
+						else
+							nonidentified.setVisible(true);
+							identified.setVisible(false);
+							setVisible(false);
+						end
+					end
+				</script>
+			</tabcontrol>
+		
+			<close_adventure />
+		</sheetdata>
+	</windowclass>
+
+	<windowclass name="item_weapon_main">
+		<sheetdata>
+			<stringcontrolX name="general_label">
+				<anchored>
+					<left>
+						<anchor>left</anchor>
+						<offset>7</offset>
+					</left>
+					<right>
+						<anchor>right</anchor>
+						<offset>-7</offset>
+					</right>
+					<top>
+						<anchor>top</anchor>
+						<offset>15</offset>
+					</top>
+				</anchored>
+				<font>sheetlabelsmallbold</font>
+				<static>Stats</static>
+			</stringcontrolX>
+			
+			<numberfieldX name="item_weight">
+				<anchored>
+					<left>
+						<parent>general_label</parent>
+						<anchor>left</anchor>
+						<offset>40</offset>
+					</left>
+					<top>
+						<parent>general_label</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						setVisible(true);
+						setEnabled(true);
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>item_weight</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Weight</static>
+			</stringcontrolX>
+			<numberfieldX name="item_length">
+				<anchored>
+					<left>
+						<parent>item_weight</parent>
+						<anchor>right</anchor>
+						<offset>15</offset>
+					</left>
+					<top>
+						<parent>item_weight</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						setVisible(true);
+						setEnabled(true);
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>item_length</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Length</static>
+			</stringcontrolX>
+			<numberfieldX name="item_value">
+				<anchored>
+					<left>
+						<parent>item_length</parent>
+						<anchor>right</anchor>
+						<offset>15</offset>
+					</left>
+					<top>
+						<parent>item_weight</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>item_value</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Value</static>
+			</stringcontrolX>
+			
+			<checkbox name="multiple_attacks">
+				<anchored>
+					<left>
+						<parent>item_value</parent>
+						<anchor>right</anchor>
+						<offset>15</offset>
+					</left>
+					<top>
+						<parent>item_weight</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<tooltip>
+					<text>Multiple Attacks?</text>
+				</tooltip>
+				<script>
+				  function onInit()
+				    if super and super.onInit then
+					  super.onInit();
+					end
+					onValueChanged();
+				  end
+				  
+				  function onValueChanged()
+					  window.secondary_attack_label.setVisible(getState())
+					  window.secondary_fumble.setVisible(getState())
+					  window.secondary_fumble_label.setVisible(getState())
+					  window.secondary_point_blank.setVisible(getState())
+					  window.secondary_point_blank_label.setVisible(getState())
+					  window.secondary_point_blank_bonus.setVisible(getState())
+					  window.secondary_point_blank_bonus_label.setVisible(getState())
+					  window.secondary_range_inc.setVisible(getState())
+					  window.secondary_range_inc_label.setVisible(getState())
+					  window.secondary_reload.setVisible(getState())
+					  window.secondary_reload_label.setVisible(getState())
+					  window.secondary_attack_table.setVisible(getState())
+					  window.secondary_attack_table_label.setVisible(getState())
+					  window.secondary_size.setVisible(getState())
+					  window.secondary_size_label.setVisible(getState())
+					  window.secondary_skill.setVisible(getState())
+					  window.secondary_skill_dropdown.setVisible(getState())
+					  window.secondary_skill_label.setVisible(getState())
+					  window.secondary_category.setVisible(getState())
+					  window.secondary_category_label.setVisible(getState())
+				  end
+				</script>
+			</checkbox>
+			<stringcontrolX>
+				<anchored>
+					<to>multiple_attacks</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Mult. Att.</static>
+			</stringcontrolX>
+
+			<stringfieldX name="nonidentified">
+				<anchored>
+					<left>
+						<anchor>left</anchor>
+						<offset>7</offset>
+					</left>
+					<right>
+						<anchor>right</anchor>
+						<offset>-7</offset>
+					</right>
+					<top>
+						<parent>item_weight</parent>
+						<anchor>bottom</anchor>
+						<offset>25</offset>
+					</top>
+				</anchored>
+				<frame>
+					<name>modifier</name>
+					<offset>7,5,7,5</offset>
+				</frame>
+				<font>sheettextsmall</font>
+				<multilinespacing>15</multilinespacing>
+			</stringfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>nonidentified</to>
+					<position>aboveleft</position>
+					<offset>0,1</offset>
+				</anchored>
+				<font>sheetlabelsmall</font>
+				<static>At a glance</static>
+			</stringcontrolX>
+
+		  <!-- Identified -->  
+			<stringfieldX name="identified">
+				<anchored>
+					<left>
+						<anchor>left</anchor>
+						<offset>7</offset>
+					</left>
+					<right>
+						<anchor>right</anchor>
+						<offset>-7</offset>
+					</right>
+					<top>
+						<parent>nonidentified</parent>
+						<anchor>bottom</anchor>
+						<offset>19</offset>
+					</top>
+				</anchored>
+				<frame>
+					<name>modifier</name>
+					<offset>7,5,7,5</offset>
+				</frame>
+				<font>sheettextsmall</font>
+				<multilinespacing>15</multilinespacing>
+			</stringfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>identified</to>
+					<position>aboveleft</position>
+					<offset>0,1</offset>
+				</anchored>
+				<font>sheetlabelsmall</font>
+				<static>When identified</static>
+			</stringcontrolX>
+			<checkbox name="isidentified">
+				<anchored>
+					<to>identified</to>
+					<position>aboveright</position>
+					<offset>0,1</offset>
+					<size>
+						<width>12</width>
+						<height>12</height>
+					</size>
+				</anchored>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+					end
+				</script>
+			</checkbox>
+		
+			<stringcontrolX name="primary_attack_label">
+				<anchored>
+					<left>
+						<parent>general_label</parent>
+						<anchor>left</anchor>
+						<offset>0</offset>
+					</left>
+					<top>
+						<parent>identified</parent>
+						<anchor>bottom</anchor>
+						<offset>15</offset>
+					</top>
+					<size>
+						<width>90</width>
+						<height>13</height>
+					</size>
+				</anchored>
+				<font>sheetlabelsmallbold</font>
+				<static>Primary Attack</static>
+			</stringcontrolX>
+			<numberfieldX name="primary_fumble">
+				<anchored>
+					<left>
+						<parent>primary_attack_label</parent>
+						<anchor>left</anchor>
+						<offset>15</offset>
+					</left>
+					<top>
+						<parent>primary_attack_label</parent>
+						<anchor>bottom</anchor>
+						<offset>10</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX name="primary_fumble_label">
+				<anchored>
+					<to>primary_fumble</to>
+					<position>above</position>
+					<offset>0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Fumble</static>
+			</stringcontrolX>
+			
+			
+			<numberfieldX name="primary_point_blank">
+				<anchored>
+					<left>
+						<parent>primary_fumble</parent>
+						<anchor>right</anchor>
+						<offset>5</offset>
+					</left>
+					<top>
+						<parent>primary_fumble</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX name="primary_point_blank_label">
+				<anchored>
+					<to>primary_point_blank</to>
+					<position>above</position>
+					<offset>0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Pt. Blnk.</static>
+			</stringcontrolX>
+			
+			<numberfieldX name="primary_point_blank_bonus">
+				<anchored>
+					<left>
+						<parent>primary_point_blank</parent>
+						<anchor>right</anchor>
+						<offset>5</offset>
+					</left>
+					<top>
+						<parent>primary_fumble</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX name="primary_point_blank_bonus_label">
+				<anchored>
+					<to>primary_point_blank_bonus</to>
+					<position>above</position>
+					<offset>0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>PB. Bon.</static>
+			</stringcontrolX>
+			
+			<numberfieldX name="primary_range_inc">
+				<anchored>
+					<left>
+						<parent>primary_point_blank_bonus</parent>
+						<anchor>right</anchor>
+						<offset>5</offset>
+					</left>
+					<top>
+						<parent>primary_fumble</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX name="primary_range_inc_label">
+				<anchored>
+					<to>primary_range_inc</to>
+					<position>above</position>
+					<offset>0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Rng. Inc.</static>
+			</stringcontrolX>
+			
+			<numberfieldX name="primary_reload">
+				<anchored>
+					<left>
+						<parent>primary_range_inc</parent>
+						<anchor>right</anchor>
+						<offset>5</offset>
+					</left>
+					<top>
+						<parent>primary_fumble</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX name="primary_reload_label">
+				<anchored>
+					<to>primary_reload</to>
+					<position>above</position>
+					<offset>0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Reload</static>
+			</stringcontrolX>
+				
+			<!-- Attack table -->
+			
+			<tablefield name="primary_attack_table">
+				<anchored>
+					<left>
+						<parent>primary_attack_label</parent>
+						<anchor>left</anchor>
+						<offset>15</offset>
+					</left>
+					<top>
+						<parent>primary_fumble</parent>
+						<anchor>bottom</anchor>
+						<offset>15</offset>
+					</top>
+					<size>
+						<width>150</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<allowDrag/>
+				<empty>(none)</empty>
+				<center />
+				<frame>
+					<name>modifier</name>
+					<offset>8,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>8,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						if window.getDatabaseNode() and window.getDatabaseNode().isStatic() then
+							setAllowDrop(false);
+						else
+							setAllowDrop(true);
+						end
+					end
+				</script>
+			</tablefield>
+			<stringcontrolX name="primary_attack_table_label">
+				<anchored>
+					<to>primary_attack_table</to>
+					<position>above</position>
+					<offset>0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Attack Table</static>
+			</stringcontrolX>
+
+			<multitext name="primary_size">
+				<anchored>
+					<left>
+						<parent>primary_attack_table</parent>
+						<anchor>right</anchor>
+						<offset>5</offset>
+					</left>
+					<top>
+						<parent>primary_attack_table</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>75</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<center />
+				<frame>
+					<name>modifier</name>
+					<offset>8,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>8,4,4,4</offset>
+				</keyeditframe>
+				<font>sheettextsmall</font>
+				<script>
+				  function onInit()
+					if super and super.onInit then
+					  super.onInit();
+					end
+					if getState() &lt; 1 then
+					  setState(1);
+					elseif getState() &gt; 5 then
+					  setState(1);
+					end
+				  end
+				</script>
+				<statelabels>
+					<state>Tiny</state>
+					<state>Small</state>
+					<state>Medium</state>
+					<state>Large</state>
+					<state>Huge</state>
+				</statelabels>
+			</multitext>
+			<stringcontrolX name="primary_size_label">
+				<anchored>
+					<to>primary_size</to>
+					<position>above</position>
+					<offset>0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Size</static>
+			</stringcontrolX>
+			
+			<stringfieldX name="primary_skill">
+				<anchored>
+					<left>
+						<parent>primary_attack_label</parent>
+						<anchor>left</anchor>
+						<offset>15</offset>
+					</left>
+					<top>
+						<parent>primary_attack_table</parent>
+						<anchor>bottom</anchor>
+						<offset>15</offset>
+					</top>
+					<size>
+						<width>100</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<center />
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+					  if super and super.onInit then
+					    super.onInit();
+					  end
+					end
+				</script>
+			</stringfieldX>
+			<DropDown name="primary_skill_dropdown">
+				<target>primary_skill</target>
+				<position>0,3</position>
+				<script>
+					function onInit()
+						super.onInit();
+						local charNode = window.getDatabaseNode().getParent().getParent().getParent();
+						if charNode then
+							local skillList = Rules_PC.SkillList(charNode);
+							if #skillList &gt; 0 then
+								addItems(skillList);
+							end
+						end
+					end
+				</script>
+			</DropDown>
+			<stringcontrolX name="primary_skill_label">
+				<anchored>
+					<to>primary_skill</to>
+					<position>above</position>
+					<offset>0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Associated Skill</static>
+			</stringcontrolX>
+			
+			<multitext name="primary_category">
+				<anchored>
+					<left>
+						<parent>primary_skill</parent>
+						<anchor>right</anchor>
+						<offset>5</offset>
+					</left>
+					<top>
+						<parent>primary_attack_table</parent>
+						<anchor>bottom</anchor>
+						<offset>15</offset>
+					</top>
+					<size>
+						<width>125</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<center />
+				<script>
+				  function onInit()
+					if super and super.onInit then
+					  super.onInit();
+					end
+					if getState() &lt; 1 then
+					  setState(1);
+					elseif getState() &gt; 18 then
+					  setState(1);
+					end
+					onValueChanged();
+				  end
+				  
+				  function onValueChanged()
+				    local flg = 0;
+					if getState() &gt; 6 and getState() &lt; 13 then
+					  flg = 1;
+					elseif getState() &gt; 17 then
+					  flg = 1;
+					else
+					  flg = 0;
+					end
+					if flg == 1 then
+					  window.primary_range_inc.setVisible(true);
+					  window.primary_point_blank_bonus.setVisible(true);
+					  window.primary_point_blank.setVisible(true);
+					  window.primary_reload.setVisible(true);
+					  window.primary_range_inc_label.setVisible(true);
+					  window.primary_point_blank_bonus_label.setVisible(true);
+					  window.primary_point_blank_label.setVisible(true);
+					  window.primary_reload_label.setVisible(true);
+					else
+					  window.primary_range_inc.setVisible(false);
+					  window.primary_point_blank_bonus.setVisible(false);
+					  window.primary_point_blank.setVisible(false);
+					  window.primary_reload.setVisible(false);
+					  window.primary_range_inc_label.setVisible(false);
+					  window.primary_point_blank_bonus_label.setVisible(false);
+					  window.primary_point_blank_label.setVisible(false);
+					  window.primary_reload_label.setVisible(false);
+					end
+				  end
+				</script>
+				<statelabels>
+					<state>Axes</state>
+					<state>Long Blades</state>
+					<state>Short Blades</state>
+					<state>Thrusting Blades</state>
+					<state>Chains Plus</state>
+					<state>Clubs</state>
+					<state>Polearms Thrown</state>
+					<state>Thrown Blades</state>
+					<state>Thrown Projectiles</state>
+					<state>Bows</state>
+					<state>Crossbows</state>
+					<state>Slings</state>
+					<state>Polearms</state>
+					<state>Great Blades</state>
+					<state>Great Chains</state>
+					<state>Long Spikes</state>
+					<state>Staves</state>
+					<state>Pistols</state>
+					<state>Long Guns</state>
+				</statelabels>
+			</multitext>
+			<stringcontrolX name="primary_category_label">
+				<anchored>
+					<to>primary_category</to>
+					<position>above</position>
+					<offset>0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Category</static>
+			</stringcontrolX>
+			
+			<stringcontrolX name="secondary_attack_label">
+				<anchored>
+					<left>
+						<parent>general_label</parent>
+						<anchor>left</anchor>
+						<offset>0</offset>
+					</left>
+					<top>
+						<parent>primary_skill</parent>
+						<anchor>bottom</anchor>
+						<offset>15</offset>
+					</top>
+					<size>
+						<width>100</width>
+						<height>13</height>
+					</size>
+				</anchored>
+				<font>sheetlabelsmallbold</font>
+				<static>Secondary Attack</static>
+			</stringcontrolX>
+			<numberfieldX name="secondary_fumble">
+				<anchored>
+					<left>
+						<parent>secondary_attack_label</parent>
+						<anchor>left</anchor>
+						<offset>15</offset>
+					</left>
+					<top>
+						<parent>secondary_attack_label</parent>
+						<anchor>bottom</anchor>
+						<offset>10</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX name="secondary_fumble_label">
+				<anchored>
+					<to>secondary_fumble</to>
+					<position>above</position>
+					<offset>0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Fumble</static>
+			</stringcontrolX>
+			
+			
+			<numberfieldX name="secondary_point_blank">
+				<anchored>
+					<left>
+						<parent>secondary_fumble</parent>
+						<anchor>right</anchor>
+						<offset>5</offset>
+					</left>
+					<top>
+						<parent>secondary_fumble</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX name="secondary_point_blank_label">
+				<anchored>
+					<to>secondary_point_blank</to>
+					<position>above</position>
+					<offset>0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Pt. Blnk.</static>
+			</stringcontrolX>
+			
+			<numberfieldX name="secondary_point_blank_bonus">
+				<anchored>
+					<left>
+						<parent>secondary_point_blank</parent>
+						<anchor>right</anchor>
+						<offset>5</offset>
+					</left>
+					<top>
+						<parent>secondary_fumble</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX name="secondary_point_blank_bonus_label">
+				<anchored>
+					<to>secondary_point_blank_bonus</to>
+					<position>above</position>
+					<offset>0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>PB. Bon.</static>
+			</stringcontrolX>
+			
+			<numberfieldX name="secondary_range_inc">
+				<anchored>
+					<left>
+						<parent>secondary_point_blank_bonus</parent>
+						<anchor>right</anchor>
+						<offset>5</offset>
+					</left>
+					<top>
+						<parent>secondary_fumble</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX name="secondary_range_inc_label">
+				<anchored>
+					<to>secondary_range_inc</to>
+					<position>above</position>
+					<offset>0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Rng. Inc.</static>
+			</stringcontrolX>
+			
+			<numberfieldX name="secondary_reload">
+				<anchored>
+					<left>
+						<parent>secondary_range_inc</parent>
+						<anchor>right</anchor>
+						<offset>5</offset>
+					</left>
+					<top>
+						<parent>secondary_fumble</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX name="secondary_reload_label">
+				<anchored>
+					<to>secondary_reload</to>
+					<position>above</position>
+					<offset>0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Reload</static>
+			</stringcontrolX>
+				
+			<!-- Attack table -->
+			
+			<tablefield name="secondary_attack_table">
+				<anchored>
+					<left>
+						<parent>secondary_attack_label</parent>
+						<anchor>left</anchor>
+						<offset>15</offset>
+					</left>
+					<top>
+						<parent>secondary_fumble</parent>
+						<anchor>bottom</anchor>
+						<offset>15</offset>
+					</top>
+					<size>
+						<width>150</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<allowDrag/>
+				<empty>(none)</empty>
+				<center />
+				<frame>
+					<name>modifier</name>
+					<offset>8,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>8,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						if window.getDatabaseNode() and window.getDatabaseNode().isStatic() then
+							setAllowDrop(false);
+						else
+							setAllowDrop(true);
+						end
+					end
+				</script>
+			</tablefield>
+			<stringcontrolX name="secondary_attack_table_label">
+				<anchored>
+					<to>secondary_attack_table</to>
+					<position>above</position>
+					<offset>0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Attack Table</static>
+			</stringcontrolX>
+
+			<multitext name="secondary_size">
+				<anchored>
+					<left>
+						<parent>secondary_attack_table</parent>
+						<anchor>right</anchor>
+						<offset>5</offset>
+					</left>
+					<top>
+						<parent>secondary_attack_table</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>75</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<center />
+				<frame>
+					<name>modifier</name>
+					<offset>8,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>8,4,4,4</offset>
+				</keyeditframe>
+				<font>sheettextsmall</font>
+				<script>
+				  function onInit()
+					if super and super.onInit then
+					  super.onInit();
+					end
+					if getState() &lt; 1 then
+					  setState(1);
+					elseif getState() &gt; 5 then
+					  setState(1);
+					end
+				  end
+				</script>
+				<statelabels>
+					<state>Tiny</state>
+					<state>Small</state>
+					<state>Medium</state>
+					<state>Large</state>
+					<state>Huge</state>
+				</statelabels>
+			</multitext>
+			<stringcontrolX name="secondary_size_label">
+				<anchored>
+					<to>secondary_size</to>
+					<position>above</position>
+					<offset>0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Size</static>
+			</stringcontrolX>
+			
+			<stringfieldX name="secondary_skill">
+				<anchored>
+					<left>
+						<parent>secondary_attack_label</parent>
+						<anchor>left</anchor>
+						<offset>15</offset>
+					</left>
+					<top>
+						<parent>secondary_attack_table</parent>
+						<anchor>bottom</anchor>
+						<offset>15</offset>
+					</top>
+					<size>
+						<width>100</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<center />
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+					  if super and super.onInit then
+					    super.onInit();
+					  end
+					end
+				</script>
+			</stringfieldX>
+			<DropDown name="secondary_skill_dropdown">
+				<target>secondary_skill</target>
+				<position>0,3</position>
+				<script>
+					function onInit()
+						super.onInit();
+						local charNode = window.getDatabaseNode().getParent().getParent().getParent();
+						if charNode then
+							local skillList = Rules_PC.SkillList(charNode);
+							if #skillList &gt; 0 then
+								addItems(skillList);
+							end
+						end
+					end
+				</script>
+			</DropDown>
+			<stringcontrolX name="secondary_skill_label">
+				<anchored>
+					<to>secondary_skill</to>
+					<position>above</position>
+					<offset>0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Associated Skill</static>
+			</stringcontrolX>
+			
+			<multitext name="secondary_category">
+				<anchored>
+					<left>
+						<parent>secondary_skill</parent>
+						<anchor>right</anchor>
+						<offset>5</offset>
+					</left>
+					<top>
+						<parent>secondary_attack_table</parent>
+						<anchor>bottom</anchor>
+						<offset>15</offset>
+					</top>
+					<size>
+						<width>125</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<center />
+				<script>
+				  function onInit()
+					if super and super.onInit then
+					  super.onInit();
+					end
+					if getState() &lt; 1 then
+					  setState(1);
+					elseif getState() &gt; 18 then
+					  setState(1);
+					end
+					onValueChanged();
+				  end
+				  
+				  function onValueChanged()
+				    local flg = 0;
+					if getState() &gt; 6 and getState() &lt; 13 then
+					  flg = 1;
+					elseif getState() &gt; 17 then
+					  flg = 1;
+					else
+					  flg = 0;
+					end
+					if flg == 1 then
+					  window.secondary_range_inc.setVisible(true);
+					  window.secondary_point_blank_bonus.setVisible(true);
+					  window.secondary_point_blank.setVisible(true);
+					  window.secondary_reload.setVisible(true);
+					  window.secondary_range_inc_label.setVisible(true);
+					  window.secondary_point_blank_bonus_label.setVisible(true);
+					  window.secondary_point_blank_label.setVisible(true);
+					  window.secondary_reload_label.setVisible(true);
+					else
+					  window.secondary_range_inc.setVisible(false);
+					  window.secondary_point_blank_bonus.setVisible(false);
+					  window.secondary_point_blank.setVisible(false);
+					  window.secondary_reload.setVisible(false);
+					  window.secondary_range_inc_label.setVisible(false);
+					  window.secondary_point_blank_bonus_label.setVisible(false);
+					  window.secondary_point_blank_label.setVisible(false);
+					  window.secondary_reload_label.setVisible(false);
+					end
+				  end
+				</script>
+				<statelabels>
+					<state>Axes</state>
+					<state>Long Blades</state>
+					<state>Short Blades</state>
+					<state>Thrusting Blades</state>
+					<state>Chains Plus</state>
+					<state>Clubs</state>
+					<state>Polearms Thrown</state>
+					<state>Thrown Blades</state>
+					<state>Thrown Projectiles</state>
+					<state>Bows</state>
+					<state>Crossbows</state>
+					<state>Slings</state>
+					<state>Polearms</state>
+					<state>Great Blades</state>
+					<state>Great Chains</state>
+					<state>Long Spikes</state>
+					<state>Staves</state>
+					<state>Pistols</state>
+					<state>Long Guns</state>
+				</statelabels>
+			</multitext>
+			<stringcontrolX name="secondary_category_label">
+				<anchored>
+					<to>secondary_category</to>
+					<position>above</position>
+					<offset>0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Category</static>
+			</stringcontrolX>
+			
+		</sheetdata>
+	</windowclass>
+</root>

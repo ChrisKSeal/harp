@@ -1,0 +1,932 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<root version="2.0">
+  
+  <windowclass name="harness">
+		<frame>charsheet</frame>
+		<placement>
+			<size>
+				<width>330</width>
+				<height>420</height>
+			</size>
+		</placement>
+		<sizelimits>
+			<minimum>
+				<width>330</width>
+				<height>420</height>
+			</minimum>
+			<maximum>
+				<width>330</width>
+				<height>420</height>
+			</maximum>
+		</sizelimits>
+		<minimize>minimized_item</minimize>
+		<sharable/>
+		<nodelete/>
+		<tooltip>
+		  <field>name</field>
+		</tooltip>
+		<sheetdata>
+			<!-- NAME -->
+			<genericcontrol name="nameframe">
+				<bounds>10,20,-20,35</bounds>
+				<frame>
+					<name>sheetgroup</name>
+				</frame>
+			</genericcontrol>
+			<windowopencontrol>
+				<anchored>
+					<to>nameframe</to>
+					<position>insidetopleft</position>
+					<offset>13,8</offset>
+					<size>
+						<width>20</width>
+						<height>20</height>
+					</size>
+				</anchored>
+				<icon>
+					<normal>button_openwindow</normal>
+					<pressed>button_emptytarget</pressed>
+				</icon>
+				<class>weapon</class>
+				<description>
+					<field>name</field>
+				</description>
+			</windowopencontrol>
+			<stringfieldX name="name">
+				<anchored>
+					<top>
+						<parent>nameframe</parent>
+						<anchor>top</anchor>
+						<offset>9</offset>
+					</top>
+					<left>
+						<parent>nameframe</parent>
+						<anchor>left</anchor>
+						<offset>35</offset>
+					</left>
+					<right>
+						<parent>nameframe</parent>
+						<anchor>right</anchor>
+						<offset>-35</offset>
+					</right>
+				</anchored>
+				<empty>&#171; New Armour &#187;</empty>
+				<font>sheettext</font>
+			</stringfieldX>
+			<!-- Frame -->    
+			<genericcontrol name="contentframe">
+				<bounds>10,54,-20,-13</bounds>
+				<frame>
+					<name>sheetgroup</name>
+					<offset>0,1,0,0</offset>
+				</frame>
+			</genericcontrol>
+
+      <!-- PROPERTIES -->
+      
+      <!-- DB Fields -->
+      <stringcontrolX>
+        <anchored>
+          <to>contentframe</to>
+          <position>insidetopleft</position>
+          <offset>15,15</offset>
+          <size>
+            <width>200</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <font>sheetlabel</font>
+        <static>Defensive Bonus</static>
+      </stringcontrolX>
+	  <numberfieldX name="dbbase">
+				<anchored>
+					<to>contentframe</to>
+					<position>insidetopleft</position>
+					<offset>235,20</offset>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<center/>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>				  
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						setReadOnly(true);
+						refresh();
+					end
+					
+					function refresh()
+					  setValue(Rules_Armour.getBaseDB(window.headarm.getState(),window.shoulderarm.getState(),window.armarm.getState(),window.handarm.getState(),window.legarm.getState(),window.neckarm.getState(),window.torsoarm.getState(),window.abdomenarm.getState(),window.groinarm.getState(),window.feetarm.getState()))
+					  setReadOnly(true);
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX>
+        <anchored>
+          <to>dbbase</to>
+          <position>below</position>
+          <offset>5,5</offset>
+          <size>
+            <width>75</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <font>sheetlabelsmallbold</font>
+        <static>Base BD</static>
+      </stringcontrolX>
+	  <numberfieldX name="dbmagicbonus">
+				<anchored>
+					<to>contentframe</to>
+					<position>insidetopleft</position>
+					<offset>235,60</offset>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<center/>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>				  
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX>
+        <anchored>
+          <to>dbmagicbonus</to>
+          <position>below</position>
+          <offset>10,5</offset>
+          <size>
+            <width>75</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <font>sheetlabelsmallbold</font>
+        <static>Bonus DB</static>
+      </stringcontrolX>
+	  
+	  <numberfieldX name="ufmaxmp">
+				<anchored>
+					<to>contentframe</to>
+					<position>insidetopleft</position>
+					<offset>235,100</offset>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<center/>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>				  
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX>
+        <anchored>
+          <to>ufmaxmp</to>
+          <position>below</position>
+          <offset>5,5</offset>
+          <size>
+            <width>75</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <font>sheetlabelsmallbold</font>
+        <static>UF Max</static>
+      </stringcontrolX>
+	  <numberfieldX name="ufminmp">
+				<anchored>
+					<to>contentframe</to>
+					<position>insidetopleft</position>
+					<offset>185,100</offset>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<center/>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>				  
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX>
+        <anchored>
+          <to>ufminmp</to>
+          <position>below</position>
+          <offset>5,5</offset>
+          <size>
+            <width>75</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <font>sheetlabelsmallbold</font>
+        <static>UF Min</static>
+      </stringcontrolX>
+	  <numberfieldX name="maxmp">
+				<anchored>
+					<to>contentframe</to>
+					<position>insidetopleft</position>
+					<offset>235,140</offset>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<center/>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>				  
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX>
+        <anchored>
+          <to>maxmp</to>
+          <position>below</position>
+          <offset>5,5</offset>
+          <size>
+            <width>75</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <font>sheetlabelsmallbold</font>
+        <static>Max MP</static>
+      </stringcontrolX>
+	  <numberfieldX name="minmp">
+				<anchored>
+					<to>contentframe</to>
+					<position>insidetopleft</position>
+					<offset>185,140</offset>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<center/>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>				  
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX>
+        <anchored>
+          <to>minmp</to>
+          <position>below</position>
+          <offset>5,5</offset>
+          <size>
+            <width>75</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <font>sheetlabelsmallbold</font>
+        <static>Min MP</static>
+      </stringcontrolX>
+	  
+	  <numberfieldX name="dbcastpenalty">
+				<anchored>
+					<to>contentframe</to>
+					<position>insidetopleft</position>
+					<offset>235,180</offset>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<center/>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>				  
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+					end
+				</script>
+			</numberfieldX>
+		<stringcontrolX>
+        <anchored>
+          <to>dbcastpenalty</to>
+          <position>below</position>
+          <offset>10,5</offset>
+          <size>
+            <width>75</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <font>sheetlabelsmallbold</font>
+        <static>Cast. Pen.</static>
+      </stringcontrolX>
+	  
+	  <numberfieldX name="spadd">
+				<anchored>
+					<to>contentframe</to>
+					<position>insidetopleft</position>
+					<offset>235,220</offset>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<center/>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>				  
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX>
+        <anchored>
+          <to>spadd</to>
+          <position>below</position>
+          <offset>5,5</offset>
+          <size>
+            <width>75</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <font>sheetlabelsmallbold</font>
+        <static>Sp. Add.</static>
+      </stringcontrolX>
+	  <numberfieldX name="ppadd">
+				<anchored>
+					<to>contentframe</to>
+					<position>insidetopleft</position>
+					<offset>185,220</offset>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<center/>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>				  
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX>
+        <anchored>
+          <to>ppadd</to>
+          <position>below</position>
+          <offset>5,5</offset>
+          <size>
+            <width>75</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <font>sheetlabelsmallbold</font>
+        <static>PP Add.</static>
+      </stringcontrolX>
+	  
+      <!-- DESCRIPTION -->
+      <multitext name="headarm">
+	  <anchored>
+          <to>contentframe</to>
+          <position>insidetopleft</position>
+          <offset>95,30</offset>
+          <size>
+            <width>95</width>
+            <height>17</height>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+        <statelabels>
+          <state>None</state>
+          <state>Soft Leather</state>
+          <state>Rigid Leather</state>
+          <state>Chain</state>
+		  <state>Plate &amp; Chain</state>
+		  <state>Plate</state>
+        </statelabels>
+		<script>
+		  function onStateChanged()
+		    window.dbbase.setValue(Rules_Armour.getBaseDB(getState(),window.shoulderarm.getState(),window.armarm.getState(),window.handarm.getState(),window.legarm.getState(),window.neckarm.getState(),window.torsoarm.getState(),window.abdomenarm.getState(),window.groinarm.getState(),window.feetarm.getState()));
+			window.dbbase.setReadOnly(true);
+		  end
+		</script>
+      </multitext>
+      <stringcontrolX>
+        <anchored>
+          <to>headarm</to>
+          <position>lefthigh</position>
+          <offset>5,4</offset>
+          <size>
+            <width>75</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <font>sheetlabelsmallbold</font>
+        <static>Head: </static>
+	   </stringcontrolX>
+	   <checkbox name="headused">
+        <bounds>130,4,12,12</bounds>
+		
+      </checkbox>
+	  
+	  <multitext name="shoulderarm">
+	  <anchored>
+          <to>contentframe</to>
+          <position>insidetopleft</position>
+          <offset>95,70</offset>
+          <size>
+            <width>95</width>
+            <height>17</height>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+        <statelabels>
+          <state>None</state>
+          <state>Soft Leather</state>
+          <state>Rigid Leather</state>
+          <state>Chain</state>
+		  <state>Plate &amp; Chain</state>
+		  <state>Plate</state>
+        </statelabels>
+		<script>
+		  function onStateChanged()
+		    window.dbbase.setValue(Rules_Armour.getBaseDB(getState(),window.headarm.getState(),window.armarm.getState(),window.handarm.getState(),window.legarm.getState(),window.neckarm.getState(),window.torsoarm.getState(),window.abdomenarm.getState(),window.groinarm.getState(),window.feetarm.getState()));
+			window.dbbase.setReadOnly(true);
+		  end
+		</script>
+      </multitext>
+      <stringcontrolX>
+        <anchored>
+          <to>shoulderarm</to>
+          <position>lefthigh</position>
+          <offset>5,4</offset>
+          <size>
+            <width>75</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <font>sheetlabelsmallbold</font>
+        <static>Shoulder: </static>
+	   </stringcontrolX>
+	   <multitext name="armarm">
+	  <anchored>
+          <to>contentframe</to>
+          <position>insidetopleft</position>
+          <offset>95,110</offset>
+          <size>
+            <width>95</width>
+            <height>17</height>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+        <statelabels>
+          <state>None</state>
+          <state>Soft Leather</state>
+          <state>Rigid Leather</state>
+          <state>Chain</state>
+		  <state>Plate &amp; Chain</state>
+		  <state>Plate</state>
+        </statelabels>
+		<script>
+		  function onStateChanged()
+		    window.dbbase.setValue(Rules_Armour.getBaseDB(getState(),window.shoulderarm.getState(),window.headarm.getState(),window.handarm.getState(),window.legarm.getState(),window.neckarm.getState(),window.torsoarm.getState(),window.abdomenarm.getState(),window.groinarm.getState(),window.feetarm.getState()));
+			window.dbbase.setReadOnly(true);
+		  end
+		</script>
+      </multitext>
+      <stringcontrolX>
+        <anchored>
+          <to>armarm</to>
+          <position>lefthigh</position>
+          <offset>5,4</offset>
+          <size>
+            <width>75</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <font>sheetlabelsmallbold</font>
+        <static>Arms: </static>
+	   </stringcontrolX>
+	   <multitext name="handarm">
+	  <anchored>
+          <to>contentframe</to>
+          <position>insidetopleft</position>
+          <offset>95,150</offset>
+          <size>
+            <width>95</width>
+            <height>17</height>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+        <statelabels>
+          <state>None</state>
+          <state>Soft Leather</state>
+          <state>Rigid Leather</state>
+          <state>Chain</state>
+		  <state>Plate &amp; Chain</state>
+		  <state>Plate</state>
+        </statelabels>
+      </multitext>
+	  <script>
+		  function onStateChanged()
+		    window.dbbase.setValue(Rules_Armour.getBaseDB(getState(),window.shoulderarm.getState(),window.armarm.getState(),window.headarm.getState(),window.legarm.getState(),window.neckarm.getState(),window.torsoarm.getState(),window.abdomenarm.getState(),window.groinarm.getState(),window.feetarm.getState()));
+			window.dbbase.setReadOnly(true);
+		  end
+		</script>
+      <stringcontrolX>
+        <anchored>
+          <to>handarm</to>
+          <position>lefthigh</position>
+          <offset>5,4</offset>
+          <size>
+            <width>75</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <font>sheetlabelsmallbold</font>
+        <static>Hand: </static>
+	   </stringcontrolX>
+	   <multitext name="legarm">
+	  <anchored>
+          <to>contentframe</to>
+          <position>insidetopleft</position>
+          <offset>95,190</offset>
+          <size>
+            <width>95</width>
+            <height>17</height>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+        <statelabels>
+          <state>None</state>
+          <state>Soft Leather</state>
+          <state>Rigid Leather</state>
+          <state>Chain</state>
+		  <state>Plate &amp; Chain</state>
+		  <state>Plate</state>
+        </statelabels>
+		<script>
+		  function onStateChanged()
+		    window.dbbase.setValue(Rules_Armour.getBaseDB(getState(),window.shoulderarm.getState(),window.armarm.getState(),window.handarm.getState(),window.headarm.getState(),window.neckarm.getState(),window.torsoarm.getState(),window.abdomenarm.getState(),window.groinarm.getState(),window.feetarm.getState()));
+			window.dbbase.setReadOnly(true);
+		  end
+		</script>
+      </multitext>
+      <stringcontrolX>
+        <anchored>
+          <to>legarm</to>
+          <position>lefthigh</position>
+          <offset>5,4</offset>
+          <size>
+            <width>75</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <font>sheetlabelsmallbold</font>
+        <static>Legs: </static>
+	   </stringcontrolX>
+	   
+	   <multitext name="neckarm">
+	  <anchored>
+          <to>contentframe</to>
+          <position>insidetopleft</position>
+          <offset>95,50</offset>
+          <size>
+            <width>95</width>
+            <height>17</height>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+        <statelabels>
+          <state>None</state>
+          <state>Soft Leather</state>
+          <state>Rigid Leather</state>
+          <state>Chain</state>
+		  <state>Plate &amp; Chain</state>
+		  <state>Plate</state>
+        </statelabels>
+		<script>
+		  function onStateChanged()
+		    window.dbbase.setValue(Rules_Armour.getBaseDB(getState(),window.shoulderarm.getState(),window.armarm.getState(),window.handarm.getState(),window.legarm.getState(),window.headarm.getState(),window.torsoarm.getState(),window.abdomenarm.getState(),window.groinarm.getState(),window.feetarm.getState()));
+			window.dbbase.setReadOnly(true);
+		  end
+		</script>
+      </multitext>
+      <stringcontrolX>
+        <anchored>
+          <to>neckarm</to>
+          <position>lefthigh</position>
+          <offset>5,4</offset>
+          <size>
+            <width>75</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <font>sheetlabelsmallbold</font>
+        <static>Neck: </static>
+	   </stringcontrolX>
+	  
+	  <multitext name="torsoarm">
+	  <anchored>
+          <to>contentframe</to>
+          <position>insidetopleft</position>
+          <offset>95,90</offset>
+          <size>
+            <width>95</width>
+            <height>17</height>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+        <statelabels>
+          <state>None</state>
+          <state>Soft Leather</state>
+          <state>Rigid Leather</state>
+          <state>Chain</state>
+		  <state>Plate &amp; Chain</state>
+		  <state>Plate</state>
+        </statelabels>
+		<script>
+		  function onStateChanged()
+		    window.dbbase.setValue(Rules_Armour.getBaseDB(getState(),window.shoulderarm.getState(),window.armarm.getState(),window.handarm.getState(),window.legarm.getState(),window.neckarm.getState(),window.headarm.getState(),window.abdomenarm.getState(),window.groinarm.getState(),window.feetarm.getState()));
+			window.dbbase.setReadOnly(true);
+		  end
+		</script>
+      </multitext>
+      <stringcontrolX>
+        <anchored>
+          <to>torsoarm</to>
+          <position>lefthigh</position>
+          <offset>5,4</offset>
+          <size>
+            <width>75</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <font>sheetlabelsmallbold</font>
+        <static>Torso: </static>
+	   </stringcontrolX>
+	   <multitext name="abdomenarm">
+	  <anchored>
+          <to>contentframe</to>
+          <position>insidetopleft</position>
+          <offset>95,130</offset>
+          <size>
+            <width>95</width>
+            <height>17</height>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+        <statelabels>
+          <state>None</state>
+          <state>Soft Leather</state>
+          <state>Rigid Leather</state>
+          <state>Chain</state>
+		  <state>Plate &amp; Chain</state>
+		  <state>Plate</state>
+        </statelabels>
+		<script>
+		  function onStateChanged()
+		    window.dbbase.setValue(Rules_Armour.getBaseDB(getState(),window.shoulderarm.getState(),window.armarm.getState(),window.handarm.getState(),window.legarm.getState(),window.neckarm.getState(),window.torsoarm.getState(),window.headarm.getState(),window.groinarm.getState(),window.feetarm.getState()));
+			window.dbbase.setReadOnly(true);
+		  end
+		</script>
+      </multitext>
+      <stringcontrolX>
+        <anchored>
+          <to>abdomenarm</to>
+          <position>lefthigh</position>
+          <offset>5,4</offset>
+          <size>
+            <width>75</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <font>sheetlabelsmallbold</font>
+        <static>Abdomen: </static>
+	   </stringcontrolX>
+	   <multitext name="groinarm">
+	  <anchored>
+          <to>contentframe</to>
+          <position>insidetopleft</position>
+          <offset>95,170</offset>
+          <size>
+            <width>95</width>
+            <height>17</height>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+        <statelabels>
+          <state>None</state>
+          <state>Soft Leather</state>
+          <state>Rigid Leather</state>
+          <state>Chain</state>
+		  <state>Plate &amp; Chain</state>
+		  <state>Plate</state>
+        </statelabels>
+		<script>
+		  function onStateChanged()
+		    window.dbbase.setValue(Rules_Armour.getBaseDB(getState(),window.shoulderarm.getState(),window.armarm.getState(),window.handarm.getState(),window.legarm.getState(),window.neckarm.getState(),window.torsoarm.getState(),window.abdomenarm.getState(),window.headarm.getState(),window.feetarm.getState()));
+			window.dbbase.setReadOnly(true);
+		  end
+		</script>
+      </multitext>
+      <stringcontrolX>
+        <anchored>
+          <to>groinarm</to>
+          <position>lefthigh</position>
+          <offset>5,4</offset>
+          <size>
+            <width>75</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <font>sheetlabelsmallbold</font>
+        <static>Groin: </static>
+	   </stringcontrolX>
+	   <multitext name="feetarm">
+	  <anchored>
+          <to>contentframe</to>
+          <position>insidetopleft</position>
+          <offset>95,210</offset>
+          <size>
+            <width>95</width>
+            <height>17</height>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+        <statelabels>
+          <state>None</state>
+          <state>Soft Leather</state>
+          <state>Rigid Leather</state>
+          <state>Chain</state>
+		  <state>Plate &amp; Chain</state>
+		  <state>Plate</state>
+        </statelabels>
+		<script>
+		  function onStateChanged()
+		    window.dbbase.setValue(Rules_Armour.getBaseDB(getState(),window.shoulderarm.getState(),window.armarm.getState(),window.handarm.getState(),window.legarm.getState(),window.neckarm.getState(),window.torsoarm.getState(),window.abdomenarm.getState(),window.groinarm.getState(),window.headarm.getState()));
+			window.dbbase.setReadOnly(true);
+		  end
+		</script>
+      </multitext>
+      <stringcontrolX>
+        <anchored>
+          <to>feetarm</to>
+          <position>lefthigh</position>
+          <offset>5,4</offset>
+          <size>
+            <width>75</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <font>sheetlabelsmallbold</font>
+        <static>Feet: </static>
+	   </stringcontrolX>
+	   
+	   <formattedtextfield name="description">
+        <anchored>
+          <to>contentframe</to>
+          <position>insidetopleft</position>
+          <offset>15,255</offset>
+          <size>
+            <width>300</width>
+            <height>100</height>
+          </size>
+        </anchored>
+        <font>
+          <normal>chatfont</normal>
+          <bold>narratorfont</bold>
+          <italic>chatitalicfont</italic>
+          <bolditalic>chatbolditalicfont</bolditalic>
+          <title>defaultstringcontrol</title>
+        </font>
+        <linkicon>
+          <link>button_openwindow</link>
+          <emptylink>button_emptytarget</emptylink>
+        </linkicon>
+        <footer>footer_narrow</footer>
+        <selectioncolor>#FFD296</selectioncolor>
+      </formattedtextfield>
+      <stringcontrolX name="descLabel">
+        <anchored>
+          <to>description</to>
+          <position>aboveleft</position>
+          <offset>0,-2</offset>
+          <size>
+            <width>65</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <font>sheetlabelsmallbold</font>
+        <static>Description</static>
+      </stringcontrolX>
+ 		<scrollbar>
+			<anchored>
+				<to>description</to>
+				<position>right</position>
+				<offset>1,-4</offset>
+			</anchored>
+			<target>description</target>
+		</scrollbar>
+	   
+		<close_adventure />
+    </sheetdata>
+ </windowclass>
+
+
+ 
+ </root>

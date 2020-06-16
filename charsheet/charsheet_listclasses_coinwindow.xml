@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<root version="2.0">
+<windowclass name="charsheet_coinwindow">
+    <sizelimits>
+      <maximum>
+        <height>19</height>
+      </maximum>
+      <minimum>
+        <height>19</height>
+      </minimum>
+    </sizelimits>
+    <sheetdata>
+      <textlistitemvalue name="name">
+        <bounds>0,1,25,17</bounds>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+      </textlistitemvalue>
+      <numberfieldX name="value">
+        <anchored>
+          <to>name</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>35</width>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+        <hideonvalue>0</hideonvalue>
+      </numberfieldX>
+    </sheetdata>
+  </windowclass>
+
+</root>

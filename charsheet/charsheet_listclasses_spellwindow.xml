@@ -1,0 +1,830 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<root version="2.0">
+  <windowclass name="charsheet_spellwindow">
+    <sizelimits>
+      <minimum>
+        <height>18</height>
+      </minimum>
+      <maximum>
+        <height>18</height>
+      </maximum>
+    </sizelimits>
+    <script>
+      function onInit()
+		if super and super.onInit then
+		  super.onInit();
+		end
+	  end
+      
+      function testDelete()
+        local win = windowlist.getPrevWindow(self);
+        if name.getValue()~="" then
+          return;
+        end
+        if #(windowlist.getWindows())==1 then
+          return;
+        end
+        if not win then
+          win = windowlist.getNextWindow(self);
+        end
+        win.name.setFocus();
+        getDatabaseNode().delete();
+      end
+      
+      function testNew()
+        local win = windowlist.getNextWindow(self);
+        if name.getValue()=="" then
+          return;
+        end
+        if not win then
+          win = windowlist.createWindow();
+        end
+		win.class.setState(1);
+        win.name.setFocus();
+      end
+    </script>
+    <sheetdata>
+      <!-- hidden fields -->
+      <numberfieldX name="locked">
+        <bounds>0,0,0,0</bounds>
+        <invisible/>
+		<script>
+			function onInit()
+				local state = false;
+				if getValue() ==1 then
+					state = true;
+				end
+				update(state);
+			end
+			
+			function onValueChanged()
+				local state = false;
+				if getValue() ==1 then
+					state = true;
+				end
+				update(state);
+			end
+			
+			function update(state)
+				window.name.setReadOnly(state);
+				window.spell_type.setEnabled(not state);
+			end
+		</script>
+      </numberfieldX>
+	  <stringfieldX name="skill">
+	    <bounds>0,0,0,0</bounds>
+		<invisible/>
+		<script>
+			function onValueChanged()
+				window.cast.update();
+			end
+		</script>
+	  </stringfieldX>
+      <!-- visible fields -->
+      <windowreferencecontrol name="open">
+        <bounds>0,2,14,14</bounds>
+        <icon>
+          <normal>button_openwindow</normal>
+          <pressed>button_openwindow</pressed>
+        </icon>
+        <class>spell</class>
+        <description>
+          <field>name</field>
+        </description>
+      </windowreferencecontrol>
+      <stringfieldX name="name">
+        <bounds>15,0,90,17</bounds>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+        <empty>&#171; New Spell &#187;</empty>
+        <script>
+          function onDragStart(button, x, y, draginfo)
+            draginfo.setType("shortcut");
+            draginfo.setShortcutData(window.open.getValue());
+            draginfo.setIcon(window.open.icon[1].normal[1]);
+            return true;
+          end
+        </script>
+      </stringfieldX>
+      <multitext name="spell_type">
+        <anchored>
+          <to>name</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>60</width>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+				<script>
+				  function onInit()
+					if super and super.onInit then
+					  super.onInit();
+					end
+					if getState() &lt; 1 then
+					  setState(1);
+					elseif getState() &gt; 3 then
+					  setState(1);
+					end
+				  end
+				</script>
+				<statelabels>
+					<state>Utility</state>
+					<state>Attack</state>
+					<state>Elemental</state>
+				</statelabels>
+			</multitext>
+	  <numberfieldX name="cast">
+        <anchored>
+          <to>spell_type</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>35</width>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+        <hideonvalue>0</hideonvalue>
+        <frame>
+          <name>textlinedice</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+        <script>
+			function onInit()
+				if super and super.onInit then
+					super.onInit();
+				end
+				local charnode = window.getDatabaseNode().getParent().getParent().getParent();
+				if charnode.getChild("skills") then
+					for k,skl in pairs(charnode.getChild("skills").getChildren()) do
+						if skl.getChild("name") then
+							skl.onChildUpdate = update;
+						end
+					end
+				end
+				update();
+			end
+			
+			function getSkillTotal(node)
+				local retval = 0;
+				if node.getChild("skills") then
+					for k,skl in pairs(node.getChild("skills").getChildren()) do
+						if skl.getChild("name") then
+							local testname = skl.createChild("name").getValue();
+							if testname == window.skill.getValue() then
+								retval = skl.createChild("total").getValue();
+							end
+						end
+					end
+				end	
+				return retval;
+			end
+				
+			function update()
+				local node = window.getDatabaseNode().getParent().getParent().getParent();
+				local value = getSkillTotal(node);
+				setValue(value);
+			end
+			
+			function onDoubleClick()
+			Debug.chat("spellnode");
+				Debug.chat(getDatabaseNode());
+				local charnode = window.getDatabaseNode().getParent().getParent().getParent();
+				Debug.chat(charnode);
+			end
+
+        </script>
+      </numberfieldX>
+
+    </sheetdata>
+  </windowclass>
+   
+  <windowclass name="charsheet_spell_adder">
+  <sizelimits>
+	<minimum>
+        <height>18</height>
+      </minimum>
+      <maximum>
+        <height>18</height>
+      </maximum>
+    </sizelimits>
+	<script>
+      function onInit()
+		if super and super.onInit then
+		  super.onInit();
+		end
+	  end
+    </script>
+    <sheetdata>
+		<stringfieldX name="item_class">
+		<bounds>0,0,0,0</bounds>
+		<invisible />
+		<script>
+			function onInit()
+				if getValue() == "" then
+					setValue("item_general");
+				end
+			end
+			
+			function onValueChanged()
+				window.open.refresh();
+				window.spell_adder.refreshLink();
+				window.name.refreshLink();
+			end
+		</script>
+	</stringfieldX>
+	<stringfieldX name="item_link">
+		<bounds>0,0,0,0</bounds>
+		<invisible />
+		<script>
+			function onValueChanged()
+				window.open.refresh();
+				window.spell_adder.refreshLink();
+				window.name.refreshLink();
+			end
+		</script>
+	</stringfieldX>
+	<windowreferencecontrol name="open">
+        <bounds>0,2,14,14</bounds>
+        <icon>
+          <normal>button_openwindow</normal>
+          <pressed>button_openwindow</pressed>
+        </icon>
+        <class>item_general</class>
+        <description>
+          <field>name</field>
+        </description>
+		<script>
+			function onInit()
+				refresh()
+			end
+			
+			function refresh()
+				setValue(window.item_class.getValue(), window.item_link.getValue());
+			end
+		</script>
+      </windowreferencecontrol>
+	  <stringfieldX name="name">
+        <bounds>15,0,150,17</bounds>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+        <empty>(none)</empty>
+        <script>
+          local locknode = nil;
+			
+			function onLinkUpdated(source)
+				setValue(source.getValue());
+			end
+
+			function setLink(dbnode)
+				if dbnode then
+					linknode = dbnode;
+					linknode.onUpdate = onLinkUpdated;
+					onLinkUpdated(linknode);
+				end
+			end
+			
+			function onInit()
+				refreshLink();
+			end
+			
+			function refreshLink()
+				local itemLink = window.item_link.getValue();
+				if itemLink ~= "" then
+					local itemlinknode = DB.findNode(itemLink);
+					if itemlinknode ~= nil then
+						local namenode = itemlinknode.createChild("name","string");
+						if namenode.getValue() == "" then
+							namenode.setValue(getValue());
+						end
+						setLink(namenode);
+					end
+				end
+			end
+			
+			function isLocked()
+				if not locknode then
+					return false;
+				else
+					return (locknode.getValue()~=0)
+				end
+			end
+          
+			function setLock(state)
+				if locknode then
+					if state then
+						locknode.setValue(1);
+					else
+						locknode.setValue(0);
+					end
+				end
+			end
+			
+			function onValueChanged()
+                if linknode then
+					if not isLocked() then
+						setLock(true);
+						linknode.setValue(getValue());
+						setLock(false);
+					end
+				end
+			end
+			
+			function onDoubleClick()
+				local node = getDatabaseNode().getParent();
+				local targetnode = node.getParent().getParent().getChild("current_spell_adder").getChild("id-00001");
+				targetnode.createChild("item_link","string").setValue(node.createChild("item_link","string").getValue());				
+				targetnode.createChild("item_class","string").setValue(node.createChild("item_class","string").getValue());				
+				targetnode.createChild("name","string").setValue(node.createChild("name","string").getValue());
+				targetnode.createChild("spell_adder","number").setValue(node.createChild("spell_adder","number").getValue());
+			end
+        </script>
+      </stringfieldX>
+	  <numberfieldX name="spell_adder">
+        <bounds>175,4,30,13</bounds>
+        <frame>
+          <name>textline</name>
+          <offset>0,5,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,5,0,0</offset>
+        </keyeditframe>
+        <font>sheetlabelsmall</font>
+        <tabtarget>
+          <next>fumble</next>
+          <prev>name</prev>
+        </tabtarget>
+        <script>
+          local locknode = nil;
+			
+			function onLinkUpdated(source)
+				setValue(source.getValue());
+			end
+
+			function setLink(dbnode)
+				if dbnode then
+					linknode = dbnode;
+					linknode.onUpdate = onLinkUpdated;
+					onLinkUpdated(linknode);
+				end
+			end
+			
+			function onInit()
+				refreshLink();
+			end
+			
+			function refreshLink()
+				local itemLink = window.item_link.getValue();
+				if itemLink ~= "" then
+					local itemlinknode = DB.findNode(itemLink);
+					if itemlinknode ~= nil then
+						local namenode = itemlinknode.createChild("spell_adder","number");
+						if namenode.getValue() == "" then
+							namenode.setValue(getValue());
+						end
+						setLink(namenode);
+					end
+				end
+			end
+			
+			function isLocked()
+				if not locknode then
+					return false;
+				else
+					return (locknode.getValue()~=0)
+				end
+			end
+          
+			function setLock(state)
+				if locknode then
+					if state then
+						locknode.setValue(1);
+					else
+						locknode.setValue(0);
+					end
+				end
+			end
+			
+			function onValueChanged()
+                if linknode then
+					if not isLocked() then
+						setLock(true);
+						linknode.setValue(getValue());
+						setLock(false);
+					end
+				end
+			end
+        </script>
+      </numberfieldX>
+	</sheetdata>
+  </windowclass>
+  
+  <windowclass name="charsheet_powerpoint_adder">
+  <sizelimits>
+	<minimum>
+        <height>18</height>
+      </minimum>
+      <maximum>
+        <height>18</height>
+      </maximum>
+    </sizelimits>
+	<script>
+      function onInit()
+		if super and super.onInit then
+		  super.onInit();
+		end
+	  end
+    </script>
+    <sheetdata>
+		<stringfieldX name="item_class">
+		<bounds>0,0,0,0</bounds>
+		<invisible />
+		<script>
+			function onInit()
+				if getValue() == "" then
+					setValue("item_general");
+				end
+			end
+			
+			function onValueChanged()
+				window.open.refresh();
+				window.pp_adder.refreshLink();
+				window.name.refreshLink();
+			end
+		</script>
+	</stringfieldX>
+	<stringfieldX name="item_link">
+		<bounds>0,0,0,0</bounds>
+		<invisible />
+		<script>
+			function onValueChanged()
+				window.open.refresh();
+				window.pp_adder.refreshLink();
+				window.name.refreshLink();
+			end
+		</script>
+	</stringfieldX>
+	<windowreferencecontrol name="open">
+        <bounds>0,2,14,14</bounds>
+        <icon>
+          <normal>button_openwindow</normal>
+          <pressed>button_openwindow</pressed>
+        </icon>
+        <class>item_general</class>
+        <description>
+          <field>name</field>
+        </description>
+		<script>
+			function onInit()
+				refresh()
+			end
+			
+			function refresh()
+				setValue(window.item_class.getValue(), window.item_link.getValue());
+			end
+		</script>
+      </windowreferencecontrol>
+	  <stringfieldX name="name">
+        <bounds>15,0,150,17</bounds>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+        <empty>(none)</empty>
+        <script>
+          local locknode = nil;
+			
+			function onLinkUpdated(source)
+				setValue(source.getValue());
+			end
+
+			function setLink(dbnode)
+				if dbnode then
+					linknode = dbnode;
+					linknode.onUpdate = onLinkUpdated;
+					onLinkUpdated(linknode);
+				end
+			end
+			
+			function onInit()
+				refreshLink();
+			end
+			
+			function refreshLink()
+				local itemLink = window.item_link.getValue();
+				if itemLink ~= "" then
+					local itemlinknode = DB.findNode(itemLink);
+					if itemlinknode ~= nil then
+						local namenode = itemlinknode.createChild("name","string");
+						if namenode.getValue() == "" then
+							namenode.setValue(getValue());
+						end
+						setLink(namenode);
+					end
+				end
+			end
+			
+			function isLocked()
+				if not locknode then
+					return false;
+				else
+					return (locknode.getValue()~=0)
+				end
+			end
+          
+			function setLock(state)
+				if locknode then
+					if state then
+						locknode.setValue(1);
+					else
+						locknode.setValue(0);
+					end
+				end
+			end
+			
+			function onValueChanged()
+                if linknode then
+					if not isLocked() then
+						setLock(true);
+						linknode.setValue(getValue());
+						setLock(false);
+					end
+				end
+			end
+			
+			function onDoubleClick()
+				local node = getDatabaseNode().getParent();
+				local targetnode = node.getParent().getParent().getChild("current_pp_adder").getChild("id-00001");
+				targetnode.createChild("item_link","string").setValue(node.createChild("item_link","string").getValue());				
+				targetnode.createChild("item_class","string").setValue(node.createChild("item_class","string").getValue());				
+				targetnode.createChild("name","string").setValue(node.createChild("name","string").getValue());
+				targetnode.createChild("pp_adder","number").setValue(node.createChild("pp_adder","number").getValue());
+			end
+        </script>
+      </stringfieldX>
+	  <numberfieldX name="pp_adder">
+        <bounds>175,4,30,13</bounds>
+        <frame>
+          <name>textline</name>
+          <offset>0,5,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,5,0,0</offset>
+        </keyeditframe>
+        <font>sheetlabelsmall</font>
+        <tabtarget>
+          <next>fumble</next>
+          <prev>name</prev>
+        </tabtarget>
+        <script>
+          local locknode = nil;
+			
+			function onLinkUpdated(source)
+				setValue(source.getValue());
+			end
+
+			function setLink(dbnode)
+				if dbnode then
+					linknode = dbnode;
+					linknode.onUpdate = onLinkUpdated;
+					onLinkUpdated(linknode);
+				end
+			end
+			
+			function onInit()
+				refreshLink();
+			end
+			
+			function refreshLink()
+				local itemLink = window.item_link.getValue();
+				if itemLink ~= "" then
+					local itemlinknode = DB.findNode(itemLink);
+					if itemlinknode ~= nil then
+						local namenode = itemlinknode.createChild("pp_adder","number");
+						if namenode.getValue() == "" then
+							namenode.setValue(getValue());
+						end
+						setLink(namenode);
+					end
+				end
+			end
+			
+			function isLocked()
+				if not locknode then
+					return false;
+				else
+					return (locknode.getValue()~=0)
+				end
+			end
+          
+			function setLock(state)
+				if locknode then
+					if state then
+						locknode.setValue(1);
+					else
+						locknode.setValue(0);
+					end
+				end
+			end
+			
+			function onValueChanged()
+                if linknode then
+					if not isLocked() then
+						setLock(true);
+						linknode.setValue(getValue());
+						setLock(false);
+					end
+				end
+			end
+        </script>
+      </numberfieldX>
+	</sheetdata>
+  </windowclass>
+  
+  <windowclass name="charsheet_charged_spell">
+	<sizelimits>
+		<minimum>
+			<height>18</height>
+		</minimum>
+		<maximum>
+			<height>18</height>
+		</maximum>
+    </sizelimits>
+	<script>
+      function onInit()
+		if super and super.onInit then
+		  super.onInit();
+		end
+	  end
+    </script>
+    <sheetdata>
+		<stringfieldX name="item_class">
+		<bounds>0,0,0,0</bounds>
+		<invisible />
+		<script>
+			function onInit()
+				if getValue() == "" then
+					setValue("item_general");
+				end
+			end
+			
+			function onValueChanged()
+				window.open.refresh();
+				window.pp_adder.refreshLink();
+				window.name.refreshLink();
+			end
+		</script>
+	</stringfieldX>
+	<stringfieldX name="item_link">
+		<bounds>0,0,0,0</bounds>
+		<invisible />
+		<script>
+			function onValueChanged()
+				window.open.refresh();
+				window.pp_adder.refreshLink();
+				window.name.refreshLink();
+			end
+		</script>
+	</stringfieldX>
+	<windowreferencecontrol name="open">
+        <bounds>0,2,14,14</bounds>
+        <icon>
+          <normal>button_openwindow</normal>
+          <pressed>button_openwindow</pressed>
+        </icon>
+        <class>item_general</class>
+        <description>
+          <field>name</field>
+        </description>
+		<script>
+			function onInit()
+				refresh()
+			end
+			
+			function refresh()
+				setValue(window.item_class.getValue(), window.item_link.getValue());
+			end
+		</script>
+    </windowreferencecontrol>
+	<stringfieldX name="name">
+        <bounds>15,0,75,17</bounds>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+        <empty>(none)</empty>
+        <script></script>
+      </stringfieldX>
+	  <stringfieldX name="itemname">
+        <bounds>90,0,75,17</bounds>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+        <empty>(none)</empty>
+        <script>
+          local locknode = nil;
+			
+			function onLinkUpdated(source)
+				setValue(source.getValue());
+			end
+
+			function setLink(dbnode)
+				if dbnode then
+					linknode = dbnode;
+					linknode.onUpdate = onLinkUpdated;
+					onLinkUpdated(linknode);
+				end
+			end
+			
+			function onInit()
+				refreshLink();
+			end
+			
+			function refreshLink()
+				local itemLink = window.item_link.getValue();
+				if itemLink ~= "" then
+					local itemlinknode = DB.findNode(itemLink);
+					if itemlinknode ~= nil then
+						local namenode = itemlinknode.createChild("name","string");
+						if namenode.getValue() == "" then
+							namenode.setValue(getValue());
+						end
+						setLink(namenode);
+					end
+				end
+			end
+			
+			function isLocked()
+				if not locknode then
+					return false;
+				else
+					return (locknode.getValue()~=0)
+				end
+			end
+          
+			function setLock(state)
+				if locknode then
+					if state then
+						locknode.setValue(1);
+					else
+						locknode.setValue(0);
+					end
+				end
+			end
+			
+			function onValueChanged()
+                if linknode then
+					if not isLocked() then
+						setLock(true);
+						linknode.setValue(getValue());
+						setLock(false);
+					end
+				end
+			end
+			
+			function onDoubleClick()
+				--[[FIND LINK TO ITEM
+				--[[OPEN ITEM WINDOW
+			end
+        </script>
+      </stringfieldX>
+	</sheetdata>
+	</windowclass>
+  
+</root>

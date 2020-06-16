@@ -1,0 +1,578 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<root version="2.0">
+
+	<windowclass name="item_general">
+		<frame>charsheet</frame>
+			<placement>
+				<size>
+					<width>320</width>
+					<height>450</height>
+				</size>
+			</placement>
+			<sizelimits>
+				<dynamic />
+				<minimum>
+					<width>320</width>
+					<height>450</height>
+				</minimum>
+			</sizelimits>
+			<minimize>minimized_item</minimize>
+			<sharable>
+				<shareas>item_general_client</shareas>
+			</sharable>
+			<tooltip>
+				<field>name</field>
+			</tooltip>
+			<nodelete/>
+			<sheetdata>
+			<!-- NAME -->
+				<genericcontrol name="nameframe">
+					<bounds>10,20,-20,35</bounds>
+					<frame>
+						<name>sheetgroup</name>
+					</frame>
+				</genericcontrol>
+				<windowopencontrol>
+					<anchored>
+						<to>nameframe</to>
+						<position>insidetopleft</position>
+						<offset>13,8</offset>
+						<size>
+							<width>20</width>
+							<height>20</height>
+						</size>
+					</anchored>
+					<icon>
+						<normal>button_openwindow</normal>
+						<pressed>button_emptytarget</pressed>
+					</icon>
+					<class>item_general</class>
+					<description>
+						<field>name</field>
+					</description>
+				</windowopencontrol>
+				<stringfieldX name="name">
+					<anchored>
+						<top>
+							<parent>nameframe</parent>
+							<anchor>top</anchor>
+							<offset>9</offset>
+						</top>
+						<left>
+							<parent>nameframe</parent>
+							<anchor>left</anchor>
+							<offset>35</offset>
+						</left>
+						<right>
+							<parent>nameframe</parent>
+							<anchor>right</anchor>
+							<offset>-15</offset>
+						</right>
+					</anchored>
+					<empty>&#171; New Item &#187;</empty>
+					<font>sheettext</font>
+				</stringfieldX>
+
+				<!-- Frame -->    
+				<genericcontrol name="contentframe">
+					<bounds>10,54,-25,-13</bounds>
+					<frame>
+						<name>sheetgroup</name>
+						<offset>0,1,0,0</offset>
+					</frame>
+				</genericcontrol>
+
+
+				<!-- Subwindows -->
+				<subwindow name="main">
+					<bounds>22,64,-35,-23</bounds>
+					<class>item_general_main</class>
+				</subwindow>
+				<scrollbar name="main_scroller">
+					<anchored>
+						<to>main</to>
+						<position>right</position>
+						<offset>-5,-4</offset>
+					</anchored>
+					<target>main</target>
+				</scrollbar>
+
+				<subwindow name="magic">
+					<bounds>22,64,-35,-23</bounds>
+					<class>item_magic</class>
+				</subwindow>
+				<scrollbar name="magic_scroller">
+					<anchored>
+						<to>magic</to>
+						<position>right</position>
+						<offset>-5,-4</offset>
+					</anchored>
+					<target>magic</target>
+				</scrollbar>
+				
+				<subwindow name="spells">
+					<bounds>22,64,-35,-23</bounds>
+					<class>item_spells</class>
+				</subwindow>
+				<scrollbar name="spell_scroller">
+					<anchored>
+						<to>spells</to>
+						<position>right</position>
+						<offset>-5,-4</offset>
+					</anchored>
+					<target>spells</target>
+				</scrollbar>
+
+			<!-- Tabs -->
+			<tabcontrol name="tabs">
+				<bounds>-22,50,18,220</bounds>
+				<tab>
+					<icon>tab_main</icon>
+					<subwindow>main</subwindow>
+					<scroller>main_scroller</scroller>
+				</tab>
+				<tab>
+					<icon>tab_magic</icon>
+					<subwindow>magic</subwindow>
+					<scroller>magic_scroller</scroller>
+				</tab>
+				<tab>
+					<icon>tab_spells</icon>
+					<subwindow>spells</subwindow>
+					<scroller>spell_scroller</scroller>
+				</tab>
+				<activate>1</activate>
+			</tabcontrol>
+		
+			<close_adventure />
+		</sheetdata>
+	</windowclass>
+	
+	<windowclass name="item_general_client">
+		<frame>charsheet</frame>
+			<placement>
+				<size>
+					<width>320</width>
+					<height>450</height>
+				</size>
+			</placement>
+			<sizelimits>
+				<dynamic />
+				<minimum>
+					<width>320</width>
+					<height>450</height>
+				</minimum>
+			</sizelimits>
+			<minimize>minimized_item</minimize>
+			<sharable>
+				<shareas>item_general_client</shareas>
+			</sharable>
+			<tooltip>
+				<field>name</field>
+			</tooltip>
+			<nodelete/>
+			<sheetdata>
+			<!-- NAME -->
+				<genericcontrol name="nameframe">
+					<bounds>10,20,-20,35</bounds>
+					<frame>
+						<name>sheetgroup</name>
+					</frame>
+				</genericcontrol>
+				<windowopencontrol>
+					<anchored>
+						<to>nameframe</to>
+						<position>insidetopleft</position>
+						<offset>13,8</offset>
+						<size>
+							<width>20</width>
+							<height>20</height>
+						</size>
+					</anchored>
+					<icon>
+						<normal>button_openwindow</normal>
+						<pressed>button_emptytarget</pressed>
+					</icon>
+					<class>item_general_client</class>
+					<description>
+						<field>name</field>
+					</description>
+				</windowopencontrol>
+				<stringfieldX name="name">
+					<anchored>
+						<top>
+							<parent>nameframe</parent>
+							<anchor>top</anchor>
+							<offset>9</offset>
+						</top>
+						<left>
+							<parent>nameframe</parent>
+							<anchor>left</anchor>
+							<offset>35</offset>
+						</left>
+						<right>
+							<parent>nameframe</parent>
+							<anchor>right</anchor>
+							<offset>-15</offset>
+						</right>
+					</anchored>
+					<empty>&#171; New Item &#187;</empty>
+					<font>sheettext</font>
+				</stringfieldX>
+
+				<!-- Frame -->    
+				<genericcontrol name="contentframe">
+					<bounds>10,54,-25,-13</bounds>
+					<frame>
+						<name>sheetgroup</name>
+						<offset>0,1,0,0</offset>
+					</frame>
+				</genericcontrol>
+
+
+				<!-- Subwindows -->
+				<subwindow name="main">
+					<bounds>22,64,-35,-23</bounds>
+					<class>item_general_main</class>
+				</subwindow>
+				<scrollbar name="main_scroller">
+					<anchored>
+						<to>main</to>
+						<position>right</position>
+						<offset>-5,-4</offset>
+					</anchored>
+					<target>main</target>
+				</scrollbar>
+
+				<subwindow name="magic">
+					<bounds>22,64,-35,-23</bounds>
+					<class>item_magic</class>
+				</subwindow>
+				<scrollbar name="magic_scroller">
+					<anchored>
+						<to>magic</to>
+						<position>right</position>
+						<offset>-5,-4</offset>
+					</anchored>
+					<target>magic</target>
+				</scrollbar>
+				
+				<subwindow name="spells">
+					<bounds>22,64,-35,-23</bounds>
+					<class>item_spells</class>
+				</subwindow>
+				<scrollbar name="spell_scroller">
+					<anchored>
+						<to>spells</to>
+						<position>right</position>
+						<offset>-5,-4</offset>
+					</anchored>
+					<target>spells</target>
+				</scrollbar>
+
+			<!-- Tabs -->
+			<tabcontrol name="tabs">
+				<bounds>-22,50,18,230</bounds>
+				<tab>
+					<icon>tab_main</icon>
+					<subwindow>main</subwindow>
+					<scroller>main_scroller</scroller>
+				</tab>
+				<tab>
+					<icon>tab_magic</icon>
+					<subwindow>magic</subwindow>
+					<scroller>magic_scroller</scroller>
+				</tab>
+				<tab>
+					<icon>tab_spells</icon>
+					<subwindow>spells</subwindow>
+					<scroller>spell_scroller</scroller>
+				</tab>
+				<activate>1</activate>
+				<script>
+					local identifynode = nil;
+
+					function capture()
+						identifynode = getDatabaseNode().createChild("isidentified","number");
+						if identifynode then
+							getDatabaseNode().onChildUpdate = function () end;
+							identifynode.onUpdate = identifyUpdated;
+							identifyUpdated();
+						end
+					end
+
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						getDatabaseNode().onChildUpdate = capture;
+						capture();
+					end
+
+					function identifyUpdated()
+						if identifynode.getValue() ~= 0 then
+							nonidentified.setVisible(false);
+							identified.setVisible(true);
+							setVisible(true);
+						else
+							nonidentified.setVisible(true);
+							identified.setVisible(false);
+							setVisible(false);
+						end
+					end
+				</script>
+			</tabcontrol>
+		
+			<close_adventure />
+		</sheetdata>
+	</windowclass>
+
+	<windowclass name="item_general_main">
+		<sheetdata>
+			<stringcontrolX name="general_label">
+				<anchored>
+					<left>
+						<anchor>left</anchor>
+						<offset>7</offset>
+					</left>
+					<right>
+						<anchor>right</anchor>
+						<offset>-7</offset>
+					</right>
+					<top>
+						<anchor>top</anchor>
+						<offset>15</offset>
+					</top>
+				</anchored>
+				<font>sheetlabelsmallbold</font>
+				<static>Stats</static>
+			</stringcontrolX>
+			
+			<numberfieldX name="item_weight">
+				<anchored>
+					<left>
+						<parent>general_label</parent>
+						<anchor>left</anchor>
+						<offset>40</offset>
+					</left>
+					<top>
+						<parent>general_label</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						setVisible(true);
+						setEnabled(true);
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>item_weight</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Weight</static>
+			</stringcontrolX>
+			<numberfieldX name="item_length">
+				<anchored>
+					<left>
+						<parent>item_weight</parent>
+						<anchor>right</anchor>
+						<offset>15</offset>
+					</left>
+					<top>
+						<parent>item_weight</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						setVisible(true);
+						setEnabled(true);
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>item_length</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Length</static>
+			</stringcontrolX>
+			<numberfieldX name="item_value">
+				<anchored>
+					<left>
+						<parent>item_length</parent>
+						<anchor>right</anchor>
+						<offset>15</offset>
+					</left>
+					<top>
+						<parent>item_weight</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>item_value</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Value</static>
+			</stringcontrolX>
+
+			<stringfieldX name="nonidentified">
+				<anchored>
+					<left>
+						<anchor>left</anchor>
+						<offset>7</offset>
+					</left>
+					<right>
+						<anchor>right</anchor>
+						<offset>-7</offset>
+					</right>
+					<top>
+						<parent>item_weight</parent>
+						<anchor>bottom</anchor>
+						<offset>25</offset>
+					</top>
+				</anchored>
+				<frame>
+					<name>modifier</name>
+					<offset>7,5,7,5</offset>
+				</frame>
+				<font>sheettextsmall</font>
+				<multilinespacing>15</multilinespacing>
+			</stringfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>nonidentified</to>
+					<position>aboveleft</position>
+					<offset>0,1</offset>
+				</anchored>
+				<font>sheetlabelsmall</font>
+				<static>At a glance</static>
+			</stringcontrolX>
+
+		  <!-- Identified -->  
+			<stringfieldX name="identified">
+				<anchored>
+					<left>
+						<anchor>left</anchor>
+						<offset>7</offset>
+					</left>
+					<right>
+						<anchor>right</anchor>
+						<offset>-7</offset>
+					</right>
+					<top>
+						<parent>nonidentified</parent>
+						<anchor>bottom</anchor>
+						<offset>19</offset>
+					</top>
+				</anchored>
+				<frame>
+					<name>modifier</name>
+					<offset>7,5,7,5</offset>
+				</frame>
+				<font>sheettextsmall</font>
+				<multilinespacing>15</multilinespacing>
+			</stringfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>identified</to>
+					<position>aboveleft</position>
+					<offset>0,1</offset>
+				</anchored>
+				<font>sheetlabelsmall</font>
+				<static>When identified</static>
+			</stringcontrolX>
+			<checkbox name="isidentified">
+				<anchored>
+					<to>identified</to>
+					<position>aboveright</position>
+					<offset>0,1</offset>
+					<size>
+						<width>12</width>
+						<height>12</height>
+					</size>
+				</anchored>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+					end
+				</script>
+			</checkbox>
+			
+		</sheetdata>
+	</windowclass>
+</root>

@@ -1,0 +1,2570 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root version="2.0">
+  
+  <windowclass name="combattracker">
+    <frame>ctbox</frame>
+    <minimize>minimized_combattracker</minimize>
+    <tooltip>
+      <text>Combat Tracker</text>
+    </tooltip>
+    <nodelete />
+    <sharable>
+      <shareas>combattracker_client</shareas>
+    </sharable>
+    <placement>
+      <size>
+        <width>660</width>
+        <height>512</height>
+      </size>
+    </placement>
+    <sizelimits>
+      <minimum>
+        <width>660</width>
+        <height>210</height>
+      </minimum>
+      <maximum>
+        <width>660</width>
+        <height>2000</height>
+      </maximum>
+      <dynamic>
+		<resize>vertical</resize>
+	  </dynamic>
+    </sizelimits>
+    <sheetdata>
+
+		<checkbox name="button_global_visibility">
+			<bounds>395,4,20,21</bounds>
+			<stateicons>
+			  <on>indicator_visible</on>
+			  <off>indicator_invisible</off>
+			</stateicons>
+			<sourceless />
+			<script>
+				function onValueChanged()
+					window.list.toggleVisibility();
+				end
+			</script>
+		</checkbox>
+
+		<button_toggle name="button_global_combat">
+			<anchored>
+				<to>button_global_visibility</to>
+				<position>right</position>
+				<offset>5,0</offset>
+				<size>
+					<width>20</width>
+				</size>
+			</anchored>
+			<icon>indicator_combat</icon>
+			<script>
+				function onValueChanged()
+					window.list.toggleCombat();
+				end
+			</script>
+		</button_toggle>
+		<button_toggle name="button_global_effects">
+			<anchored>
+				<to>button_global_combat</to>
+				<position>right</position>
+				<offset>5,0</offset>
+				<size>
+					<width>20</width>
+				</size>
+			</anchored>
+			<icon>indicator_effect</icon>
+			<script>
+				function onValueChanged()
+					window.list.toggleEffects();
+				end
+			</script>
+		</button_toggle>
+		<button_toggle name="button_global_notes">
+			<anchored>
+				<to>button_global_effects</to>
+				<position>right</position>
+				<offset>6,0</offset>
+				<size>
+					<width>20</width>
+				</size>
+			</anchored>
+			<icon>indicator_casterprep</icon>
+			<script>
+				function onValueChanged()
+					window.list.toggleNotes();
+				end
+			</script>
+		</button_toggle>
+
+      <windowlist name="list">
+        <datasource>.entries</datasource>
+        <class>combattracker_entry</class>
+        <bounds>0,30,-20,-50</bounds>
+
+        <acceptdrop class="mini_charsheet" fields="name" />
+        <acceptdrop class="charsheet" fields="name,db" />
+        <acceptdrop class="npc" fields="name,db" />
+        <acceptdrop class="monster" fields="name,db" />
+        
+        <script file="ct/scripts/ct.lua" />
+      </windowlist>
+
+ 		<scrollbar>
+			<anchored>
+				<to>list</to>
+				<position>right</position>
+				<offset>1,-4</offset>
+			</anchored>
+			<target>list</target>
+		</scrollbar>
+      
+      <genericcontrol>
+        <bounds>28,-51,33,40</bounds>
+        <activeicon>indicator_ctactive</activeicon>
+        <script>
+          function onInit()
+            if super and super.onInit then
+              super.onInit();
+            end
+            widget = addBitmapWidget(activeicon[1]);
+            setHoverCursor("hand");
+          end
+          
+          function onDragStart(button, x, y, draginfo)
+            draginfo.setType("combattrackeractivation");
+            draginfo.setIcon(activeicon[1]);
+            widget.setVisible(false);
+            
+            return true;
+          end
+          
+          function onDragEnd(draginfo)
+            widget.setVisible(true);
+          end
+        </script>
+      </genericcontrol>
+      <buttoncontrol>
+        <bounds>62,-50,49,42</bounds>
+        <icon>
+          <normal>button_ctnextactor</normal>
+          <pressed>button_ctnextactor_down</pressed>
+        </icon>
+        <tooltip>
+          <text>Next actor</text>
+        </tooltip>
+        <script>
+          function onButtonPress()
+            window.list.nextActor();
+          end
+          
+          function onDragStart(button, x, y, draginfo)
+            draginfo.setType("combattrackernextactor");
+            draginfo.setIcon(icon[1].normal[1]);
+            return true;
+          end
+        </script>
+      </buttoncontrol>
+
+      <combattrackerffsource>
+        <bounds>150,-38,20,20</bounds>
+        <icon>indicator_ctfffriend</icon>
+        <value>friend</value>
+        <tooltip>
+          <text>Friendly</text>
+        </tooltip>
+      </combattrackerffsource>
+      <combattrackerffsource>
+        <bounds>177,-38,20,20</bounds>
+        <icon>indicator_ctffneutral</icon>
+        <value>neutral</value>
+        <tooltip>
+          <text>Neutral</text>
+        </tooltip>
+      </combattrackerffsource>
+      <combattrackerffsource>
+        <bounds>204,-38,20,20</bounds>
+        <icon>indicator_ctfffoe</icon>
+        <value>foe</value>
+        <tooltip>
+          <text>Hostile</text>
+        </tooltip>
+      </combattrackerffsource>
+
+	  <buttoncontrol name="button_menu">
+				<bounds>-380,-35,40,15</bounds>
+				<icon>
+					<normal>button_menu</normal>
+					<pressed>button_menu_down</pressed>
+				</icon>
+				<tooltip>
+					<text>Right click for CT menu</text>
+				</tooltip>
+				<script>
+					function onClickDown(button, x, y)
+						return true;
+					end
+					
+					function onClickRelease(button, x, y)
+						if button == 1 then
+							Interface.openRadialMenu();
+							return true;
+						end
+					end
+					
+					function onInit()
+						if User.isHost() then
+							registerMenuItem("Reset the Combat Round back to Round 1", "resetround", 4);
+							registerMenuItem("Initiative", "initiative", 5);
+							registerMenuItem("Roll All Initiatives", "rollallinits", 5, 8);
+							registerMenuItem("Roll NPC Initiatives", "rollnpcinits", 5, 7);
+							registerMenuItem("Roll PC Initiatives", "rollpcinits", 5, 6);
+							registerMenuItem("Clear All Initiatives", "clearallinits", 5, 4);
+							
+							registerMenuItem("Delete NPCs from tracker", "deletenpcs", 3);
+							registerMenuItem("Confirm NPC Delete", "deletenpcs", 3, 1);
+
+							registerMenuItem("Rest", "rest", 6);
+							registerMenuItem("Rest 1 Hour. 1 hit and all exhaustion recovered.", "rest_1_hour", 6, 3);
+							registerMenuItem("Rest 2 Hours. 2 hits and all exhaustion recovered.", "rest_2_hours", 6, 4);
+							registerMenuItem("Rest 4 Hours. 4 hits and all exhaustion recovered.", "rest_4_hours", 6, 5);
+							registerMenuItem("Rest 8 Hours. 8 hits, all exhaustion and PP recovered.", "rest_8_hours", 6, 6);
+							registerMenuItem("Rest 12 Hours. 12 hits, all exhaustion and PP recovered.", "rest_12_hours", 6, 7);
+							registerMenuItem("Rest 24 Hours. 24 hits, all exhaustion and PP recovered.", "rest_24_hours", 6, 8);
+							registerMenuItem("Remove", "rest_remove", 6, 1);
+							registerMenuItem("Remove all Hits", "rest_hits", 6, 1, 6);
+							registerMenuItem("Remove all PP", "rest_pp", 6, 1, 7);
+							registerMenuItem("Remove all Effects", "rest_effects", 6, 1, 8);
+							registerMenuItem("Remove all Hits and PP", "rest_hits_pp", 6, 1, 1);
+							registerMenuItem("Remove all Hits and Effects", "rest_hits_effects", 6, 1, 2);
+							registerMenuItem("Remove all PP and Effects", "rest_pp_effects", 6, 1, 3);
+							registerMenuItem("Remove all Hits, PP and Effects", "rest_hits_pp_effects", 6, 1, 4);
+						end
+					end
+					
+					function onMenuSelection(selection, subselection, subsubselection)
+						if User.isHost() then
+							if selection == 4 then
+								window.roundcounter.setValue(1);
+								window.phasecounter.setValue(1);
+								window.list.removeTurnComplete();
+							end
+							if selection == 5 then
+								if subselection == 4 then
+									window.list.clearAllInit();
+								elseif subselection == 8 then
+									window.list.rollAllInit();
+								elseif subselection == 7 then
+									window.list.rollNPCInit();
+								elseif subselection == 6 then
+									window.list.rollPCInit();
+								end
+							end
+							if selection == 3 then
+								if subselection == 1 then
+									window.list.deleteNPCs();
+								end
+							end
+							if selection == 6 then
+								if subselection == 3 then
+									window.list.restHours(1);
+								elseif subselection == 4 then
+									window.list.restHours(2);
+								elseif subselection == 5 then
+									window.list.restHours(4);
+								elseif subselection == 6 then
+									window.list.restHours(8);
+								elseif subselection == 7 then
+									window.list.restHours(12);
+								elseif subselection == 8 then
+									window.list.restHours(24);
+								elseif subselection == 1 then
+									if subsubselection == 6 then
+										window.list.restRemoveHits();
+									elseif subsubselection == 7 then
+										window.list.restRemovePP();
+									elseif subsubselection == 8 then
+										window.list.restRemoveEffects();
+									elseif subsubselection == 1 then
+										window.list.restRemoveHitsPP();
+									elseif subsubselection == 2 then
+										window.list.restRemoveHitsEffects();
+									elseif subsubselection == 3 then
+										window.list.restRemovePPEffects();
+									elseif subsubselection == 4 then
+										window.list.restRemoveHitsPPEffects();
+									end
+								end
+							end
+						end
+					end
+				</script>
+			</buttoncontrol>
+
+      <stringcontrolX name="roundcounterlabel">
+        <bounds>-153,-35,50,15</bounds>
+        <font>sheetlabel</font>
+        <color>#ffffffff</color>
+        <static>Round</static>
+      </stringcontrolX>
+      <numberfieldX name="roundcounter" source="round">
+        <anchored>
+          <to>roundcounterlabel</to>
+          <position>righthigh</position>
+          <offset>0,-6</offset>
+          <size>
+            <width>40</width>
+            <height>25</height>
+          </size>
+        </anchored>
+        <frame>
+          <name>modifier</name>
+          <offset>3,3,3,3</offset>
+        </frame>
+        <font>sheetnumber</font>
+      </numberfieldX>
+      <buttoncontrol>
+        <bounds>-60,-50,52,42</bounds>
+        <icon>
+          <normal>button_ctnextround</normal>
+          <pressed>button_ctnextround_down</pressed>
+        </icon>
+        <tooltip>
+          <text>Next round</text>
+        </tooltip>
+        <script>
+          function onButtonPress()
+            window.list.nextRound();
+          end
+          
+          function onDragStart(button, x, y, draginfo)
+            draginfo.setType("combattrackernextround");
+            draginfo.setIcon(icon[1].normal[1]);
+            return true;
+          end
+        </script>
+      </buttoncontrol>
+		<close_ctbox />
+    </sheetdata>
+  </windowclass>
+
+  <windowclass name="combattracker_client">
+    <frame>ctbox</frame>
+    <minimize>minimized_combattracker</minimize>
+    <tooltip>
+      <text>Combat Tracker</text>
+    </tooltip>
+    <nodelete />
+    <placement>
+      <size>
+        <width>660</width>
+        <height>512</height>
+      </size>
+    </placement>
+    <sizelimits>
+      <minimum>
+        <height>210</height>
+      </minimum>
+      <maximum>
+        <height>2000</height>
+      </maximum>
+      <dynamic>
+        <resize>vertical</resize>
+      </dynamic>
+    </sizelimits>
+    <sheetdata>
+		<button_toggle name="button_global_combat">
+			<bounds>416,4,20,21</bounds>
+			<icon>indicator_combat</icon>
+			<script>
+				function onValueChanged()
+					window.list.toggleCombat();
+				end
+			</script>
+		</button_toggle>
+		<button_toggle name="button_global_effects">
+			<anchored>
+				<to>button_global_combat</to>
+				<position>right</position>
+				<offset>20,0</offset>
+				<size>
+					<width>20</width>
+				</size>
+			</anchored>
+			<icon>indicator_effect</icon>
+			<script>
+				function onValueChanged()
+					window.list.toggleEffects();
+				end
+			</script>
+		</button_toggle>
+
+      <windowlist name="list">
+        <datasource>.entries</datasource>
+        <class>combattracker_entry</class>
+        <bounds>0,30,-20,-50</bounds>
+
+        <acceptdrop class="mini_charsheet" fields="name" />
+        <acceptdrop class="charsheet" fields="name,db" />
+        <acceptdrop class="npc" fields="name,db" />
+        <acceptdrop class="monster" fields="name,db" />
+
+        <script file="ct/scripts/ct.lua" />
+      </windowlist>
+
+ 		<scrollbar>
+			<anchored>
+				<to>list</to>
+				<position>right</position>
+				<offset>1,-4</offset>
+			</anchored>
+			<target>list</target>
+		</scrollbar>
+
+      <stringcontrolX name="roundcounterlabel">
+        <bounds>-111,-35,50,15</bounds>
+        <font>sheetlabel</font>
+        <color>#ffffffff</color>
+        <static>Round</static>
+      </stringcontrolX>
+      <numberfieldX name="roundcounter" source="round">
+        <anchored>
+          <to>roundcounterlabel</to>
+          <position>righthigh</position>
+          <offset>0,-6</offset>
+          <size>
+            <width>40</width>
+            <height>25</height>
+          </size>
+        </anchored>
+        <frame>
+          <name>modifier</name>
+          <offset>3,3,3,3</offset>
+        </frame>
+        <font>sheetnumber</font>
+        <readonly/>
+      </numberfieldX>
+    </sheetdata>
+  </windowclass>
+
+  <windowclass name="combattracker_entry">
+    <frame>ctentrybox</frame>
+    <sizelimits>
+      <minimum>
+        <height>170</height>
+      </minimum>
+    </sizelimits>
+    <script file="ct/scripts/ct_entry.lua" />
+    <sheetdata>
+      <!-- Hidden fields -->
+      <stringfieldX name="type">
+        <bounds>0,0,0,0</bounds>
+        <invisible />
+      </stringfieldX>
+      <stringfieldX name="dbnode">
+        <bounds>0,0,0,0</bounds>
+        <invisible />
+      </stringfieldX>
+      <stringfieldX name="tokenrefnode">
+        <bounds>0,0,0,0</bounds>
+        <invisible />
+      </stringfieldX>
+      <numberfieldX name="identified">
+        <bounds>0,0,0,0</bounds>
+        <invisible />
+      </numberfieldX>
+      <numberfieldX name="tokenrefid">
+        <bounds>0,0,0,0</bounds>
+        <invisible />
+      </numberfieldX>
+      <stringfieldX name="fof">
+        <bounds>0,0,0,0</bounds>
+        <invisible />
+      </stringfieldX>
+	  <stringfieldX name="health_f">
+        <bounds>0,0,0,0</bounds>
+        <invisible />
+      </stringfieldX>
+      <numberfieldX name="parryamount">
+        <bounds>0,0,0,0</bounds>
+        <invisible />
+      </numberfieldX>
+	  
+      <!-- Basics -->
+      <tokenfield name="token">
+        <bounds>33,6,23,23</bounds>
+        <empty>indicator_emptytoken</empty>
+        <script file="ct/scripts/ct_token.lua" />
+      </tokenfield>
+      <checkbox name="turncomplete">
+        <anchored>
+          <to>token</to>
+          <position>insidetopleft</position>
+          <offset>-3,-2</offset>
+          <size>
+            <width>12</width>
+            <height>12</height>
+          </size>
+        </anchored>
+        <stateicons>
+          <on>indicator_turntaken</on>
+          <off>indicator_turnos</off>
+        </stateicons>
+      </checkbox>
+      <genericcontrol name="healthstatus">
+        <anchored>
+          <to>token</to>
+          <position>insidebottomleft</position>
+          <offset>-1,0</offset>
+          <size>
+            <width>8</width>
+            <height>8</height>
+          </size>
+        </anchored>
+      </genericcontrol>
+      <checkbox name="shownpc">
+        <anchored>
+          <to>token</to>
+          <position>righthigh</position>
+          <offset>0,-6</offset>
+          <size>
+            <width>18</width>
+            <height>18</height>
+          </size>
+        </anchored>
+        <stateicons>
+          <on>indicator_visible</on>
+          <off>indicator_invisible</off>
+        </stateicons>
+        <script>
+          function onValueChanged()
+            window.token.updateVisibility();
+          end
+        </script>
+      </checkbox>
+
+      <!-- For subwindows to anchor -->
+      <genericcontrol name="listanchor">
+        <anchored>
+          <to>token</to>
+          <position>righthigh</position>
+          <offset>1,6</offset>
+          <size>
+            <width>1</width>
+            <height>17</height>
+          </size>
+        </anchored>
+      </genericcontrol>
+
+      <!-- Name, Identity or Label -->
+      <stringfieldX name="label">
+        <anchored>
+          <to>token</to>
+          <position>righthigh</position>
+          <offset>1,7</offset>
+          <size>
+            <width>155</width>
+            <height>17</height>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+        <invisible />
+        <script>
+          function recalc()
+            local node = window.getDatabaseNode();
+            local myval = "";
+            if node then
+              local nameval = node.createChild("name","string").getValue();
+              local glanceval = node.createChild("glance","string").getValue();
+              if window.isIdentified() then
+                myval = nameval;
+              else
+                myval = glanceval;
+              end
+            end
+            setValue(myval);
+            window.token.setName(myval);
+          end
+
+          function onDragStart(button, x, y, draginfo)
+            draginfo.setType("combattrackerentry");
+            draginfo.setStringData(getValue());
+            draginfo.setCustomData(window);
+            return true;
+          end
+
+          function onInit()
+            if super and super.onInit then
+              super.onInit();
+            end
+            local node = window.getDatabaseNode();
+            if node then
+              node.createChild("name","string").onUpdate = recalc;
+              node.createChild("glance","string").onUpdate = recalc;
+              node.createChild("identified","number").onUpdate = recalc;
+            end
+            setHoverCursor("hand");
+            recalc();
+          end
+          
+          function onDrop(...)
+            if window.onDrop(...) then
+              return true;
+            else
+              return;
+            end
+          end
+        </script>
+      </stringfieldX>
+      <stringfieldX name="glance">
+        <anchored>
+          <to>token</to>
+          <position>righthigh</position>
+          <offset>1,7</offset>
+          <size>
+            <width>90</width>
+            <height>17</height>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+		<tooltip />
+        <script>
+          function onDragStart(button, x, y, draginfo)
+            draginfo.setType("combattrackerentry");
+            draginfo.setStringData(getValue());
+            draginfo.setCustomData(window);
+            return true;
+          end
+
+          function onInit()
+            if super and super.onInit then
+              super.onInit();
+            end
+            setHoverCursor("hand");
+			setTooltipText(getValue());
+          end
+          
+          function onDrop(...)
+            if window.onDrop(...) then
+              return true;
+            else
+              return;
+            end
+          end
+        </script>
+      </stringfieldX>
+      <stringfieldX name="name">
+        <anchored>
+          <to>token</to>
+          <position>righthigh</position>
+          <offset>96,7</offset>
+          <size>
+            <width>85</width>
+            <height>17</height>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+		<tooltip />
+        <script>
+          function onDragStart(button, x, y, draginfo)
+            draginfo.setType("combattrackerentry");
+            draginfo.setStringData(getValue());
+            draginfo.setCustomData(window);
+            return true;
+          end
+
+          function onInit()
+            if super and super.onInit then
+              super.onInit();
+            end
+            setHoverCursor("hand");
+			setTooltipText(getValue());
+          end
+
+          function onLinkUpdated(source)
+            setValue(source.getValue());
+          end
+
+          function setLink(srcnode)
+            if srcnode then
+              linknode = srcnode;
+              linknode.onUpdate = onLinkUpdated;
+              onLinkUpdated(linknode);
+              local linkWidget = addBitmapWidget("indicator_linked");
+			  linkWidget.setPosition("bottomright", 25, -7);
+			  linkWidget.setSize(9,9);
+            end
+          end
+          
+          function onDrop(...)
+            if window.onDrop(...) then
+              return true;
+            else
+              return;
+            end
+          end
+        </script>
+      </stringfieldX>
+      <stringcontrolX name="nameLabel">
+        <anchored>
+          <to>name</to>
+          <position>aboveleft</position>
+          <offset>0,0</offset>
+          <size>
+            <width>50</width>
+            <height>11</height>
+          </size>
+        </anchored>
+        <font>sheetlabelsmall</font>
+        <color>#E0786147</color>
+        <static>Identity</static>
+      </stringcontrolX>
+      <numberfieldX name="idnum">
+        <anchored>
+          <to>token</to>
+          <position>righthigh</position>
+          <offset>186,7</offset>
+          <size>
+            <width>25</width>
+            <height>17</height>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+	  </numberfieldX>
+      <stringcontrolX name="idnumLabel">
+        <anchored>
+          <to>idnum</to>
+          <position>aboveleft</position>
+          <offset>0,0</offset>
+          <size>
+            <width>25</width>
+            <height>11</height>
+          </size>
+        </anchored>
+        <font>sheetlabelsmall</font>
+        <color>#E0786147</color>
+        <static>ID #</static>
+        <center/>
+      </stringcontrolX>
+
+      <genericcontrol name="leftanchor">
+        <anchored>
+          <to>token</to>
+          <position>righthigh</position>
+          <offset>210,7</offset>
+          <size>
+            <width>1</width>
+            <height>17</height>
+          </size>
+        </anchored>
+      </genericcontrol>
+      <genericcontrol name="initdiceholder">
+        <anchored>
+          <left>
+            <parent>leftanchor</parent>
+            <anchor>right</anchor>
+          <offset>5</offset>
+          </left>
+          <top>
+            <parent>leftanchor</parent>
+            <anchor>top</anchor>
+          </top>
+          <size>
+            <width>30</width>
+            <height>17</height>
+          </size>
+        </anchored>
+        <frame>
+          <name>ghostdice</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+		<script>
+			function showHide()
+				if (User.isHost()) then
+					setVisible(true);
+				else
+					local ctNode = DB.findNode(window.getDatabaseNode().getNodeName());
+					if ctNode.isOwner() then
+						setVisible(true);
+					else
+						setVisible(false);
+					end
+				end
+			end
+			
+			function onInit()
+				showHide();
+			end
+		</script>
+      </genericcontrol>
+      <numberfieldX name="initiative">
+        <anchored>
+          <left>
+            <parent>leftanchor</parent>
+            <anchor>right</anchor>
+            <relation>relative</relation>
+          <offset>5</offset>
+          </left>
+          <top>
+            <parent>leftanchor</parent>
+            <anchor>top</anchor>
+          </top>
+          <size>
+            <width>30</width>
+            <height>17</height>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+		<script>
+			function onDoubleClick(x,y)	
+				local ctNode = DB.findNode(window.getDatabaseNode().getNodeName());
+				window.rollInit(ctNode);
+			end
+		</script>
+		</numberfieldX>
+      <stringcontrolX name="initLabel">
+        <anchored>
+          <to>initiative</to>
+          <position>aboveleft</position>
+          <offset>0,0</offset>
+          <size>
+            <width>30</width>
+            <height>11</height>
+          </size>
+        </anchored>
+        <font>sheetlabelsmall</font>
+        <color>#E0786147</color>
+        <static>Init.</static>
+        <center/>
+      </stringcontrolX>
+	  <stringcontrolX name="health_label">
+		<anchored>
+          <left>
+            <parent>initiative</parent>
+            <anchor>right</anchor>
+            <relation>relative</relation>
+            <offset>5</offset>
+          </left>
+          <top>
+			<parent>leftanchor</parent>
+            <anchor>top</anchor>
+          </top>
+          <size>
+            <width>30</width>
+            <height>17</height>
+          </size>
+        </anchored>
+        <font>sheetlabel</font>
+		<static>Hits:</static>
+	  </stringcontrolX>
+	  <genericcontrol name="health">
+        <anchored>
+          <left>
+            <parent>health_label</parent>
+            <anchor>right</anchor>
+            <relation>relative</relation>
+            <offset>5</offset>
+          </left>
+          <top>
+			<parent>leftanchor</parent>
+            <anchor>top</anchor>
+			<offset>-5</offset>
+          </top>
+          <size>
+            <width>12</width>
+            <height>22</height>
+          </size>
+        </anchored>
+        <icon>healthbar</icon>
+        <stateicons>
+          <nowound>nowound</nowound>
+          <lightwound>lightwound</lightwound>
+          <mediumwound>healthbar</mediumwound>
+		  <largewound>largewound</largewound>
+		  <dead>dead</dead>
+        </stateicons>
+        <script>
+          function onDrop(x, y, draginfo)
+            if draginfo.isType("combattrackerff") then
+              state = draginfo.getStringData();
+              window.health_f.setValue(state);
+              window.token.updateUnderlay();
+              setIcon(stateicons[1][state][1]);
+            end
+          end
+
+          function setState(s)
+            state = s;
+            window.health_f.setValue(state);
+            if stateicons[1][state] then
+              setIcon(stateicons[1][state][1]);
+            else
+              setIcon(icon[1]);
+            end
+            window.token.updateUnderlay();
+          end
+		  		  
+		  function cycleState(amount)
+			local s;
+			local newAmount;
+			if window.health_f.getValue() == "nowound" then
+				newAmount = 0;
+			elseif window.health_f.getValue() == "lightwound" then
+				newAmount = 1;
+			elseif window.health_f.getValue() == "mediumwound" then
+				newAmount = 2;
+			elseif window.health_f.getValue() == "largewound" then
+				newAmount = 3;
+			elseif window.health_f.getValue() == "dead" then
+				newAmount = 4;
+			else
+				newAmount = -1;
+			end
+			newAmount = (newAmount + amount) % 5;
+			if newAmount == 0 then
+				s = "nowound";
+			elseif newAmount == 1 then
+				s = "lightwound";
+			elseif newAmount == 2 then
+				s = "mediumwound";
+			elseif newAmount == 3 then
+				s = "largewound";
+			elseif newAmount == 4 then
+				s = "dead";
+			end			
+			setState(s);
+		  end
+		  
+		  function onClickDown(x,y)
+			cycleState(1);
+			return true;
+		  end
+		  
+		  function onWheel(amount)
+			  local key = PreferenceManager.load(Preferences.MouseScrollerKeyPref);
+
+			  if key and key ~= Preferences.MouseScrollerKey.None then
+			  
+				if (key == Preferences.MouseScrollerKey.Ctrl and Input.isControlPressed() == true) 
+							or (key == Preferences.MouseScrollerKey.Shift and Input.isShiftPressed() == true) 
+							or (key == Preferences.MouseScrollerKey.Alt and Input.isAltPressed() == true) then 
+					cycleState(amount);
+					return true    
+				end
+				
+			  elseif key == Preferences.MouseScrollerKey.None then
+				cycleState(amount);
+				return true;
+			  else
+				return false;
+			  end
+
+			return false;
+		  end
+        </script>
+      </genericcontrol>
+	  <numberfieldX name="current_hits">
+		<anchored>
+          <left>
+            <parent>health</parent>
+            <anchor>right</anchor>
+            <relation>relative</relation>
+          <offset>5</offset>
+          </left>
+          <bottom>
+            <parent>leftanchor</parent>
+            <anchor>bottom</anchor>
+			<offset>-3</offset>
+          </bottom>
+          <size>
+            <width>25</width>
+            <height>17</height>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+	  </numberfieldX>
+	  <stringcontrolX name="health_spacer">	
+	<anchored>
+          <left>
+            <parent>current_hits</parent>
+            <anchor>right</anchor>
+            <relation>relative</relation>
+          <offset>5</offset>
+          </left>
+          <top>
+            <parent>leftanchor</parent>
+            <anchor>top</anchor>
+          </top>
+          <size>
+            <width>5</width>
+            <height>17</height>
+          </size>
+        </anchored>
+		<font>sheetlabel</font>
+		<static>/</static>
+	</stringcontrolX>
+	  <numberfieldX name="maximum_hits">
+		<anchored>
+          <left>
+            <parent>health_spacer</parent>
+            <anchor>right</anchor>
+            <relation>relative</relation>
+          <offset>5</offset>
+          </left>
+          <bottom>
+            <parent>leftanchor</parent>
+            <anchor>bottom</anchor>
+			<offset>-3</offset>
+          </bottom>
+          <size>
+            <width>30</width>
+            <height>17</height>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+	  </numberfieldX>
+	  <stringcontrolX name="pp_label">
+		<anchored>
+          <left>
+            <parent>maximum_hits</parent>
+            <anchor>right</anchor>
+            <relation>relative</relation>
+            <offset>5</offset>
+          </left>
+          <top>
+			<parent>leftanchor</parent>
+            <anchor>top</anchor>
+          </top>
+          <size>
+            <width>55</width>
+            <height>17</height>
+          </size>
+        </anchored>
+        <font>sheetlabel</font>
+		<static>Pow. Pts:</static>
+	  </stringcontrolX>
+	  <numberfieldX name="current_pps">
+		<anchored>
+          <left>
+            <parent>pp_label</parent>
+            <anchor>right</anchor>
+            <relation>relative</relation>
+          <offset>5</offset>
+          </left>
+          <bottom>
+            <parent>leftanchor</parent>
+            <anchor>bottom</anchor>
+			<offset>-3</offset>
+          </bottom>
+          <size>
+            <width>25</width>
+            <height>17</height>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+	  </numberfieldX>
+	  <stringcontrolX name="pp_spacer">	
+	<anchored>
+          <left>
+            <parent>current_pps</parent>
+            <anchor>right</anchor>
+            <relation>relative</relation>
+          <offset>5</offset>
+          </left>
+          <top>
+            <parent>leftanchor</parent>
+            <anchor>top</anchor>
+          </top>
+          <size>
+            <width>5</width>
+            <height>17</height>
+          </size>
+        </anchored>
+		<font>sheetlabel</font>
+		<static>/</static>
+	</stringcontrolX>
+	  <numberfieldX name="maximum_pps">
+		<anchored>
+          <left>
+            <parent>pp_spacer</parent>
+            <anchor>right</anchor>
+            <relation>relative</relation>
+          <offset>5</offset>
+          </left>
+          <bottom>
+            <parent>leftanchor</parent>
+            <anchor>bottom</anchor>
+			<offset>-3</offset>
+          </bottom>
+          <size>
+            <width>30</width>
+            <height>17</height>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+	  </numberfieldX>
+	  
+	  
+	  
+	  <stringcontrolX name="db_label">
+		<anchored>
+          <to>token</to>
+          <position>insidetopleft</position>
+          <offset>25,40</offset>
+          <size>
+            <width>105</width>
+            <height>17</height>
+          </size>
+        </anchored>
+        <font>sheetlabel</font>
+		<static>Defensive Bonus:</static>
+	  </stringcontrolX>
+	  <numberfieldX name="db">
+		<anchored>
+          <left>
+            <parent>db_label</parent>
+            <anchor>right</anchor>
+            <relation>relative</relation>
+          <offset>5</offset>
+          </left>
+          <bottom>
+            <parent>db_label</parent>
+            <anchor>bottom</anchor>
+			<offset>-3</offset>
+          </bottom>
+          <size>
+            <width>30</width>
+            <height>17</height>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+	  </numberfieldX>
+	  <stringcontrolX name="size_label">
+		<anchored>
+          <left>
+            <parent>db</parent>
+            <anchor>right</anchor>
+            <relation>relative</relation>
+          <offset>10</offset>
+          </left>
+          <top>
+            <parent>db_label</parent>
+            <anchor>top</anchor>
+          </top>
+          <size>
+            <width>80</width>
+            <height>17</height>
+          </size>
+        </anchored>
+		<font>sheetlabel</font>
+		<static>Size/Eff. Size:</static>
+	  </stringcontrolX>
+	  <multitext name="actual_size">
+		<anchored>
+          <left>
+            <parent>size_label</parent>
+            <anchor>right</anchor>
+            <relation>relative</relation>
+          <offset>5</offset>
+          </left>
+          <bottom>
+            <parent>db_label</parent>
+            <anchor>bottom</anchor>
+			<offset>-2</offset>
+          </bottom>
+          <size>
+            <width>50</width>
+            <height>17</height>
+          </size>
+        </anchored>
+		<statelabels>
+          <state>Tiny</state>
+          <state>Small</state>
+          <state>Medium</state>
+          <state>Large</state>
+		  <state>Huge</state>
+        </statelabels>
+		<font>sheettextsmall</font>
+		<center />
+	</multitext>
+	<stringcontrolX name="size_spacer">	
+	<anchored>
+          <left>
+            <parent>actual_size</parent>
+            <anchor>right</anchor>
+            <relation>relative</relation>
+          <offset>5</offset>
+          </left>
+          <top>
+            <parent>db_label</parent>
+            <anchor>top</anchor>
+          </top>
+          <size>
+            <width>5</width>
+            <height>17</height>
+          </size>
+        </anchored>
+		<font>sheetlabel</font>
+		<static>/</static>
+	</stringcontrolX>
+	<multitext name="critical_size">
+		<anchored>
+          <left>
+            <parent>size_spacer</parent>
+            <anchor>right</anchor>
+            <relation>relative</relation>
+          <offset>5</offset>
+          </left>
+          <bottom>
+            <parent>db_label</parent>
+            <anchor>bottom</anchor>
+			<offset>-2</offset>
+          </bottom>
+          <size>
+            <width>50</width>
+            <height>17</height>
+          </size>
+        </anchored>
+		<statelabels>
+          <state>Tiny</state>
+          <state>Small</state>
+          <state>Medium</state>
+          <state>Large</state>
+		  <state>Huge</state>
+        </statelabels>
+		<font>sheettextsmall</font>
+		<center />
+	</multitext>
+	<stringcontrolX name="rr_label">
+		<anchored>
+          <left>
+            <parent>critical_size</parent>
+            <anchor>right</anchor>
+          <offset>15</offset>
+          </left>
+          <top>
+            <parent>db_label</parent>
+            <anchor>top</anchor>
+          </top>
+          <size>
+            <width>65</width>
+            <height>17</height>
+          </size>
+        </anchored>
+		<font>sheetlabel</font>
+		<static>Res. Rolls:</static>
+	  </stringcontrolX>
+	  <genericcontrol name="magic_rr_diceholder">
+        <anchored>
+          <left>
+            <parent>rr_label</parent>
+            <anchor>right</anchor>
+          <offset>5</offset>
+          </left>
+          <top>
+            <parent>db_label</parent>
+            <anchor>top</anchor>
+			<offset>-4</offset>
+          </top>
+          <size>
+            <width>30</width>
+            <height>17</height>
+          </size>
+        </anchored>
+        <frame>
+          <name>ghostdice</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+		<script>
+			function showHide()
+				if (User.isHost()) then
+					setVisible(true);
+				else
+					local ctNode = DB.findNode(window.getDatabaseNode().getNodeName());
+					if ctNode.isOwner() then
+						setVisible(true);
+					else
+						setVisible(false);
+					end
+				end
+			end
+			
+			function onInit()
+				showHide();
+			end
+		</script>
+      </genericcontrol>
+      <numberfieldX name="magic_rr" source="resistances.magic">
+        <anchored>
+          <left>
+            <parent>rr_label</parent>
+            <anchor>right</anchor>
+            <relation>relative</relation>
+          <offset>5</offset>
+          </left>
+          <top>
+            <parent>db_label</parent>
+            <anchor>top</anchor>
+			<offset>-4</offset>
+          </top>
+          <size>
+            <width>30</width>
+            <height>17</height>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+		<script>
+			function onDoubleClick(x,y)	
+				local ctNode = DB.findNode(window.getDatabaseNode().getNodeName());
+				window.rollInit(ctNode);
+			end
+		</script>
+		</numberfieldX>
+      <stringcontrolX name="magic_rr_Label">
+        <anchored>
+          <to>magic_rr</to>
+          <position>aboveleft</position>
+          <offset>0,0</offset>
+          <size>
+            <width>30</width>
+            <height>11</height>
+          </size>
+        </anchored>
+        <font>sheetlabelsmall</font>
+        <color>#E0786147</color>
+        <static>Magic</static>
+        <center/>
+      </stringcontrolX>
+	  <genericcontrol name="stamina_rr_diceholder">
+        <anchored>
+          <left>
+            <parent>magic_rr</parent>
+            <anchor>right</anchor>
+          <offset>5</offset>
+          </left>
+          <top>
+            <parent>db_label</parent>
+            <anchor>top</anchor>
+			<offset>-4</offset>
+          </top>
+          <size>
+            <width>30</width>
+            <height>17</height>
+          </size>
+        </anchored>
+        <frame>
+          <name>ghostdice</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+		<script>
+			function showHide()
+				if (User.isHost()) then
+					setVisible(true);
+				else
+					local ctNode = DB.findNode(window.getDatabaseNode().getNodeName());
+					if ctNode.isOwner() then
+						setVisible(true);
+					else
+						setVisible(false);
+					end
+				end
+			end
+			
+			function onInit()
+				showHide();
+			end
+		</script>
+      </genericcontrol>
+      <numberfieldX name="stamina_rr" source="resistances.stamina">
+        <anchored>
+          <left>
+            <parent>magic_rr</parent>
+            <anchor>right</anchor>
+            <relation>relative</relation>
+          <offset>5</offset>
+          </left>
+          <top>
+            <parent>db_label</parent>
+            <anchor>top</anchor>
+			<offset>-4</offset>
+          </top>
+          <size>
+            <width>30</width>
+            <height>17</height>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+		<script>
+			function onDoubleClick(x,y)	
+				local ctNode = DB.findNode(window.getDatabaseNode().getNodeName());
+				window.rollInit(ctNode);
+			end
+		</script>
+		</numberfieldX>
+      <stringcontrolX name="stamina_rr_Label">
+        <anchored>
+          <to>stamina_rr</to>
+          <position>aboveleft</position>
+          <offset>0,0</offset>
+          <size>
+            <width>30</width>
+            <height>11</height>
+          </size>
+        </anchored>
+        <font>sheetlabelsmall</font>
+        <color>#E0786147</color>
+        <static>Stam.</static>
+        <center/>
+      </stringcontrolX>
+	  <genericcontrol name="will_rr_diceholder">
+        <anchored>
+          <left>
+            <parent>stamina_rr</parent>
+            <anchor>right</anchor>
+          <offset>5</offset>
+          </left>
+          <top>
+            <parent>db_label</parent>
+            <anchor>top</anchor>
+			<offset>-4</offset>
+          </top>
+          <size>
+            <width>30</width>
+            <height>17</height>
+          </size>
+        </anchored>
+        <frame>
+          <name>ghostdice</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+		<script>
+			function showHide()
+				if (User.isHost()) then
+					setVisible(true);
+				else
+					local ctNode = DB.findNode(window.getDatabaseNode().getNodeName());
+					if ctNode.isOwner() then
+						setVisible(true);
+					else
+						setVisible(false);
+					end
+				end
+			end
+			
+			function onInit()
+				showHide();
+			end
+		</script>
+      </genericcontrol>
+      <numberfieldX name="will_rr" source="resistances.will">
+        <anchored>
+          <left>
+            <parent>stamina_rr</parent>
+            <anchor>right</anchor>
+            <relation>relative</relation>
+          <offset>5</offset>
+          </left>
+          <top>
+            <parent>db_label</parent>
+            <anchor>top</anchor>
+			<offset>-4</offset>
+          </top>
+          <size>
+            <width>30</width>
+            <height>17</height>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+		<script>
+			function onDoubleClick(x,y)	
+				local ctNode = DB.findNode(window.getDatabaseNode().getNodeName());
+				window.rollInit(ctNode);
+			end
+		</script>
+		</numberfieldX>
+      <stringcontrolX name="will_rr_Label">
+        <anchored>
+          <to>will_rr</to>
+          <position>aboveleft</position>
+          <offset>0,0</offset>
+          <size>
+            <width>30</width>
+            <height>11</height>
+          </size>
+        </anchored>
+        <font>sheetlabelsmall</font>
+        <color>#E0786147</color>
+        <static>Will</static>
+        <center/>
+      </stringcontrolX>
+	  
+	  <checkbox name="db_show_box">
+		<anchored>
+			<top>
+				<parent>db_label</parent>
+				<anchor>top</anchor>
+				<offset>-10</offset>
+			</top>
+			<right>
+				<parent>db_label</parent>
+				<anchor>left</anchor>
+				<offset>7</offset>
+			</right>
+			<size>
+				<width>45</width>
+				<height>35</height>
+			</size>
+		</anchored>
+		<stateicons>
+			  <on>icon_arrow_up</on>
+			  <off>icon_arrow_down</off>
+		</stateicons>
+		<script>
+			function onInit()
+				if super and super.onInit() then
+					super.onInit();
+				end
+			end
+			
+			function onValueChanged()
+				window.defence_panel.applyFilter();
+			end
+		</script>
+	  </checkbox>
+	  
+	  <windowlist name="defence_panel">
+		<anchored>
+          <top>
+            <parent>db_label</parent>
+            <anchor>bottom</anchor>
+			<offset>5</offset>
+          </top>
+          <left>
+            <anchor>left</anchor>
+          </left>
+          <right>
+            <anchor>right</anchor>
+          </right>
+        </anchored>
+		<datasource>.defences</datasource>
+        <class>combatpanel_defence</class>
+        <noscroll/>
+		<script>		
+          function onFilter()
+            return window.db_show_box.getState();
+          end
+          
+          function onListRearranged()
+            window.setSpacerState();
+          end
+        </script>
+        <skipempty />
+	  </windowlist>
+	  
+	  <stringcontrolX name="current_attack_label">
+		<anchored>
+          <top>
+            <parent>defence_panel</parent>
+            <anchor>bottom</anchor>
+			<offset>10</offset>
+          </top>
+		  <left>
+		    <parent>db_label</parent>
+            <anchor>left</anchor>
+          </left>
+          <size>
+            <width>105</width>
+            <height>17</height>
+          </size>
+        </anchored>
+        <font>sheetlabel</font>
+		<static>Current Action:</static>
+	  </stringcontrolX>
+	  
+	  <!-- Include a windowlist here and allocate the class based on the attack type - spell/melee/ranged -->
+	  
+	  <stringcontrolX name="effects_label">
+		<anchored>
+          <top>
+            <parent>current_attack_label</parent>
+            <anchor>bottom</anchor>
+			<offset>20</offset>
+          </top>
+		  <left>
+		    <parent>db_label</parent>
+            <anchor>left</anchor>
+          </left>
+          <size>
+            <width>45</width>
+            <height>17</height>
+          </size>
+        </anchored>
+        <font>sheetlabel</font>
+		<static>Effects:</static>
+	  </stringcontrolX>
+	  <checkbox name="blindfighting">
+		<anchored>
+			<top>
+				<parent>effects_label</parent>
+				<anchor>top</anchor>
+				<offset>-2</offset>
+			</top>
+			<left>
+				<parent>effects_label</parent>
+				<anchor>right</anchor>
+				<offset>7</offset>
+			</left>
+			<size>
+				<width>40</width>
+				<height>17</height>
+			</size>
+		</anchored>
+	  </checkbox>
+	  <stringcontrolX name="blind_label">
+        <anchored>
+          <to>blindfighting</to>
+          <position>above</position>
+          <offset>0</offset>
+        </anchored>
+        <font>sheetlabelsmall</font>
+        <color>#E0786147</color>
+        <static>Blind</static>
+        <center/>
+      </stringcontrolX>
+	  <checkbox name="mounted_fighting">
+		<anchored>
+			<top>
+				<parent>effects_label</parent>
+				<anchor>top</anchor>
+				<offset>-2</offset>
+			</top>
+			<left>
+				<parent>blindfighting</parent>
+				<anchor>right</anchor>
+				<offset>7</offset>
+			</left>
+			<size>
+				<width>40</width>
+				<height>17</height>
+			</size>
+		</anchored>
+	  </checkbox>
+	  <stringcontrolX name="mounted_label">
+        <anchored>
+          <to>mounted_fighting</to>
+          <position>above</position>
+          <offset>0</offset>
+        </anchored>
+        <font>sheetlabelsmall</font>
+        <color>#E0786147</color>
+        <static>Mounted</static>
+        <center/>
+      </stringcontrolX>
+	  
+	  <checkbox name="effects_show_box">
+		<anchored>
+			<top>
+				<parent>effects_label</parent>
+				<anchor>top</anchor>
+				<offset>-10</offset>
+			</top>
+			<right>
+				<parent>current_attack_label</parent>
+				<anchor>left</anchor>
+				<offset>7</offset>
+			</right>
+			<size>
+				<width>45</width>
+				<height>35</height>
+			</size>
+		</anchored>
+		<stateicons>
+			  <on>icon_arrow_up</on>
+			  <off>icon_arrow_down</off>
+		</stateicons>
+		<script>
+			function onInit()
+				if super and super.onInit() then
+					super.onInit();
+				end
+				onValueChanged();
+			end
+			
+			function onValueChanged()
+				window.effects_panel.applyFilter();
+				window.durationLabel.setVisible(getState());
+			end
+		</script>
+	  </checkbox>
+	  <stringcontrolX name="sum_effects_label">
+		<anchored>
+          <top>
+            <parent>current_attack_label</parent>
+            <anchor>bottom</anchor>
+			<offset>10</offset>
+          </top>
+		  <left>
+		    <parent>db_label</parent>
+            <anchor>left</anchor>
+			<offset>175</offset>
+          </left>
+          <size>
+            <width>65</width>
+            <height>17</height>
+          </size>
+        </anchored>
+        <font>sheetlabel</font>
+		<static>Summary</static>
+	  </stringcontrolX>
+	  <numberfieldX name="sum_penalty">
+        <anchored>
+          <to>effects_label</to>
+          <position>right</position>
+          <offset>200</offset>
+          <size>
+            <width>40</width>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+        <script>
+          function onDrop(x, y, draginfo)
+            return window.onDrop(x, y, draginfo);
+          end
+        </script>
+      </numberfieldX>
+	  <stringcontrolX name="penaltyLabel">
+        <anchored>
+          <to>sum_penalty</to>
+          <position>belowleft</position>
+          <offset>0,0</offset>
+          <size>
+            <width>40</width>
+            <height>11</height>
+          </size>
+        </anchored>
+        <font>sheetlabelsmall</font>
+        <color>#E0786147</color>
+        <static>Penalty</static>
+        <center/>
+      </stringcontrolX>
+      <stringcontrolX name="durationLabel">
+        <anchored>
+          <to>penaltyLabel</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>40</width>
+          </size>
+        </anchored>
+        <font>sheetlabelsmall</font>
+        <color>#E0786147</color>
+        <center/>
+        <static>Duration</static>
+      </stringcontrolX>
+      	  
+	  <numberfieldX name="sum_bleeding">
+        <anchored>
+          <to>sum_penalty</to>
+          <position>right</position>
+          <offset>50</offset>
+          <size>
+            <width>40</width>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+        <script>
+          function onDrop(x, y, draginfo)
+            return window.onDrop(x, y, draginfo);
+          end
+        </script>
+      </numberfieldX>
+	  <stringcontrolX name="bleedingLabel">
+        <anchored>
+          <to>sum_bleeding</to>
+          <position>belowleft</position>
+          <offset>0,0</offset>
+          <size>
+            <width>40</width>
+            <height>11</height>
+          </size>
+        </anchored>
+        <font>sheetlabelsmall</font>
+        <color>#E0786147</color>
+        <static>Bleed</static>
+        <center/>
+      </stringcontrolX>
+	  
+	  <numberfieldX name="sum_stun">
+        <anchored>
+          <to>sum_bleeding</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>40</width>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+        <script>
+          function onDrop(x, y, draginfo)
+            return window.onDrop(x, y, draginfo);
+          end
+        </script>
+      </numberfieldX>
+	  <stringcontrolX name="stunLabel">
+        <anchored>
+          <to>sum_stun</to>
+          <position>belowleft</position>
+          <offset>10,0</offset>
+          <size>
+            <width>60</width>
+            <height>11</height>
+          </size>
+        </anchored>
+        <font>sheetlabelsmall</font>
+        <color>#E0786147</color>
+        <static>Stun (RR)</static>
+        <center/>
+      </stringcontrolX>
+	  <numberfieldX name="sum_staminarr">
+        <anchored>
+          <to>sum_stun</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>30</width>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>textlinedice</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+        <script>
+          function onDoubleClick()
+			local stamina = window.windowlist.window.windowlist.window.link.getTargetDatabaseNode().getChild("stamina").getValue()
+			local customData = {type=Rules_Constants.DataType.DieRoll,tableType=Rules_Constants.TableType.Other,modifiers={}};
+			customData.tableID = "";
+			customData.dieType = Rules_Constants.DieType.HighOpenEnded;
+			table.insert(customData.modifiers, {description="Stamina RR", value=stamina});
+			customData.ctNodeStunRR = getDatabaseNode().getParent();
+		    ChatManager.throwDice("dice", {"d100","d10"}, 0, "Stamina Resistance Roll: Stun resistance", customData);
+		  end
+        </script>
+      </numberfieldX>
+	  <numberfieldX name="sum_stunroll">
+	  <bounds>0,0,0,0</bounds>
+	  <invisible />
+	  <script>
+	  function onValueChanged()
+		local roll = getValue();
+		local target = window.sum_staminarr.getValue();
+		if target &lt; roll then
+			window.stunned.setValue(0);
+		end
+		setValue(0);
+	  end
+	  </script>
+	  </numberfieldX>
+	  <stringcontrolX name="injuryLabel">
+        <anchored>
+          <to>sum_stun</to>
+          <position>belowleft</position>
+          <offset>75,0</offset>
+          <size>
+            <width>60</width>
+            <height>11</height>
+          </size>
+        </anchored>
+        <font>sheetlabelsmall</font>
+        <color>#E0786147</color>
+        <static>Injury Level</static>
+        <center/>
+      </stringcontrolX>
+	  <multitext name="sum_injury_level">
+	    <anchored>
+          <to>sum_staminarr</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>50</width>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+		<script>
+		</script>
+		<statelabels>
+          <state>None</state>
+          <state>Light</state>
+          <state>Medium</state>
+          <state>Severe</state>
+        </statelabels>
+	</multitext>
+	  
+	  <windowlist name="effects_panel">
+		<anchored>
+          <top>
+            <parent>effects_label</parent>
+            <anchor>bottom</anchor>
+			<offset>5</offset>
+          </top>
+          <left>
+		    <parent>effects_label</parent>
+            <anchor>left</anchor>
+			<offset>0</offset>
+          </left>
+          <right>
+            <anchor>right</anchor>
+          </right>
+        </anchored>
+        <class>combatpanel_effect</class>
+		<datasource>.effects</datasource>
+        <noscroll/>
+		<script>		
+          function onFilter()
+            return window.effects_show_box.getState();
+          end
+          
+          function onListRearranged()
+            window.setSpacerState();
+          end
+        </script>
+        <skipempty />
+	  </windowlist>
+	  
+	  <stringcontrolX name="attacks_label">
+		<anchored>
+          <top>
+            <parent>effects_panel</parent>
+            <anchor>bottom</anchor>
+			<offset>10</offset>
+          </top>
+		  <left>
+		    <parent>db_label</parent>
+            <anchor>left</anchor>
+          </left>
+          <size>
+            <width>65</width>
+            <height>17</height>
+          </size>
+        </anchored>
+        <font>sheetlabel</font>
+		<static>Attacks</static>
+	  </stringcontrolX>
+	  
+	  <checkbox name="attacks_show_box">
+		<anchored>
+			<top>
+				<parent>attacks_label</parent>
+				<anchor>top</anchor>
+				<offset>-10</offset>
+			</top>
+			<right>
+				<parent>current_attack_label</parent>
+				<anchor>left</anchor>
+				<offset>7</offset>
+			</right>
+			<size>
+				<width>45</width>
+				<height>35</height>
+			</size>
+		</anchored>
+		<stateicons>
+			  <on>icon_arrow_up</on>
+			  <off>icon_arrow_down</off>
+		</stateicons>
+		<script>
+			function onInit()
+				if super and super.onInit() then
+					super.onInit();
+				end
+			end
+			
+			function onValueChanged()
+				window.attacks_panel.applyFilter();
+			end
+		</script>
+	  </checkbox>
+	  
+	  <windowlist name="attacks_panel">
+		<anchored>
+          <top>
+            <parent>attacks_label</parent>
+            <anchor>bottom</anchor>
+			<offset>5</offset>
+          </top>
+          <left>
+            <anchor>left</anchor>
+          </left>
+          <right>
+            <anchor>right</anchor>
+          </right>
+        </anchored>
+		<datasource>.attacks</datasource>
+        <class>combatpanel_attack</class>
+        <noscroll/>
+		<script>
+          function onFilter()
+            return window.attacks_show_box.getState();
+          end
+          
+          function onListRearranged()
+            window.setSpacerState();
+          end
+        </script>
+        <skipempty />
+	  </windowlist>
+	  
+	  <stringcontrolX name="spells_label">
+		<anchored>
+          <top>
+            <parent>effects_panel</parent>
+            <anchor>bottom</anchor>
+			<offset>10</offset>
+          </top>
+		  <left>
+		    <parent>db_label</parent>
+            <anchor>left</anchor>
+			<offset>150</offset>
+          </left>
+          <size>
+            <width>65</width>
+            <height>17</height>
+          </size>
+        </anchored>
+        <font>sheetlabel</font>
+		<static>Spells</static>
+	  </stringcontrolX>
+	  
+	  <checkbox name="spells_show_box">
+		<anchored>
+			<top>
+				<parent>spells_label</parent>
+				<anchor>top</anchor>
+				<offset>-10</offset>
+			</top>
+			<right>
+				<parent>spells_label</parent>
+				<anchor>left</anchor>
+				<offset>7</offset>
+			</right>
+			<size>
+				<width>45</width>
+				<height>35</height>
+			</size>
+		</anchored>
+		<stateicons>
+			  <on>icon_arrow_up</on>
+			  <off>icon_arrow_down</off>
+		</stateicons>
+		<script>
+			function onInit()
+				if super and super.onInit() then
+					super.onInit();
+				end
+			end
+			
+			function onValueChanged()
+				window.spells_panel.applyFilter();
+			end
+		</script>
+	  </checkbox>
+	  
+	  <windowlist name="spells_panel">
+		<anchored>
+          <top>
+            <parent>attacks_panel</parent>
+            <anchor>bottom</anchor>
+			<offset>5</offset>
+          </top>
+          <left>
+            <anchor>left</anchor>
+          </left>
+          <right>
+            <anchor>right</anchor>
+          </right>
+        </anchored>
+		<datasource>.attacks</datasource>
+        <class>combatpanel_spell</class>
+        <noscroll/>
+		<script>
+          function onFilter()
+            return window.spells_show_box.getState();
+          end
+          
+          function onListRearranged()
+            window.setSpacerState();
+          end
+        </script>
+        <skipempty />
+	  </windowlist>
+	  
+	  <stringcontrolX name="items_label">
+		<anchored>
+          <top>
+            <parent>effects_panel</parent>
+            <anchor>bottom</anchor>
+			<offset>10</offset>
+          </top>
+		  <left>
+		    <parent>db_label</parent>
+            <anchor>left</anchor>
+			<offset>300</offset>
+          </left>
+          <size>
+            <width>65</width>
+            <height>17</height>
+          </size>
+        </anchored>
+        <font>sheetlabel</font>
+		<static>Items</static>
+	  </stringcontrolX>
+	  
+	  <checkbox name="items_show_box">
+		<anchored>
+			<top>
+				<parent>items_label</parent>
+				<anchor>top</anchor>
+				<offset>-10</offset>
+			</top>
+			<right>
+				<parent>items_label</parent>
+				<anchor>left</anchor>
+				<offset>7</offset>
+			</right>
+			<size>
+				<width>45</width>
+				<height>35</height>
+			</size>
+		</anchored>
+		<stateicons>
+			  <on>icon_arrow_up</on>
+			  <off>icon_arrow_down</off>
+		</stateicons>
+		<script>
+			function onInit()
+				if super and super.onInit() then
+					super.onInit();
+				end
+			end
+			
+			function onValueChanged()
+				window.items_panel.applyFilter();
+			end
+		</script>
+	  </checkbox>
+	  
+	  <windowlist name="items_panel">
+		<anchored>
+          <top>
+            <parent>spells_panel</parent>
+            <anchor>bottom</anchor>
+			<offset>5</offset>
+          </top>
+          <left>
+            <anchor>left</anchor>
+          </left>
+          <right>
+            <anchor>right</anchor>
+          </right>
+        </anchored>
+		<datasource>.attacks</datasource>
+        <class>combatpanel_item</class>
+        <noscroll/>
+		<script>
+          function onFilter()
+            return window.items_show_box.getState();
+          end
+          
+          function onListRearranged()
+            window.setSpacerState();
+          end
+        </script>
+        <skipempty />
+	  </windowlist>
+	
+      <genericcontrol name="midanchor">
+        <anchored>
+          <left>
+            <parent>leftanchor</parent>
+            <anchor>right</anchor>
+            <relation>relative</relation>
+            <offset>5</offset>
+          </left>
+          <top>
+            <parent>leftanchor</parent>
+            <anchor>top</anchor>
+          </top>
+          <size>
+            <width>1</width>
+            <height>20</height>
+          </size>
+        </anchored>
+      </genericcontrol>
+
+      <genericcontrol name="rightanchor">
+        <anchored>
+          <right>
+            <anchor>right</anchor>
+            <offset>-20</offset>
+          </right>
+          <top>
+            <anchor>top</anchor>
+            <offset>1</offset>
+          </top>
+          <size>
+            <width>1</width>
+            <height>20</height>
+          </size>
+        </anchored>
+      </genericcontrol>
+      <genericcontrol name="friendfoe">
+        <anchored>
+          <right>
+            <parent>rightanchor</parent>
+            <anchor>left</anchor>
+            <relation>relative</relation>
+            <offset>-2</offset>
+          </right>
+          <top>
+            <anchor>top</anchor>
+            <offset>8</offset>
+          </top>
+          <size>
+            <width>20</width>
+            <height>20</height>
+          </size>
+        </anchored>
+        <icon>indicator_ctffempty</icon>
+        <stateicons>
+          <friend>indicator_ctfffriend</friend>
+          <neutral>indicator_ctffneutral</neutral>
+          <foe>indicator_ctfffoe</foe>
+        </stateicons>
+        <script>
+          function onDrop(x, y, draginfo)
+            if draginfo.isType("combattrackerff") then
+              state = draginfo.getStringData();
+              window.fof.setValue(state);
+              window.token.updateUnderlay();
+              setIcon(stateicons[1][state][1]);
+            end
+          end
+
+          function setState(s)
+            state = s;
+            window.fof.setValue(state);
+            if stateicons[1][state] then
+              setIcon(stateicons[1][state][1]);
+            else
+              setIcon(icon[1]);
+            end
+            window.token.updateUnderlay();
+          end
+		  		  
+		  function cycleState(amount)
+			local s;
+			local newAmount;
+			if window.fof.getValue() == "friend" then
+				newAmount = 0;
+			elseif window.fof.getValue() == "neutral" then
+				newAmount = 1;
+			elseif window.fof.getValue() == "foe" then
+				newAmount = 2;
+			else
+				newAmount = -1;
+			end
+			newAmount = (newAmount + amount) % 3;
+			if newAmount == 0 then
+				s = "friend";
+			elseif newAmount == 1 then
+				s = "neutral";
+			elseif newAmount == 2 then
+				s = "foe";
+			end			
+			setState(s);
+		  end
+		  
+		  function onClickDown(x,y)
+			cycleState(1);
+			return true;
+		  end
+		  
+		  function onWheel(amount)
+			  local key = PreferenceManager.load(Preferences.MouseScrollerKeyPref);
+
+			  if key and key ~= Preferences.MouseScrollerKey.None then
+			  
+				if (key == Preferences.MouseScrollerKey.Ctrl and Input.isControlPressed() == true) 
+							or (key == Preferences.MouseScrollerKey.Shift and Input.isShiftPressed() == true) 
+							or (key == Preferences.MouseScrollerKey.Alt and Input.isAltPressed() == true) then 
+					cycleState(amount);
+					return true    
+				end
+				
+			  elseif key == Preferences.MouseScrollerKey.None then
+				cycleState(amount);
+				return true;
+			  else
+				return false;
+			  end
+
+			return false;
+		  end
+        </script>
+      </genericcontrol>
+      <genericcontrol name="identity">
+        <anchored>
+          <right>
+            <parent>rightanchor</parent>
+            <anchor>left</anchor>
+            <relation>relative</relation>
+            <offset>1</offset>
+          </right>
+          <top>
+            <anchor>top</anchor>
+            <offset>8</offset>
+          </top>
+          <size>
+            <width>20</width>
+            <height>20</height>
+          </size>
+        </anchored>
+        <icon>button_identityactivate</icon>
+        <script>
+          function onClickDown(button, x, y)
+            return true;
+          end
+          
+          function onClickDown(button, x, y)
+            GmIdentityManager.addIdentity(window.label.getValue());
+            return true;
+          end
+        </script>
+      </genericcontrol>
+      <windowreferencefield name="link">
+        <anchored>
+          <right>
+            <anchor>right</anchor>
+            <offset>-4</offset>
+          </right>
+          <top>
+            <anchor>top</anchor>
+            <offset>9</offset>
+          </top>
+          <size>
+            <width>18</width>
+            <height>18</height>
+          </size>
+        </anchored>
+        <icon>
+          <normal>button_openwindow</normal>
+        </icon>
+        <invisible />
+      </windowreferencefield>
+
+      <!-- panel list -->
+      <windowlist name="panels">
+        <anchored>
+          <top>
+            <parent>listanchor</parent>
+            <anchor>bottom</anchor>
+          </top>
+          <left>
+            <anchor>left</anchor>
+          </left>
+          <right>
+            <anchor>right</anchor>
+          </right>
+        </anchored>
+        <class>notesmall</class>
+        <noscroll/>
+        <skipempty/>
+        <script>
+          function onFilter(win)
+            if win.isDisplayed then
+              return win.isDisplayed();
+            else
+              return true;
+            end
+          end
+          
+          function onListRearranged()
+            window.setSpacerState();
+          end
+        </script>
+      </windowlist>
+
+      <!-- Spacer -->
+      <genericcontrol name="spacer">
+        <anchored>
+          <top>
+            <parent>panels</parent>
+            <anchor>bottom</anchor>
+          </top>
+          <left>
+            <anchor>left</anchor>
+          </left>
+          <right>
+            <anchor>right</anchor>
+          </right>
+          <size>
+            <height>10</height>
+          </size>
+        </anchored>
+        <invisible />
+        <disabled />
+      </genericcontrol>
+
+      <genericcontrol name="active">
+        <anchored>
+          <top>
+            <anchor>top</anchor>
+          </top>
+          <bottom>
+            <anchor>bottom</anchor>
+          </bottom>
+          <left>
+            <anchor>left</anchor>
+          </left>
+          <size>
+            <width>33</width>
+          </size>
+        </anchored>
+        <icon>indicator_ctpassive</icon>
+        <activeicon>indicator_ctactive</activeicon>
+        <script file="ct/scripts/ct_active.lua" />
+      </genericcontrol>
+    </sheetdata>
+  </windowclass>
+
+</root>

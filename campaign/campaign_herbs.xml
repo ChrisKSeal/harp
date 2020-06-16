@@ -1,0 +1,573 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<root version="2.0">
+  <windowclass name="herb">
+    <frame>charsheet</frame>
+    <placement>
+      <size>
+        <width>270</width>
+        <height>370</height>
+      </size>
+    </placement>
+    <sizelimits>
+      <minimum>
+        <width>270</width>
+        <height>370</height>
+      </minimum>
+      <maximum>
+        <width>270</width>
+        <height>370</height>
+      </maximum>
+    </sizelimits>
+    <minimize>minimized_item</minimize>
+    
+    <sharable/>
+    <nodelete/>
+    <tooltip>
+      <field>name</field>
+    </tooltip>
+    <sheetdata>
+      <!-- NAME -->
+      <genericcontrol name="nameframe">
+        <bounds>10,20,250,35</bounds>
+        <frame>
+          <name>sheetgroup</name>
+        </frame>
+      </genericcontrol>
+      <windowopencontrol>
+        <anchored>
+          <to>nameframe</to>
+          <position>insidetopleft</position>
+          <offset>13,8</offset>
+          <size>
+            <width>20</width>
+            <height>20</height>
+          </size>
+        </anchored>
+        <icon>
+          <normal>button_openwindow</normal>
+          <pressed>button_emptytarget</pressed>
+        </icon>
+        <class>herb</class>
+        <description>
+          <field>name</field>
+        </description>
+      </windowopencontrol>
+      <stringfieldX name="name">
+        <anchored>
+          <top>
+            <parent>nameframe</parent>
+            <anchor>top</anchor>
+            <offset>9</offset>
+          </top>
+          <left>
+            <parent>nameframe</parent>
+            <anchor>left</anchor>
+            <offset>35</offset>
+          </left>
+          <right>
+            <parent>nameframe</parent>
+            <anchor>right</anchor>
+            <offset>-35</offset>
+          </right>
+        </anchored>
+        <empty>&#171; New Weapon &#187;</empty>
+        <font>sheettext</font>
+      </stringfieldX>
+
+      <!-- Frame -->    
+      <genericcontrol name="contentframe">
+        <bounds>10,54,250,-13</bounds>
+        <frame>
+          <name>sheetgroup</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+      </genericcontrol>
+
+      <!-- invisible placeholder controls -->
+      <stringfieldX name="table">
+        <bounds>0,0,0,0</bounds>
+        <invisible/>
+      </stringfieldX>
+
+      <!-- Properties -->
+      <stringcontrolX>
+        <anchored>
+          <to>contentframe</to>
+          <position>insidetopleft</position>
+          <offset>10,14</offset>
+          <size>
+            <width>45</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <font>sheetlabelsmallbold</font>
+        <static>Type</static>
+      </stringcontrolX>
+      <multitext name="type">
+        <anchored>
+          <to>contentframe</to>
+          <position>insidetopleft</position>
+          <offset>50,10</offset>
+          <size>
+            <width>175</width>
+            <height>17</height>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+        <script>
+          function onInit()
+            if super and super.onInit then
+              super.onInit();
+            end
+            if getState() &lt; 1 then
+              setState(20);
+            elseif getState() &gt; 20 then
+              setState(20);
+            end
+          end
+          
+          function beforeStateChanged(newstate)
+            --[[ prevent change to/from shield]]
+            if newstate==8 then
+              --[[ cannot switch away from a shield ]]
+              newstate = 7;
+            elseif newstate==7 then
+              --[[ cannot switch to a shield, skip to Natural Weapon instead ]]
+              newstate = 8;
+            end
+            return newstate;
+          end
+        </script>
+        <statelabels>
+          <state>One-Handed Slashing</state>
+          <state>One-Handed Concussion</state>
+          <state>Two-Handed Weapon</state>
+          <state>Pole Arm</state>
+          <state>Missile Weapon</state>
+          <state>Thrown Weapon</state>
+          <state>Shield</state>
+          <state>Natural Weapon</state>
+          <state>Elemental Attack</state>
+          <state>Special</state>
+		  <state>Accessory</state>
+		  <state>Armor</state>
+		  <state>Herbs, Etc.</state>
+		  <state>Potion</state>
+		  <state>Clothing</state>
+		  <state>Gem</state>
+		  <state>Food</state>
+		  <state>Service</state>
+		  <state>Transportation</state>
+		  <state>-</state>
+        </statelabels>
+      </multitext>
+
+      <stringcontrolX>
+        <anchored>
+          <to>contentframe</to>
+          <position>insidetopleft</position>
+          <offset>10,46</offset>
+          <size>
+            <width>65</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <font>sheetlabelsmallbold</font>
+        <static>Info</static>
+      </stringcontrolX>
+            <stringcontrolX>
+        <anchored>
+          <to>contentframe</to>
+          <position>insidetopleft</position>
+          <offset>50,31</offset>
+          <size>
+            <width>55</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <center/>
+        <font>sheetlabelsmall</font>
+		<center/>
+        <static>Cost</static>
+      </stringcontrolX>
+      <stringfieldX name="rural">
+        <anchored>
+          <to>contentframe</to>
+          <position>insidetopleft</position>
+          <offset>50,42</offset>
+          <size>
+            <width>55</width>
+            <height>17</height>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+		<center/>
+        <frame>
+          <name>modifier</name>
+          <offset>4,4,4,4</offset>
+        </frame>
+        <keyeditframe>
+          <name>sheetfocus</name>
+          <offset>4,4,4,4</offset>
+        </keyeditframe>
+      </stringfieldX>
+      <stringcontrolX>
+        <anchored>
+          <to>contentframe</to>
+          <position>insidetopleft</position>
+          <offset>110,31</offset>
+          <size>
+            <width>40</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <center/>
+        <font>sheetlabelsmall</font>
+		<center/>
+        <static>Quantity</static>
+      </stringcontrolX>
+      <stringfieldX name="quantity">
+        <anchored>
+          <to>contentframe</to>
+          <position>insidetopleft</position>
+          <offset>110,42</offset>
+          <size>
+            <width>40</width>
+            <height>17</height>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+		<center/>
+        <frame>
+          <name>modifier</name>
+          <offset>4,4,4,4</offset>
+        </frame>
+        <keyeditframe>
+          <name>sheetfocus</name>
+          <offset>4,4,4,4</offset>
+        </keyeditframe>
+      </stringfieldX>
+      <stringcontrolX>
+        <anchored>
+          <to>contentframe</to>
+          <position>insidetopleft</position>
+          <offset>155,31</offset>
+          <size>
+            <width>80</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <center/>
+        <font>sheetlabelsmall</font>
+		<center/>
+        <static>Effect</static>
+      </stringcontrolX>
+      <stringfieldX name="aoe">
+        <anchored>
+          <to>contentframe</to>
+          <position>insidetopleft</position>
+          <offset>155,42</offset>
+          <size>
+            <width>80</width>
+            <height>17</height>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+		<center/>
+        <frame>
+          <name>modifier</name>
+          <offset>4,4,4,4</offset>
+        </frame>
+        <keyeditframe>
+          <name>sheetfocus</name>
+          <offset>4,4,4,4</offset>
+        </keyeditframe>
+      </stringfieldX>
+      
+      <stringcontrolX>
+        <anchored>
+          <to>contentframe</to>
+          <position>insidetopleft</position>
+          <offset>30,63</offset>
+          <size>
+            <width>100</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <center/>
+        <font>sheetlabelsmall</font>
+		<center/>
+        <static>Form/Prep</static>
+      </stringcontrolX>
+      <stringfieldX name="form">
+        <anchored>
+          <to>contentframe</to>
+          <position>insidetopleft</position>
+          <offset>30,74</offset>
+          <size>
+            <width>100</width>
+            <height>17</height>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+		<center/>
+        <frame>
+          <name>modifier</name>
+          <offset>4,4,4,4</offset>
+        </frame>
+        <keyeditframe>
+          <name>sheetfocus</name>
+          <offset>4,4,4,4</offset>
+        </keyeditframe>
+      </stringfieldX>
+      <stringcontrolX>
+        <anchored>
+          <to>contentframe</to>
+          <position>insidetopleft</position>
+          <offset>150,63</offset>
+          <size>
+            <width>75</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <center/>
+        <font>sheetlabelsmall</font>
+        <static>Locale Codes</static>
+      </stringcontrolX>
+      <stringfieldX name="codes">
+        <anchored>
+          <to>contentframe</to>
+          <position>insidetopleft</position>
+          <offset>150,74</offset>
+          <size>
+            <width>75</width>
+            <height>17</height>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+		<center/>
+        <frame>
+          <name>modifier</name>
+          <offset>4,4,4,4</offset>
+        </frame>
+        <keyeditframe>
+          <name>sheetfocus</name>
+          <offset>4,4,4,4</offset>
+        </keyeditframe>
+      </stringfieldX>
+	  
+
+<!---------CALCULATOR START------------->
+	  <stringcontrolX>
+        <anchored>
+          <to>contentframe</to>
+          <position>insidetopleft</position>
+          <offset>10,109</offset>
+          <size>
+            <width>65</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <font>sheetlabelsmallbold</font>
+        <static>Calc.</static>
+      </stringcontrolX>
+      <stringcontrolX>
+        <anchored>
+          <to>contentframe</to>
+          <position>insidetopleft</position>
+          <offset>50,94</offset>
+          <size>
+            <width>60</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <center/>
+        <font>sheetlabelsmall</font>
+		<center/>
+        <static>Base Value</static>
+      </stringcontrolX>
+      <numberfieldX name="value">
+        <anchored>
+          <to>contentframe</to>
+          <position>insidetopleft</position>
+          <offset>50,106</offset>
+          <size>
+            <width>60</width>
+            <height>17</height>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+		<center/>
+        <frame>
+          <name>modifier</name>
+          <offset>4,4,4,4</offset>
+        </frame>
+        <keyeditframe>
+          <name>sheetfocus</name>
+          <offset>4,4,4,4</offset>
+        </keyeditframe>
+      </numberfieldX>
+      <stringcontrolX>
+        <anchored>
+          <to>contentframe</to>
+          <position>insidetopleft</position>
+          <offset>115,94</offset>
+          <size>
+            <width>30</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <center/>
+        <font>sheetlabelsmall</font>
+        <static>Multi.</static>
+      </stringcontrolX>
+      <numberfieldX name="stanvalx">
+        <anchored>
+          <to>contentframe</to>
+          <position>insidetopleft</position>
+          <offset>115,106</offset>
+          <size>
+            <width>30</width>
+            <height>17</height>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+		<center/>
+        <frame>
+          <name>modifier</name>
+          <offset>4,4,4,4</offset>
+        </frame>
+        <keyeditframe>
+          <name>sheetfocus</name>
+          <offset>4,4,4,4</offset>
+        </keyeditframe>
+      </numberfieldX>
+	  <stringcontrolX>
+        <anchored>
+          <to>contentframe</to>
+          <position>insidetopleft</position>
+          <offset>150,94</offset>
+          <size>
+            <width>60</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <center/>
+        <font>sheetlabelsmall</font>
+        <static>Total Value</static>
+      </stringcontrolX>
+      <numberfieldX name="totalvalue">
+        <anchored>
+          <to>contentframe</to>
+          <position>insidetopleft</position>
+          <offset>150,106</offset>
+          <size>
+            <width>60</width>
+            <height>17</height>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+		<center/>
+        <frame>
+          <name>modifier</name>
+          <offset>4,4,4,4</offset>
+        </frame>
+        <keyeditframe>
+          <name>sheetfocus</name>
+          <offset>4,4,4,4</offset>
+        </keyeditframe>
+       <script>
+		function onInit()
+			stanvalmult = window.getDatabaseNode() .getChild("stanvalx"); 
+			value = window.getDatabaseNode() .getChild("value");		
+		stanvalmult.onUpdate = update; 
+		value.onUpdate = update;
+		update();
+		
+
+		end
+		
+		function update()
+		valuetemp = window.getDatabaseNode().getChild("value");
+		stanvaltemp = window.getDatabaseNode().getChild("stanvalx");
+			setValue(valuetemp.getValue()*stanvaltemp.getValue());
+		end
+		
+		
+		</script>
+      </numberfieldX>
+	  <stringfieldX name="denomination">
+        <anchored>
+          <to>contentframe</to>
+          <position>insidetopleft</position>
+          <offset>210,106</offset>
+          <size>
+            <width>25</width>
+            <height>17</height>
+          </size>
+        </anchored>
+		<center/>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>modifier</name>
+          <offset>4,4,4,4</offset>
+        </frame>
+        <keyeditframe>
+          <name>sheetfocus</name>
+          <offset>4,4,4,4</offset>
+        </keyeditframe>
+      </stringfieldX>
+	  
+      <!-- Range data -->
+     
+      
+
+     
+
+      <!-- Special notes -->
+      <stringcontrolX>
+        <anchored>
+          <to>contentframe</to>
+          <position>insidetopleft</position>
+          <offset>0,128</offset>
+          <size>
+            <width>250</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <font>sheetlabelsmallbold</font>
+		<center/>
+        <static>Effect</static>
+      </stringcontrolX>
+      <stringfieldX name="effect">
+        <anchored>
+          <to>contentframe</to>
+          <position>insidetopleft</position>
+          <offset>10,141</offset>
+          <size>
+            <width>230</width>
+            <height>167</height>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>textlinesmall</name>
+          <offset>0,-1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadelinesmall</name>
+          <offset>0,-1,0,0</offset>
+        </keyeditframe>
+        <multilinespacing>14</multilinespacing>
+      </stringfieldX>
+
+      <numberfieldX name="max_level">
+        <bounds>0,0,1,1</bounds>
+        <invisible />
+      </numberfieldX>
+		
+	  <close_adventure />
+    </sheetdata>
+  </windowclass>
+  
+</root>

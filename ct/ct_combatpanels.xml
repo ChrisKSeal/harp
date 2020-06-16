@@ -1,0 +1,1775 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root version="2.0">
+  
+  <windowclass name="combatpanel_active">
+    <sizelimits>
+      <minimum>
+        <height>17</height>
+      </minimum>
+    </sizelimits>
+    <script>
+      local forcedisplay = false;
+      local displayflag = false;
+      local entry = nil;
+      local enabledflag = true;
+      
+      function setEnabled(state)
+        enabledflag = state;
+        refilter();
+      end
+	  
+      function setTarget(nodepath)
+        for i,win in ipairs(attacks.getWindows()) do
+          win.targetnode.setValue(nodepath);
+        end
+        for i,win in ipairs(defences.getWindows()) do
+          if not win.targetall or not win.targetall.getState() then
+            win.targetnode.setValue(nodepath);
+          end
+        end
+      end
+      
+      function isDisplayed()
+        return (forcedisplay or displayflag) and enabledflag;
+      end
+      
+      function toggleForceDisplay()
+        forcedisplay = not forcedisplay;
+        refilter();
+      end
+      
+      function setDisplay(flag)
+        displayflag = flag;
+        refilter();
+      end
+      
+      function onInit()
+        entry = windowlist.window;
+        --[[ refresh menus - doesn't wipe existing contents ]]
+        populate(nil);
+      end
+      
+      function populate(source)
+        --[[ set menu entries ]]
+        attacks.resetMenuItems();
+        defences.resetMenuItems();
+        if getDatabaseNode().isOwner() then
+          attacks.registerMenuItem("New attack","insert",5);
+          defences.registerMenuItem("New defence","insert",5);
+        end
+        --[[ copy pc data across ]]
+        if source and entry and entry.getType()=="pc" then
+          --[[ Attacks and defences (remove the default empty slot if we find any weapons of our own) ]]
+          if source.getChild("weapons") then
+            local oldwpn = nil;
+            local oldshld = nil;
+            if #(attacks.getWindows())>0 then
+              oldwpn = attacks.getWindows()[1];
+            end
+            if #(defences.getWindows())>0 then
+              oldshld = defences.getWindows()[1];
+            end
+            for k,node in pairs(source.getChild("weapons").getChildren()) do
+              if node.createChild("isequipped","number").getValue()~=0 then
+                if node.getChild("type").getValue()==7 then
+                  --[[ add a defence using this shield ]]
+                  defences.addEntry(node);
+                  if oldshld then
+                    oldshld = nil;
+                  end
+                else
+                  --[[ add an attack using this weapon ]]
+                  attacks.addEntry(node);
+                  if oldwpn then
+                    oldwpn.getDatabaseNode().delete();
+                    oldwpn = nil;
+                  end
+                end
+              end
+            end
+          end
+          --[[ Martial arts entries ]]
+          if source.getChild("martialarts") then
+            for k,node in pairs(source.getChild("martialarts").getChildren()) do
+              if node.createChild("isequipped","number").getValue()~=0 then
+                attacks.addMANode(node);
+              end
+            end
+          end
+        elseif source and entry and entry.getType()=="npc" then
+          --[[ Weapons (remove the default empty slot if we find any weapons of our own) ]]
+          if source.getChild("weapons") then
+            local oldwpn = nil;
+            if #(attacks.getWindows())>0 then
+              oldwpn = attacks.getWindows()[1];
+            end
+            for k,node in pairs(source.getChild("weapons").getChildren()) do
+              --[[ add an attack using this weapon ]]
+              local win = attacks.addEntry(node);
+              --[[ set a default ordering, if an explicit order isn't present ]]
+              if not win.getDatabaseNode().getChild("order") then
+                local num = tonumber(string.sub(node.getName(),-3)) or 0;
+                if num &gt; 0 then
+                  win.getDatabaseNode().createChild("order","number").setValue(num);
+                end
+              end
+              --[[ close the blank entry, if it exists ]]
+              if oldwpn then
+                oldwpn.getDatabaseNode().delete();
+                oldwpn = nil;
+              end
+            end
+          end
+          --[[ Defences and shields (remove the default empty slot if we find any defences of our own) ]]
+          if source.getChild("defences") then
+            local oldshld = nil;
+            if #(defences.getWindows())>0 then
+              oldshld = defences.getWindows()[1];
+            end
+            for k,node in pairs(source.getChild("defences").getChildren()) do
+              --[[ add a defence using this shield ]]
+              defences.addEntry(node);
+              if oldshld then
+                oldshld = nil;
+              end
+            end
+          end
+        end
+      end
+      
+      function refilter()
+        if windowlist then
+          windowlist.applyFilter();
+        end
+      end
+	  
+    </script>
+    <sheetdata>	
+	  <!-- Visible Fields -->
+      <genericcontrol name="combaticon">
+        <anchored>
+          <left>
+            <anchor>left</anchor>
+            <offset>38</offset>
+          </left>
+          <top>
+            <anchor>top</anchor>
+            <offset>8</offset>
+          </top>
+          <size>
+            <width>20</width>
+            <height>21</height>
+          </size>
+        </anchored>
+        <icon>indicator_combat</icon>
+      </genericcontrol>
+      <numberfieldX name="db">
+        <anchored>
+          <left>
+            <parent>atmiss</parent>
+            <anchor>right</anchor>
+            <relation>relative</relation>
+          <offset>5</offset>
+          </left>
+          <top>
+            <anchor>top</anchor>
+            <offset>14</offset>
+          </top>
+          <size>
+            <width>25</width>
+            <height>17</height>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+        <script>
+          function onValueChanged()
+            if getValue() &lt; 0 then
+              setInvalid();
+            else
+              setValid();
+            end
+          end
+          
+          function onInit()
+            if super and super.onInit then
+              super.onInit();
+            end
+            onValueChanged();
+          end
+
+          function onLinkUpdated(source)
+            setValue(source.getValue());
+          end
+
+          function setLink(dbnode)
+            if dbnode then
+              linknode = dbnode;
+              linknode.onUpdate = onLinkUpdated;
+              onLinkUpdated(linknode);
+              local linkWidget = addBitmapWidget("indicator_linked");
+			  linkWidget.setPosition("bottomright", -5, -5);
+			  linkWidget.setSize(9,9);
+            end
+          end
+        </script>
+      </numberfieldX>
+      <stringcontrolX name="dbLabel">
+        <anchored>
+          <to>db</to>
+          <position>aboveleft</position>
+          <offset>0,0</offset>
+          <size>
+            <width>25</width>
+            <height>11</height>
+          </size>
+        </anchored>
+        <font>sheetlabelsmall</font>
+        <color>#E0786147</color>
+        <static>DB</static>
+        <center/>
+      </stringcontrolX>
+     
+      <windowlist name="defences">
+        <datasource>.defences</datasource>
+        <anchored>
+          <left>
+            <parent>defenceicon</parent>
+            <anchor>right</anchor>
+          </left>
+          <right>
+            <anchor>right</anchor>
+            <offset>-7</offset>
+          </right>
+          <top>
+            <anchor>top</anchor>
+            <offset>28</offset>
+			<parent>at</parent>
+          </top>
+        </anchored>
+        <class>combattracker_defence</class>
+        <script file="ct/scripts/ct_weapons.lua" />
+        <noscroll/>
+        <skipempty/>
+      </windowlist>
+	  
+      <genericcontrol name="attackicon">
+        <anchored>
+          <left>
+            <anchor>left</anchor>
+            <offset>38</offset>
+          </left>
+          <top>
+            <parent>defences</parent>
+            <anchor>bottom</anchor>
+            <offset>9</offset>
+          </top>
+          <size>
+            <width>20</width>
+            <height>21</height>
+          </size>
+        </anchored>
+        <icon>indicator_sword</icon>
+      </genericcontrol>
+      <stringcontrolX name="attackLabel">
+        <anchored>
+          <left>
+            <parent>attackicon</parent>
+            <anchor>right</anchor>
+            <offset>20</offset>
+          </left>
+          <top>
+            <parent>attackicon</parent>
+            <anchor>top</anchor>
+            <offset>-8</offset>
+          </top>
+          <size>
+            <width>134</width>
+            <height>12</height>
+          </size>
+        </anchored>
+        <font>sheetlabelsmall</font>
+        <color>#E0786147</color>
+        <static>Attack</static>
+      </stringcontrolX>
+      <stringcontrolX name="attackingLabel">
+        <anchored>
+          <to>attackLabel</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>135</width>
+          </size>
+        </anchored>
+        <font>sheetlabelsmall</font>
+        <color>#E0786147</color>
+        <static>Attack vs</static>
+      </stringcontrolX>
+      <stringcontrolX name="obLabel">
+        <anchored>
+          <to>attackingLabel</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>30</width>
+          </size>
+        </anchored>
+        <center/>
+        <font>sheetlabelsmall</font>
+        <color>#E0786147</color>
+        <static>OB</static>
+      </stringcontrolX>
+      <stringcontrolX name="attackOBLabel">
+        <anchored>
+          <to>obLabel</to>
+          <position>right</position>
+          <offset>0</offset>
+          <size>
+            <width>40</width>
+          </size>
+        </anchored>
+        <center/>
+        <font>sheetlabelsmall</font>
+        <color>#E0786147</color>
+        <static>Att. OB</static>
+      </stringcontrolX>
+      <stringcontrolX name="notesLabel">
+        <anchored>
+          <to>attackOBLabel</to>
+          <position>right</position>
+          <offset>0</offset>
+          <size>
+            <width>100</width>
+          </size>
+        </anchored>
+        <font>sheetlabelsmall</font>
+        <color>#E0786147</color>
+        <static>Notes</static>
+      </stringcontrolX>
+      <windowlist name="attacks">
+        <datasource>.attacks</datasource>
+        <anchored>
+          <left>
+            <parent>attackicon</parent>
+            <anchor>right</anchor>
+          </left>
+          <right>
+            <anchor>right</anchor>
+            <offset>-7</offset>
+          </right>
+          <top>
+            <parent>defences</parent>
+            <anchor>bottom</anchor>
+            <offset>10</offset>
+          </top>
+        </anchored>
+        <class>combattracker_attack</class>
+        <script file="ct/scripts/ct_weapons.lua" />
+        <noscroll/>
+        <skipempty/>
+      </windowlist>
+
+    </sheetdata>
+  </windowclass>
+  
+  <windowclass name="combatpanel_effects">
+    <sizelimits>
+      <minimum>
+        <height>17</height>
+      </minimum>
+    </sizelimits>
+    <script>
+      local forcedisplay = false;
+      local displayflag = false;
+      local enabledflag = true;
+      
+      function onDrop(...)
+        return windowlist.window.onDrop(...);
+      end
+      
+      function setEnabled(state)
+        enabledflag = state;
+        refilter();
+      end
+      
+      function progressEffects(...)
+        return effects.progressEffects(...);
+      end
+      
+      function isDisplayed()
+        return (forcedisplay or displayflag) and enabledflag;
+      end
+      
+      function toggleForceDisplay()
+        forcedisplay = not forcedisplay;
+        refilter();
+      end
+      
+      function setDisplay(flag)
+        displayflag = flag;
+        refilter();
+      end
+      
+      function onInit()
+        populate(nil);
+      end
+      
+      function populate(source)
+        --[[ fill in panel info from pc or npc source ]]
+        effects.resetMenuItems();
+        if getDatabaseNode().isOwner() then
+          effects.registerMenuItem("New effect","insert",5);
+        end
+      end
+      
+      function refilter()
+        if windowlist then
+          windowlist.applyFilter();
+        end
+      end
+    </script>
+    <sheetdata>
+      <genericcontrol name="effecticon">
+        <anchored>
+          <left>
+            <anchor>left</anchor>
+            <offset>38</offset>
+          </left>
+          <top>
+            <anchor>top</anchor>
+            <offset>10</offset>
+          </top>
+          <size>
+            <width>20</width>
+            <height>21</height>
+          </size>
+        </anchored>
+        <icon>indicator_effect</icon>
+      </genericcontrol>
+      <checkbox name="expandeffects">
+        <anchored>
+          <to>effecticon</to>
+          <position>insidebottomright</position>
+          <offset>-6,6</offset>
+          <size>
+            <width>9</width>
+            <height>9</height>
+          </size>
+        </anchored>
+        <stateicons>
+          <on>indicator_minus</on>
+          <off>indicator_plus</off>
+        </stateicons>
+        <script>
+          function onValueChanged()
+            window.effects.applyFilter();
+          end
+        </script>
+      </checkbox>
+      <stringcontrolX name="descriptionLabel">
+        <anchored>
+          <left>
+            <parent>effecticon</parent>
+            <anchor>right</anchor>
+            <offset>7</offset>
+          </left>
+          <top>
+            <parent>effecticon</parent>
+            <anchor>top</anchor>
+            <offset>-8</offset>
+          </top>
+          <size>
+            <width>220</width>
+            <height>12</height>
+          </size>
+        </anchored>
+        <font>sheetlabelsmall</font>
+        <color>#E0786147</color>
+        <static>Description</static>
+      </stringcontrolX>
+      <stringcontrolX name="penaltyLabel">
+        <anchored>
+          <to>descriptionLabel</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>30</width>
+          </size>
+        </anchored>
+        <font>sheetlabelsmall</font>
+        <color>#E0786147</color>
+        <center/>
+        <static>Pen.</static>
+      </stringcontrolX>
+      <stringcontrolX name="durationLabel">
+        <anchored>
+          <to>penaltyLabel</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>30</width>
+          </size>
+        </anchored>
+        <font>sheetlabelsmall</font>
+        <color>#E0786147</color>
+        <center/>
+        <static>Durn.</static>
+      </stringcontrolX>
+      <stringcontrolX name="bleedingLabel">
+        <anchored>
+          <to>durationLabel</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>30</width>
+          </size>
+        </anchored>
+        <font>sheetlabelsmall</font>
+        <color>#E0786147</color>
+        <center/>
+        <static>Bleed</static>
+      </stringcontrolX>
+      <stringcontrolX name="mustParryLabel">
+        <anchored>
+          <to>bleedingLabel</to>
+          <position>right</position>
+          <offset>0</offset>
+          <size>
+            <width>40</width>
+          </size>
+        </anchored>
+        <font>sheetlabelsmall</font>
+        <color>#E0786147</color>
+        <center/>
+        <static>Must P.</static>
+      </stringcontrolX>
+      <stringcontrolX name="parryAtLabel">
+        <anchored>
+          <to>mustParryLabel</to>
+          <position>right</position>
+          <offset>0</offset>
+          <size>
+            <width>30</width>
+          </size>
+        </anchored>
+        <font>sheetlabelsmall</font>
+        <color>#E0786147</color>
+        <center/>
+        <static>Par. At</static>
+      </stringcontrolX>
+      <stringcontrolX name="stunnedLabel">
+        <anchored>
+          <to>parryAtLabel</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>30</width>
+          </size>
+        </anchored>
+        <font>sheetlabelsmall</font>
+        <color>#E0786147</color>
+        <center/>
+        <static>Stun</static>
+      </stringcontrolX>
+      <stringcontrolX name="cantParryLabel">
+        <anchored>
+          <to>stunnedLabel</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>35</width>
+          </size>
+        </anchored>
+        <font>sheetlabelsmall</font>
+        <color>#E0786147</color>
+        <center/>
+        <static>Can&apos;t P.</static>
+      </stringcontrolX>
+      <windowlist name="effects">
+        <datasource>.effects</datasource>
+        <anchored>
+          <left>
+            <parent>effecticon</parent>
+            <anchor>right</anchor>
+            <offset>7</offset>
+          </left>
+          <right>
+            <anchor>right</anchor>
+            <offset>-7</offset>
+          </right>
+          <top>
+            <anchor>top</anchor>
+            <offset>10</offset>
+          </top>
+        </anchored>
+        <class>combattracker_effect</class>
+        <script file="ct/scripts/ct_effects.lua" />
+        <noscroll/>
+      </windowlist>
+    </sheetdata>
+  </windowclass>
+  
+  <windowclass name="combatpanel_notes">
+    <sizelimits>
+      <minimum>
+        <height>20</height>
+      </minimum>
+    </sizelimits>
+    <script>
+      local forcedisplay = false;
+      local displayflag = false;
+      local enabledflag = true;
+      
+      function setEnabled(state)
+        enabledflag = state;
+        refilter();
+      end
+      
+      function isDisplayed()
+        return (forcedisplay or displayflag) and enabledflag;
+      end
+      
+      function toggleForceDisplay()
+        forcedisplay = not forcedisplay;
+        refilter();
+      end
+      
+      function setDisplay(flag)
+        displayflag = flag;
+        refilter();
+      end
+      
+      function onInit()
+        local entry = windowlist.window;
+        local targetnode = entry.getTargetNode();
+        populate(targetnode);
+      end
+      
+      function populate(source)
+        local entry = windowlist.window;
+        --[[ fill in panel info from pc or npc source ]]
+        if source and entry.getType()=="pc" then
+          gmnotes.setLink(source.createChild("gmnotes","string"),false);
+        end
+      end
+      
+      function refilter()
+        if windowlist then
+          windowlist.applyFilter();
+        end
+      end
+    </script>
+    <sheetdata>
+      <genericcontrol name="icon">
+        <anchored>
+          <left>
+            <anchor>left</anchor>
+            <offset>38</offset>
+          </left>
+          <top>
+            <anchor>top</anchor>
+            <offset>2</offset>
+          </top>
+          <size>
+            <width>20</width>
+            <height>20</height>
+          </size>
+        </anchored>
+        <icon>indicator_casterprep</icon>
+      </genericcontrol>
+      <stringfieldX name="gmnotes">
+        <anchored>
+          <left>
+            <parent>icon</parent>
+            <anchor>right</anchor>
+            <offset>7</offset>
+          </left>
+          <right>
+            <anchor>right</anchor>
+            <offset>-12</offset>
+          </right>
+          <top>
+            <anchor>top</anchor>
+            <offset>3</offset>
+          </top>
+        </anchored>
+        <font>sheettextsmall</font>
+        <multilinespacing>17</multilinespacing>
+        <frame>
+          <name>textline17</name>
+          <offset>0,0,0,0</offset>
+        </frame>
+        <script>
+          local linknode = nil;
+          local ripple = true;
+
+          function setLink(srcnode)
+            if srcnode then
+              linknode = srcnode;
+              linknode.onUpdate = onLinkUpdated;
+              onLinkUpdated(linknode);
+              local linkWidget = addBitmapWidget("indicator_linked");
+			  linkWidget.setPosition("bottomright", -5, -7);
+			  linkWidget.setSize(9,9);
+            end
+          end
+
+          function onLinkUpdated(source)
+            if ripple then
+              ripple = false;
+              setValue(source.getValue());
+              ripple = true;
+            end
+          end
+
+          function onValueChanged()
+            if linknode then
+              if ripple then
+                ripple = false;
+                linknode.setValue(getValue());
+                ripple = true;
+              end
+            end
+          end
+          
+          function onInit()
+            if super and super.onInit then
+              super.onInit();
+            end
+            onValueChanged();
+          end
+        </script>
+      </stringfieldX>
+    </sheetdata>
+  </windowclass>
+  
+  <windowclass name="combattracker_attack">
+    <sizelimits>
+      <minimum>
+        <height>22</height>
+      </minimum>
+    </sizelimits>
+    <script file="ct/scripts/ct_attack.lua" />
+    <sheetdata>
+      <windowreferencefield name="open">
+        <bounds>2,3,16,16</bounds>
+        <icon>
+          <normal>button_openwindow</normal>
+        </icon>
+        <description>
+          <field>name</field>
+        </description>
+      </windowreferencefield>
+      <stringfieldX name="name">
+        <bounds>20,4,134,17</bounds>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+        <script>
+          function onDeleteDown()
+            window.testDelete();
+          end
+          
+          function onDeleteUp()
+            window.testDelete();
+          end
+
+          function onEnter()
+            window.testNew();
+          end
+
+		  function onLinkUpdated(source)
+            setValue(source.getValue());
+          end
+
+          function setLink(dbnode)
+            if dbnode then
+              linknode = dbnode;
+              linknode.onUpdate = onLinkUpdated;
+              onLinkUpdated(linknode);
+              local linkWidget = addBitmapWidget("indicator_linked");
+			  linkWidget.setPosition("bottomright", -5, -5);
+			  linkWidget.setSize(9,9);
+            end
+          end
+        </script>
+        <tabtarget>
+          <next>ob</next>
+          <prev>attack</prev>
+        </tabtarget>
+      </stringfieldX>
+      <!-- Target -->
+      <stringfieldX name="targetnode">
+        <bounds>0,0,0,0</bounds>
+        <invisible/>
+        <script>
+          function Updated()
+            local nodename = getValue();
+            node = DB.findNode(nodename);
+            if nodename~="" and node then
+              window.targetname.setLink(node.getChild("label"));
+            else
+              window.targetname.setLink(nil);
+            end
+          end
+
+          function onInit()
+            if super and super.onInit then
+              super.onInit();
+            end
+            getDatabaseNode().onUpdate = Updated;
+            Updated();
+          end
+        </script>
+      </stringfieldX>
+      <stringcontrolX name="targetname">
+        <anchored>
+          <to>name</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>135</width>
+          </size>
+        </anchored>
+        <static />
+        <empty>(none)</empty>
+        <font>sheettextsmall</font>
+        <script>
+          local linknode = nil;
+          
+          function onInit()
+            if super and super.onInit then
+              super.onInit();
+            end
+            registerMenuItem("Clear target","cleartarget",6);
+          end
+
+          function onDrop(x, y, draginfo)
+            if draginfo.isType("combattrackerentry") then
+				local targetWin = draginfo.getCustomData();
+				if PreferenceManager.load(Preferences.FillAllTargetsPref) == Preferences.No or not User.isHost() then
+					window.setTarget(targetWin);
+				else
+					local tracker = Interface.findWindow("combattracker","combattracker");
+					if not tracker then
+						return nil;
+					end
+					local entryNode = window.getDatabaseNode().getParent().getParent();
+					for i,entry in ipairs(tracker.list.getWindows()) do
+						if entry.getDatabaseNode() == entryNode then
+							for i, att in ipairs(entry.getPanel("active").attacks.getWindows()) do
+								att.setTarget(targetWin);
+							end
+							for i, def in ipairs(entry.getPanel("active").defences.getWindows()) do
+								if not def.targetall or (def.targetall and not def.targetall.getState()) then
+									def.setTarget(targetWin);
+								end
+							end
+						end
+					end
+				end
+				return true;
+            end
+            return false;
+          end
+
+          function onMenuSelection(item)
+            if item==6 then
+              window.setTarget(nil);
+            end
+          end
+
+          function onLinkUpdated(source)
+            setValue(source.getValue());
+          end
+          
+          function doNothing()
+            --[[ used as an empty value for clearing event handlers]]
+          end
+
+          function setLink(srcnode)
+            if linknode then
+              linknode.onUpdate = doNothing;
+            end
+            linknode = srcnode;
+            if linknode then
+              linknode.onUpdate = onLinkUpdated;
+              onLinkUpdated(linknode);
+            else
+              setValue("");
+            end
+          end
+        </script>
+      </stringcontrolX>
+      <!-- OB -->
+      <numberfieldX name="ob">
+        <anchored>
+          <to>targetname</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>30</width>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+        <script>
+          function onValueChanged()
+            if getValue() &lt; 0 then
+              setInvalid();
+            else
+              setValid();
+            end
+          end
+          
+          function onInit()
+            if super and super.onInit then
+              super.onInit();
+            end
+            onValueChanged();
+          end
+		  
+		  function onLinkUpdated(source)
+            setValue(source.getValue());
+          end
+
+          function setLink(dbnode)
+            if dbnode then
+              linknode = dbnode;
+              linknode.onUpdate = onLinkUpdated;
+              onLinkUpdated(linknode);
+              local linkWidget = addBitmapWidget("indicator_linked");
+			  linkWidget.setPosition("bottomright", -5, -5);
+			  linkWidget.setSize(9,9);
+            end
+          end
+        </script>
+        <tabtarget>
+          <next>attack</next>
+          <prev>name</prev>
+        </tabtarget>
+      </numberfieldX>
+      <!-- Attack -->
+      <numberfieldX name="attack">
+        <anchored>
+          <to>ob</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>30</width>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>textlinedice</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+        <script>
+          function obUpdated()
+            setValue(window.ob.getValue());
+          end
+
+          function onInit()
+            if super and super.onInit then
+              super.onInit();
+            end
+            window.ob.getDatabaseNode().onUpdate = obUpdated;
+            getDatabaseNode().onUpdate = updated;
+            updated();
+          end
+
+          function onDoubleClick()
+            window.rollAttack();
+          end
+          
+          function onDragStart(button, x, y, dragData)
+            return window.dragAttack(button, x, y, dragData);
+          end
+
+          function updated()
+            if getValue() &lt; 0 then
+              setInvalid();
+            else
+              setValid();
+            end
+          end
+        </script>
+        <tabtarget>
+          <next>name</next>
+          <prev>ob</prev>
+        </tabtarget>
+      </numberfieldX>
+      <!-- Notes -->
+      <tablefield name="attacktable">
+        <bounds>0,0,0,0</bounds>
+        <invisible/>
+        <allowDrag/>
+      </tablefield>
+      <genericcontrol name="tableicon">
+        <anchored>
+          <left>
+            <parent>attack</parent>
+            <anchor>right</anchor>
+            <offset>4</offset>
+            <relation>relative</relation>
+          </left>
+          <top>
+            <anchor>top</anchor>
+            <offset>6</offset>
+          </top>
+          <size>
+            <width>14</width>
+            <height>14</height>
+          </size>
+        </anchored>
+        <icon>icon_notable</icon>
+        <tooltip>
+          <text></text>
+        </tooltip>
+        <script>
+          function onDragStart(...)
+            local id,name = window.attacktable.getValue();
+            if id~="" then
+              return window.attacktable.onDragStart(...);
+            else
+              return false;
+            end
+          end
+          
+          function onDrop(x,y,dragdata)
+            local customData = dragdata.getCustomData();
+            if not customData or not customData.type or customData.type~="RMCTable" then
+              return false;
+            end
+            window.attacktable.setValue(customData.tableID,customData.tableName);
+            window.updateNotes();
+            return true;
+          end
+        </script>
+      </genericcontrol>
+      <stringcontrolX name="chance">
+        <anchored>
+          <left>
+            <parent>attack</parent>
+            <anchor>right</anchor>
+            <offset>4</offset>
+            <relation>relative</relation>
+          </left>
+          <top>
+            <parent>attack</parent>
+            <anchor>top</anchor>
+            <offset>0</offset>
+          </top>
+        </anchored>
+        <font>sheettextsmall</font>
+        <static>100%</static>
+        <tooltip>
+          <text>The chance of this particular attack being used.</text>
+        </tooltip>
+      </stringcontrolX>
+      <genericcontrol name="sameround">
+        <anchored>
+          <left>
+            <parent>attack</parent>
+            <anchor>right</anchor>
+            <offset>3</offset>
+            <relation>relative</relation>
+          </left>
+          <top>
+            <anchor>top</anchor>
+            <offset>7</offset>
+          </top>
+          <size>
+            <width>12</width>
+            <height>12</height>
+          </size>
+        </anchored>
+        <icon>icon_sameround</icon>
+        <tooltip>
+          <text>Attack occurs in the same round as a critical from the previous attack.</text>
+        </tooltip>
+      </genericcontrol>
+      <genericcontrol name="nextround">
+        <anchored>
+          <left>
+            <parent>attack</parent>
+            <anchor>right</anchor>
+            <offset>3</offset>
+            <relation>relative</relation>
+          </left>
+          <top>
+            <anchor>top</anchor>
+            <offset>6</offset>
+          </top>
+          <size>
+            <width>14</width>
+            <height>14</height>
+          </size>
+        </anchored>
+        <icon>icon_nextround</icon>
+        <tooltip>
+          <text>Attack occurs in the next round after a critical from the previous attack.</text>
+        </tooltip>
+      </genericcontrol>
+    </sheetdata>
+  </windowclass>
+
+  <windowclass name="combattracker_defence">
+    <sizelimits>
+      <minimum>
+        <height>22</height>
+      </minimum>
+    </sizelimits>
+    <script file="ct/scripts/ct_defence.lua" />
+    <sheetdata>
+      <windowreferencefield name="open">
+        <bounds>2,3,16,16</bounds>
+        <icon>
+          <normal>button_openwindow</normal>
+        </icon>
+        <description>
+          <field>name</field>
+        </description>
+      </windowreferencefield>
+      <stringfieldX name="name">
+        <bounds>20,4,134,17</bounds>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+        <script>
+          function onDeleteDown()
+            window.testDelete();
+          end
+          
+          function onDeleteUp()
+            window.testDelete();
+          end
+          
+          function onEnter()
+            window.testNew();
+          end
+		  
+		  function onValueChanged()
+		    if getValue() == "Parry" then
+				window.missilebonus.setVisible(false);
+			else
+				window.missilebonus.setVisible(true);
+			end
+		  end
+
+		  function onInit()
+            if super and super.onInit then
+              super.onInit();
+            end
+            onValueChanged();
+          end
+        </script>
+        <tabtarget>
+          <next>meleebonus</next>
+          <prev>missilebonus</prev>
+        </tabtarget>
+      </stringfieldX>
+      <!-- Target -->
+      <stringfieldX name="targetnode">
+        <bounds>0,0,0,0</bounds>
+        <invisible/>
+        <script>
+          function Updated()
+            local nodename = getValue();
+            node = DB.findNode(nodename);
+            if nodename~="" and node then
+              window.targetname.setLink(node.getChild("label"));
+            else
+              window.targetname.setLink(nil);
+            end
+          end
+
+          function onInit()
+            if super and super.onInit then
+              super.onInit();
+            end
+            getDatabaseNode().onUpdate = Updated;
+            Updated();
+          end
+        </script>
+      </stringfieldX>
+      <stringcontrolX name="targetname">
+        <anchored>
+          <to>name</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>115</width>
+          </size>
+        </anchored>
+        <static />
+        <font>sheettextsmall</font>
+        <script>
+          local linknode = nil;
+          
+          function onInit()
+            if super and super.onInit then
+              super.onInit();
+            end
+            registerMenuItem("Clear target","cleartarget",6);
+          end
+
+          function onDrop(x, y, draginfo)
+            if draginfo.isType("combattrackerentry") then
+				local targetWin = draginfo.getCustomData();
+				if PreferenceManager.load(Preferences.FillAllTargetsPref) == Preferences.No or not User.isHost() then
+		            if window.targetall and window.targetall.getState() then
+						return false;
+					else
+						window.setTarget(targetWin);
+					end
+				else
+					local tracker = Interface.findWindow("combattracker","combattracker");
+					if not tracker then
+						return nil;
+					end
+					local entryNode = window.getDatabaseNode().getParent().getParent();
+					for i,entry in ipairs(tracker.list.getWindows()) do
+						if entry.getDatabaseNode() == entryNode then
+							for i, att in ipairs(entry.getPanel("active").attacks.getWindows()) do
+								att.setTarget(targetWin);
+							end
+							for i, def in ipairs(entry.getPanel("active").defences.getWindows()) do
+								if not def.targetall or (def.targetall and not def.targetall.getState()) then
+									def.setTarget(targetWin);
+								end
+							end
+						end
+					end
+				end
+				return true;
+            end
+            return false;
+          end
+
+          function onMenuSelection(item)
+            if item==6 then
+              window.setTarget(nil);
+            end
+          end
+
+          function onLinkUpdated(source)
+            setValue(source.getValue());
+          end
+          
+          function doNothing()
+            --[[ used as an empty value for clearing event handlers]]
+          end
+
+          function setLink(srcnode)
+            if linknode then
+              linknode.onUpdate = doNothing;
+            end
+            linknode = srcnode;
+            if linknode then
+              linknode.onUpdate = onLinkUpdated;
+              onLinkUpdated(linknode);
+            else
+              if window.targetall and window.targetall.getState() then
+                setValue("** All **");
+              else
+                setValue("(none)");
+              end
+            end
+          end
+        </script>
+      </stringcontrolX>
+      <checkbox name="targetall">
+        <anchored>
+          <to>targetname</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>15</width>
+          </size>
+        </anchored>
+        <script>
+          function onValueChanged()
+            if getState() then
+              window.setTarget(nil);
+            else
+              window.targetname.setLink(nil);
+            end
+          end
+          
+          function onInit()
+            if super and super.onInit then
+              super.onInit();
+            end
+            onValueChanged();
+          end
+        </script>
+      </checkbox>
+      <!-- Melee Shield Bonus -->
+      <numberfieldX name="meleebonus">
+        <anchored>
+          <to>targetall</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>30</width>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+        <script>
+          function onValueChanged()
+            if getValue() &lt; 0 then
+              setInvalid();
+            else
+              setValid();
+			  if window.name.getValue() == "Parry" then
+				window.updateAttacks(getValue());
+			  end
+            end
+          end
+          
+          function onInit()
+            if super and super.onInit then
+              super.onInit();
+            end
+            onValueChanged();
+          end
+        </script>
+        <tabtarget>
+          <next>missilebonus</next>
+          <prev>name</prev>
+        </tabtarget>
+      </numberfieldX>
+      <!-- Missile Shield Bonus -->
+      <numberfieldX name="missilebonus">
+        <anchored>
+          <to>meleebonus</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>30</width>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+        <script>
+          function onValueChanged()
+            if getValue() &lt; 0 then
+              setInvalid();
+            else
+              setValid();
+            end
+          end
+          
+          function onInit()
+            if super and super.onInit then
+              super.onInit();
+            end
+            onValueChanged();
+          end
+        </script>
+        <tabtarget>
+          <next>name</next>
+          <prev>meleebonus</prev>
+        </tabtarget>
+      </numberfieldX>
+    </sheetdata>
+  </windowclass>
+
+  <windowclass name="combattracker_effect">
+    <sizelimits>
+      <minimum>
+        <height>22</height>
+      </minimum>
+    </sizelimits>
+    <script file="ct/scripts/ct_effect.lua" />
+    <sheetdata>
+      <numberfieldX name="summary">
+        <bounds>0,0,0,0</bounds>
+        <invisible/>
+      </numberfieldX>
+      <stringfieldX name="description">
+        <bounds>0,4,220,17</bounds>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+		<tooltip />
+        <script>
+			function onInit()
+				setTooltipText(getValue());
+			end
+
+			function onValueChanged()
+				setTooltipText(getValue());
+			end
+			
+          function onDeleteDown()
+            window.deleteDown();
+          end
+          
+          function onDeleteUp()
+            window.deleteUp();
+          end
+
+          function onEnter()
+            window.testNew();
+          end
+          
+          function onDrop(x, y, draginfo)
+            return window.onDrop(x, y, draginfo);
+          end
+        </script>
+      </stringfieldX>
+      <numberfieldX name="penalty">
+        <anchored>
+          <to>description</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>30</width>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+        <script>
+          function onDrop(x, y, draginfo)
+            return window.onDrop(x, y, draginfo);
+          end
+        </script>
+      </numberfieldX>
+      <numberfieldX name="duration">
+        <anchored>
+          <to>penalty</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>30</width>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+        <script>
+          function onDrop(x, y, draginfo)
+            return window.onDrop(x, y, draginfo);
+          end
+        </script>
+      </numberfieldX>
+      <numberfieldX name="bleeding">
+        <anchored>
+          <to>duration</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>30</width>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+        <script>
+          function onDrop(x, y, draginfo)
+            return window.onDrop(x, y, draginfo);
+          end
+        </script>
+      </numberfieldX>
+      <numberfieldX name="mustParry">
+        <anchored>
+          <to>bleeding</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>30</width>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+        <script>
+          function onDrop(x, y, draginfo)
+            return window.onDrop(x, y, draginfo);
+          end
+        </script>
+      </numberfieldX>
+      <numberfieldX name="parryAt">
+        <anchored>
+          <to>mustParry</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>30</width>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+        <script>
+          function onDrop(x, y, draginfo)
+            return window.onDrop(x, y, draginfo);
+          end
+        </script>
+      </numberfieldX>
+      <numberfieldX name="stunned">
+        <anchored>
+          <to>parryAt</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>30</width>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+        <script>
+          function onDrop(x, y, draginfo)
+            return window.onDrop(x, y, draginfo);
+          end
+        </script>
+      </numberfieldX>
+      <numberfieldX name="cantParry">
+        <anchored>
+          <to>stunned</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>35</width>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+      </numberfieldX>
+    </sheetdata>
+  </windowclass>
+
+  <!-- pop up list for selecting attack/defence targets: abandoned code due to complexity vs benefits -->
+
+  <windowclass name="combattracker_targetlist">
+    <frame>ghost</frame>
+    <placement>
+      <size>
+        <width>115</width>
+        <height>50</height>
+      </size>
+    </placement>
+    <script>
+      local targetnode = nil;
+      
+      function setTargetNode(node)
+        --[[ save the target node ]]
+        targetnode = node;
+        --[[ close all current windows ]]
+        for i,win in ipairs(list.getWindows()) do
+          win.close();
+        end
+        --[[ add a nil entry ]]
+        list.createWindowWithClass("combattracker_niltarget");
+        --[[ find the list of possible targets ]]
+        node = node.getParent().getParent().getParent();
+        --[[ populate the list ]]
+        for k,n in pairs(node.getChildren()) do
+          list.createWindow(n);
+        end
+        --[[ refilter the list ]]
+        list.applyFilter();
+      end
+    </script>
+    <sheetdata>
+      <windowlist name="list">
+        <bounds>5,5,-5,-5</bounds>
+        <datasource>.entries</datasource>
+        <class>combattracker_target</class>
+        <script>
+          function onFilter(w)
+            return w.isFiltered();
+          end
+        </script>
+        <skipempty/>
+      </windowlist>
+    </sheetdata>
+  </windowclass>
+
+  <windowclass name="combattracker_target">
+    <sizelimits>
+      <minimum>
+        <height>18</height>
+      </minimum>
+    </sizelimits>
+    <script>
+      function isFiltered()
+        local result = User.isHost() or getType()=="pc" or shownpc();
+        return result;
+      end
+      
+      function getType()
+        return getDatabaseNode().createChild("type","string").getValue();
+      end
+      
+      function shownpc()
+        return (getDatabaseNode().createChild("shownpc","number").getValue()==1);
+      end
+    </script>
+    <sheetdata>
+      <stringfieldX name="label">
+        <bounds>0,0,-1,-1</bounds>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>rowshade</name>
+        </frame>
+        <static/>
+        <script>
+          function onDragStart(button, x, y, draginfo)
+            local node = window.getDatabaseNode();
+            draginfo.setType("combattrackertarget");
+            draginfo.setStringData(getValue());
+            draginfo.setCustomData(node);
+            return true;
+          end
+
+          function onInit()
+            if super and super.onInit then
+              super.onInit();
+            end
+            setHoverCursor("hand");
+          end
+        </script>
+      </stringfieldX>
+    </sheetdata>
+  </windowclass>
+
+  <windowclass name="combattracker_niltarget">
+    <sizelimits>
+      <minimum>
+        <height>18</height>
+      </minimum>
+    </sizelimits>
+    <script>
+      function isFiltered()
+        return true;
+      end
+    </script>
+    <sheetdata>
+      <stringcontrolX name="label">
+        <bounds>0,0,-1,-1</bounds>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>rowshade</name>
+        </frame>
+        <static/>
+        <script>
+          function onDragStart(button, x, y, draginfo)
+            local node = window.getDatabaseNode();
+            draginfo.setType("combattrackertarget");
+            draginfo.setStringData("");
+            draginfo.setCustomData(nil);
+            return true;
+          end
+
+          function onInit()
+            if super and super.onInit then
+              super.onInit();
+            end
+            setHoverCursor("hand");
+          end
+        </script>
+        <static>(none)</static>
+      </stringcontrolX>
+    </sheetdata>
+  </windowclass>
+
+</root>

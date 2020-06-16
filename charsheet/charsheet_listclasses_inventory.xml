@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<root version="2.0">
+<windowclass name="charsheet_inventorywindow">
+    <sizelimits>
+      <maximum>
+        <height>18</height>
+      </maximum>
+      <minimum>
+        <height>18</height>
+      </minimum>
+    </sizelimits>
+    <script>
+      function getWeight()
+        if enc.getState() then
+          return weight.getValue();
+        else
+          return 0;
+        end
+      end
+	  
+	  function onInit()
+		registerMenuItem("Delete Item","delete",6);
+	  end
+	  
+		function onMenuSelection(item)
+			if item then
+				if item==6 then
+					local dblink = DB.getPath(getDatabaseNode());
+					if item_link.getValue() ~= "" then
+						local itemLink = DB.findNode(item_link.getValue());
+						if itemLink ~= nil then
+							itemLink.delete();
+						end
+					end
+					dblinknode = DB.findNode(dblink);
+					if dblinknode ~= nil then
+						dblinknode.delete();
+					end
+				end
+			end
+		end
+		
+    </script>
+    <sheetdata>
+	<stringfieldX name="item_class">
+		<bounds>0,0,0,0</bounds>
+		<invisible />
+		<script>
+			function onInit()
+				if getValue() == "" then
+					setValue("item_general");
+				end
+			end
+			
+			function onValueChanged()
+				window.open.refresh();
+				window.weight.refreshLink();
+				window.name.refreshLink();
+			end
+		</script>
+	</stringfieldX>
+	<stringfieldX name="item_link">
+		<bounds>0,0,0,0</bounds>
+		<invisible />
+		<script>
+			function onValueChanged()
+				window.open.refresh();
+				window.weight.refreshLink();
+				window.name.refreshLink();
+			end
+		</script>
+	</stringfieldX>
+	<windowreferencecontrol name="open">
+        <bounds>0,2,14,14</bounds>
+        <icon>
+          <normal>button_openwindow</normal>
+          <pressed>button_openwindow</pressed>
+        </icon>
+        <class>item_general</class>
+        <description>
+          <field>name</field>
+        </description>
+		<script>
+			function onInit()
+				refresh()
+			end
+			
+			function refresh()
+				setValue(window.item_class.getValue(), window.item_link.getValue());
+			end
+		</script>
+      </windowreferencecontrol>
+      <textlistitemvalue name="name">
+        <bounds>15,0,235,17</bounds>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+        <font>sheettextsmall</font>
+        <tabtarget>
+          <next>location</next>
+          <prev>weight</prev>
+        </tabtarget>
+		<script>
+			local locknode = nil;
+			
+			function onLinkUpdated(source)
+				setValue(source.getValue());
+			end
+
+			function setLink(dbnode)
+				if dbnode then
+					linknode = dbnode;
+					linknode.onUpdate = onLinkUpdated;
+					onLinkUpdated(linknode);
+				end
+			end
+			
+			function onInit()
+				refreshLink();
+			end
+			
+			function refreshLink()
+				local itemLink = window.item_link.getValue();
+				if itemLink ~= "" then
+					local itemlinknode = DB.findNode(itemLink);
+					if itemlinknode ~= nil then
+						local namenode = itemlinknode.createChild("name","string");
+						if namenode.getValue() == "" then
+							namenode.setValue(getValue());
+						end
+						setLink(namenode);
+					end
+				end
+			end
+			
+			function isLocked()
+				if not locknode then
+					return false;
+				else
+					return (locknode.getValue()~=0)
+				end
+			end
+          
+			function setLock(state)
+				if locknode then
+					if state then
+						locknode.setValue(1);
+					else
+						locknode.setValue(0);
+					end
+				end
+			end
+			
+			function onValueChanged()
+                if linknode then
+					if not isLocked() then
+						setLock(true);
+						linknode.setValue(getValue());
+						setLock(false);
+					end
+				end
+			end
+		</script>
+      </textlistitemvalue>
+      <textlistitemvalue name="location">
+        <anchored>
+          <to>name</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>120</width>
+          </size>
+        </anchored>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+        <font>sheettextsmall</font>
+        <tabtarget>
+          <next>weight</next>
+          <prev>name</prev>
+        </tabtarget>
+      </textlistitemvalue>
+      <checkbox name="enc">
+        <anchored>
+          <to>location</to>
+          <position>right</position>
+          <offset>10</offset>
+          <size>
+            <width>15</width>
+          </size>
+        </anchored>
+        <script>
+          function onValueChanged()
+            window.windowlist.update();
+			local itemLink = window.item_link.getValue();
+				if itemLink ~= "" then
+				local itemlinknode = DB.findNode(itemLink);
+				local state = getState();
+				if state then
+					itemlinknode.createChild("isequipped","number").setValue(1);
+				else
+					itemlinknode.createChild("isequipped","number").setValue(0);
+				end
+			end
+          end
+        </script>
+      </checkbox>
+      <numberfieldX name="weight">
+        <anchored>
+          <to>enc</to>
+          <position>right</position>
+          <offset>10</offset>
+          <size>
+            <width>40</width>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+        <tabtarget>
+          <next>name</next>
+          <prev>weight</prev>
+        </tabtarget>
+        <script>
+			local locknode = nil;
+		
+			function onLinkUpdated(source)
+				setValue(source.getValue());
+			end
+
+			function setLink(dbnode)
+				if dbnode then
+					linknode = dbnode;
+					linknode.onUpdate = onLinkUpdated;
+					onLinkUpdated(linknode);
+				end
+			end
+			
+			function onValueChanged()
+                if linknode then
+					if not isLocked() then
+						setLock(true);
+						linknode.setValue(getValue());
+						setLock(false);
+					end
+				end
+				window.windowlist.update();
+			end
+			
+			function onInit()
+				refreshLink();
+			end
+			
+			function refreshLink()
+				local itemLink = window.item_link.getValue();
+				if itemLink ~= "" then
+					local itemlinknode = DB.findNode(itemLink);
+					if itemlinknode ~= nil then
+						local namenode = itemlinknode.createChild("item_weight","number");
+						if namenode.getValue() == "" then
+							namenode.setValue(getValue());
+						end
+						setLink(namenode);
+					end
+				end
+			end
+			
+			function isLocked()
+				if not locknode then
+					return false;
+				else
+					return (locknode.getValue()~=0)
+				end
+			end
+          
+			function setLock(state)
+				if locknode then
+					if state then
+						locknode.setValue(1);
+					else
+						locknode.setValue(0);
+					end
+				end
+			end
+        </script>
+      </numberfieldX>
+    </sheetdata>
+  </windowclass>
+ 
+</root>

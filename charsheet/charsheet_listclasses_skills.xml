@@ -1,0 +1,380 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<root version="2.0">
+  <windowclass name="charsheet_skillwindow">
+    <sizelimits>
+      <minimum>
+        <height>18</height>
+      </minimum>
+      <maximum>
+        <height>18</height>
+      </maximum>
+    </sizelimits>
+    <script file="charsheet/scripts/charsheet_skillwindow.lua" />
+    <sheetdata>
+      <!-- hidden fields -->
+      <numberfieldX name="locked">
+        <bounds>0,0,0,0</bounds>
+        <invisible/>
+        <script>
+          function onValueChanged()
+            if getValue()==1 then
+              window.shortname.setReadOnly(true);
+              window.shortname.setFrame("",0,1,0,0);
+            else
+              window.shortname.setReadOnly(false);
+              window.shortname.setFrame("textline",0,1,0,0);
+            end
+            window.setMenus();
+          end
+          
+          function onInit()
+            if super and super.onInit then
+              super.onInit();
+            end
+            onValueChanged();
+          end
+        </script>
+      </numberfieldX>
+      <stringfieldX name="name">
+        <bounds>0,0,0,0</bounds>
+        <invisible/>
+      </stringfieldX>
+      <stringfieldX name="fullname">
+        <bounds>0,0,0,0</bounds>
+        <invisible/>
+      </stringfieldX>
+      <stringfieldX name="stats">
+        <bounds>0,0,0,0</bounds>
+        <invisible/>
+      </stringfieldX>
+      <numberfieldX name="armorfactor">
+        <bounds>0,0,0,0</bounds>
+        <invisible/>
+      </numberfieldX>
+      <numberfieldX name="gmonlyskill">
+        <bounds>0,0,0,0</bounds>
+        <invisible/>
+      </numberfieldX>
+      <numberfieldX name="group">
+        <bounds>0,0,0,0</bounds>
+        <invisible/>
+		<script>
+		  function onValueChanged()
+            if super and super.onValueChanged then
+              super.onValueChanged();
+            end
+            window.refresh();
+		  end
+
+		</script>
+      </numberfieldX>
+	<stringfieldX name="specialization">
+        <bounds>0,0,0,0</bounds>
+        <invisible/>
+      </stringfieldX>
+      <!-- visible fields -->
+      <windowreferencecontrol name="open">
+        <bounds>0,2,14,14</bounds>
+        <icon>
+          <normal>button_openwindow</normal>
+          <pressed>button_openwindow</pressed>
+        </icon>
+        <description>
+          <field>name</field>
+        </description>
+        <class>skill</class>
+      </windowreferencecontrol>
+      <genericcontrol name="diceholder">
+        <bounds>15,0,156,17</bounds>
+        <frame>
+          <name>ghostdice</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+      </genericcontrol>
+      <stringcontrolX name="shortname">
+        <anchored>
+          <to>diceholder</to>
+          <position>over</position>
+        </anchored>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+		<tooltip />
+        <script>
+          local sem = false;
+          
+          function onValueChanged()
+            if sem then
+              return;
+            else
+              sem = true;
+              window.parseShortName();
+              sem = false;
+            end
+          end
+          
+          function onDoubleClick()
+            window.rollSkill();
+          end
+          
+          function onDragStart(button, x, y, dragData)
+            return window.dragSkill(button, x, y, dragData);
+          end
+          
+          function update()
+            if sem then
+              return;
+            else
+              sem = true;
+              local nm = window.name.getValue();
+			  local spec = window.specialization.getValue();
+              local sts = window.stats.getValue();
+			  local name; 
+			  if sts=="" and spec=="" then
+                name = nm;
+              elseif sts == "" then
+                name = nm .. "[" .. spec .. "]";
+              elseif spec == "" then
+                name = nm .. "(" .. sts .. ")";
+              else
+                name = nm .. "[" .. spec .. "](" .. sts .. ")";
+              end
+			  setValue(name);
+			  setTooltipText(name);
+              sem = false;
+            end
+          end
+          
+          function onInit()
+            if super and super.onInit then
+              super.onInit();
+            end
+            update();
+          end
+        </script>
+      </stringcontrolX>
+      <stringfieldX name="cost">
+        <bounds>186,4,20,13</bounds>
+        <font>sheetlabelsmall</font>
+        <frame>
+          <name>textline</name>
+          <offset>0,5,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,5,0,0</offset>
+        </keyeditframe>
+        <center/>
+      </stringfieldX>
+      <numberfieldX name="rank">
+        <anchored>
+          <to>cost</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>20</width>
+          </size>
+        </anchored>
+        <font>sheetlabelsmall</font>
+        <hideonvalue>0</hideonvalue>
+        <frame>
+          <name>textline</name>
+          <offset>0,5,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,5,0,0</offset>
+        </keyeditframe>
+      </numberfieldX>
+      <numberfieldX name="rankbonus">
+        <anchored>
+          <to>rank</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>20</width>
+          </size>
+        </anchored>
+        <font>sheetlabelsmall</font>
+        <frame>
+          <name>textline</name>
+          <offset>0,5,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,5,0,0</offset>
+        </keyeditframe>
+        <displaysign/>
+        <readonly/>
+        <script>
+          function onValueChanged()
+            if not isReadOnly() then
+              window.refresh();
+            end
+          end
+        </script>
+      </numberfieldX>
+      <numberfieldX name="statbonus">
+        <anchored>
+          <to>rankbonus</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>25</width>
+          </size>
+        </anchored>
+        <font>sheetlabelsmall</font>
+        <displaysign/>
+        <readonly/>
+      </numberfieldX>
+      <numberfieldX name="level">
+        <anchored>
+          <to>statbonus</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>25</width>
+          </size>
+        </anchored>
+        <font>sheetlabelsmall</font>
+        <frame>
+          <name>textline</name>
+          <offset>0,5,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,5,0,0</offset>
+        </keyeditframe>
+        <displaysign/>
+        <hideonvalue>0</hideonvalue>
+      </numberfieldX>
+      <numberfieldX name="item">
+        <anchored>
+          <to>level</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>25</width>
+          </size>
+        </anchored>
+        <font>sheetlabelsmall</font>
+        <frame>
+          <name>textline</name>
+          <offset>0,5,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,5,0,0</offset>
+        </keyeditframe>
+        <displaysign/>
+        <hideonvalue>0</hideonvalue>
+      </numberfieldX>
+      <numberfieldX name="special">
+        <anchored>
+          <to>item</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>25</width>
+          </size>
+        </anchored>
+        <font>sheetlabelsmall</font>
+        <frame>
+          <name>textline</name>
+          <offset>0,5,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,5,0,0</offset>
+        </keyeditframe>
+        <displaysign/>
+        <hideonvalue>0</hideonvalue>
+      </numberfieldX>
+      <numberfieldX name="misc">
+        <anchored>
+          <to>special</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>25</width>
+          </size>
+        </anchored>
+        <font>sheetlabelsmall</font>
+        <frame>
+          <name>textline</name>
+          <offset>0,5,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,5,0,0</offset>
+        </keyeditframe>
+        <displaysign/>
+        <hideonvalue>0</hideonvalue>
+      </numberfieldX>
+      <numberfieldX name="total">
+        <anchored>
+          <to>misc</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>20</width>
+          </size>
+        </anchored>
+        <font>sheetlabelsmall</font>
+        <frame>
+          <name>textline</name>
+          <offset>0,5,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,5,0,0</offset>
+        </keyeditframe>
+        <displaysign/>
+        <readonly/>
+        <script>
+			function onDoubleClick()
+				window.rollSkill();
+			end
+		  
+			function onValueChanged(init)
+				local charNode = window.getDatabaseNode().getParent().getParent();
+				local skillName = window.name.getValue();
+				local skillFullName = window.fullname.getValue();
+				local skillTotal = getValue();
+				Rules_PC.SkillTotalChanged(charNode, skillName, skillFullName, skillTotal);
+			end
+          
+			function onDragStart(button, x, y, dragData)
+				return window.dragSkill(button, x, y, dragData);
+			end
+        </script>
+      </numberfieldX>
+    </sheetdata>
+  </windowclass>
+
+  <windowclass name="charsheet_skillcategory">
+    <frame>rowshade</frame>
+    <sizelimits>
+      <minimum>
+        <height>18</height>
+      </minimum>
+      <maximum>
+        <height>18</height>
+      </maximum>
+    </sizelimits>
+    <sheetdata>
+      <stringcontrolX name="name">
+        <bounds>15,0,-1,17</bounds>
+        <font>sheettextsmall</font>
+        <static />
+      </stringcontrolX>
+    </sheetdata>
+  </windowclass>
+
+</root>

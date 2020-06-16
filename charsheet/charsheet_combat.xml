@@ -1,0 +1,1506 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<root version="2.0">
+
+	<windowclass name="charsheet_combat">
+		<placement>
+			<size>
+				<width>525</width>
+				<height>611</height>
+			</size>
+		</placement>
+		<nodelete />
+		<script>
+			function onInit()
+				if super and super.onInit then
+					super.onInit()
+				end
+				local charnode = getDatabaseNode()
+				if charnode.getChild("items.general") then
+					charnode.getChild("items.general").onChildUpdate = updateDefences;
+				end
+				if charnode.getChild("inventory.equipment") then
+					charnode.getChild("inventory.equipment").onChildUpdate = updateDefences;
+				end
+				if charnode.getChild("combat.weapons") then
+					charnode.getChild("combat.weapons").onChildUpdate = updateDefences;
+				end
+				armour_item_list.getDatabaseNode().onChildUpdate = updateDefences;
+				ranged_item_list.getDatabaseNode().onChildUpdate = updateAttacks;
+				melee_item_list.getDatabaseNode().onChildUpdate = updateAttacks;
+				head_armour.setEnabled(false);
+				neck_armour.setEnabled(false);
+				shoulder_armour.setEnabled(false);
+				torso_armour.setEnabled(false);
+				abdomen_armour.setEnabled(false);
+				arm_armour.setEnabled(false);
+				hand_armour.setEnabled(false);
+				groin_armour.setEnabled(false);
+				leg_armour.setEnabled(false);
+				foot_armour.setEnabled(false);
+				updateDefences();
+				updateAttacks();
+			end
+		
+			function updateDefences()
+				local node = getDatabaseNode();
+				head_armour.setState(Rules_Armour.setMaxHeadArmour(node));
+				neck_armour.setState(Rules_Armour.setMaxNeckArmour(node));
+				shoulder_armour.setState(Rules_Armour.setMaxShoulderArmour(node));
+				torso_armour.setState(Rules_Armour.setMaxTorsoArmour(node));
+				abdomen_armour.setState(Rules_Armour.setMaxAbdomenArmour(node));
+				arm_armour.setState(Rules_Armour.setMaxArmArmour(node));
+				hand_armour.setState(Rules_Armour.setMaxHandArmour(node));
+				groin_armour.setState(Rules_Armour.setMaxGroinArmour(node));
+				leg_armour.setState(Rules_Armour.setMaxLegArmour(node));
+				foot_armour.setState(Rules_Armour.setMaxFootArmour(node));
+				armour_db.setValue(Rules_Armour.getBaseDB(head_armour.getState(), neck_armour.getState(), shoulder_armour.getState(), torso_armour.getState(), abdomen_armour.getState(), arm_armour.getState(), hand_armour.getState(), groin_armour.getState(), leg_armour.getState(), foot_armour.getState()));
+				quickness_db.setValue(Rules_Armour.quicknessDB(node));
+				shield_db.setValue(Rules_Armour.getShieldDB(node));
+				maneuver_penalty.setValue(Rules_Armour.getPenalty(node));
+				casting_penalty.setValue(Rules_Armour.getCastPenalty(node));
+				known_magic_db.setValue(Rules_Armour.getKnownMagicDB(node));
+				unknown_magic_db.setValue(Rules_Armour.getUnknownMagicDB(node));
+				total_known_db.setValue(armour_db.getValue() + quickness_db.getValue() + shield_db.getValue() + known_magic_db.getValue());
+				total_db.setValue(armour_db.getValue() + quickness_db.getValue() + shield_db.getValue() + known_magic_db.getValue() + unknown_magic_db.getValue());
+			end
+			
+			function updateAttacks()
+				melee_item_list.refilter();
+				ranged_item_list.refilter();
+			end
+		</script>
+		<sheetdata>
+			<!-- Melee -->
+			<genericcontrol name="melee_list_frame">
+				<bounds>15,20,240,225</bounds>
+				<frame>
+					<name>sheetgroup</name>
+				</frame>
+			</genericcontrol>
+			<stringcontrolX name="melee_list_label">
+				<anchored>
+					<to>melee_list_frame</to>
+					<position>insidetopleft</position>
+					<offset>15,10</offset>
+				</anchored>
+				<font>sheetlabel</font>
+				<static>Melee Attacks</static>
+			</stringcontrolX>
+			<sortablelist name="melee_item_list">
+				<anchored>
+					<top>
+						<parent>melee_list_label</parent>
+						<anchor>bottom</anchor>
+						<offset>10</offset>
+					</top>
+					<bottom>
+						<parent>melee_list_frame</parent>
+						<anchor>bottom</anchor>
+						<offset>-15</offset>
+					</bottom>
+					<left>
+						<parent>melee_list_frame</parent>
+						<anchor>left</anchor>
+						<offset>15</offset>
+					</left>
+					<right>
+						<parent>melee_list_frame</parent>
+						<anchor>right</anchor>
+						<offset>-15</offset>
+					</right>
+				</anchored>
+				<class>charsheet_melee_window</class>
+				<datasource>.combat.weapons</datasource>
+				<allowdelete />
+				<defaultsort>
+					<fieldname>name</fieldname>
+				</defaultsort>
+				<script file="charsheet/scripts/charsheet_meleeweaponlist.lua" />
+			</sortablelist>
+			<scrollbar>
+				<anchored>
+					<to>melee_item_list</to>
+					<position>right</position>
+					<offset>1,-4</offset>
+				</anchored>
+				<target>melee_item_list</target>
+			</scrollbar>
+		
+			<!-- Ranged -->
+			<genericcontrol name="ranged_list_frame">
+				<bounds>255,20,240,225</bounds>
+				<frame>
+					<name>sheetgroup</name>
+				</frame>
+			</genericcontrol>
+			<stringcontrolX name="ranged_list_label">
+				<anchored>
+					<to>ranged_list_frame</to>
+					<position>insidetopleft</position>
+					<offset>15,10</offset>
+				</anchored>
+				<font>sheetlabel</font>
+				<static>Ranged Attacks</static>
+			</stringcontrolX>
+			<sortablelist name="ranged_item_list">
+				<anchored>
+					<top>
+						<parent>ranged_list_label</parent>
+						<anchor>bottom</anchor>
+						<offset>10</offset>
+					</top>
+					<bottom>
+						<parent>ranged_list_frame</parent>
+						<anchor>bottom</anchor>
+						<offset>-15</offset>
+					</bottom>
+					<left>
+						<parent>ranged_list_frame</parent>
+						<anchor>left</anchor>
+						<offset>15</offset>
+					</left>
+					<right>
+						<parent>ranged_list_frame</parent>
+						<anchor>right</anchor>
+						<offset>-15</offset>
+					</right>
+				</anchored>
+				<class>charsheet_ranged_window</class>
+				<datasource>.combat.weapons</datasource>
+				<allowdelete />
+				<defaultsort>
+					<fieldname>name</fieldname>
+				</defaultsort>
+				<script file="charsheet/scripts/charsheet_rangedweaponlist.lua" />
+			</sortablelist>
+			<scrollbar>
+				<anchored>
+					<to>ranged_item_list</to>
+					<position>right</position>
+					<offset>1,-4</offset>
+				</anchored>
+				<target>ranged_item_list</target>
+			</scrollbar>
+			
+			<!-- Ammunition -->
+			<genericcontrol name="ammunition_items_frame">
+				<bounds>255,245,240,125</bounds>
+				<frame>
+					<name>sheetgroup</name>
+				</frame>
+			</genericcontrol>
+			<stringcontrolX name="ammunition_label">
+				<anchored>
+					<to>ammunition_items_frame</to>
+					<position>insidetopleft</position>
+					<offset>15,10</offset>
+				</anchored>
+				<font>sheetlabel</font>
+				<static>Ammunition</static>
+			</stringcontrolX>
+			<stringcontrolX name="arrow_label">
+				<anchored>
+					<left>
+						<parent>ammunition_label</parent>
+						<anchor>left</anchor>
+						<offset>0</offset>
+					</left>
+					<top>
+						<parent>ammunition_label</parent>
+						<anchor>bottom</anchor>
+						<offset>15</offset>
+					</top>
+					<size>
+						<width>50</width>
+						<height>15</height>
+					</size>
+				</anchored>
+				<font>sheetlabelsmallbold</font>
+				<static>Arrows:</static>
+			</stringcontrolX>
+			<stringcontrolX name="bolt_label">
+				<anchored>
+					<left>
+						<parent>ammunition_label</parent>
+						<anchor>left</anchor>
+						<offset>0</offset>
+					</left>
+					<top>
+						<parent>arrow_label</parent>
+						<anchor>bottom</anchor>
+						<offset>10</offset>
+					</top>
+					<size>
+						<width>50</width>
+						<height>15</height>
+					</size>
+				</anchored>
+				<font>sheetlabelsmallbold</font>
+				<static>Bolts:</static>
+			</stringcontrolX>
+			<stringcontrolX name="bullet_label">
+				<anchored>
+					<left>
+						<parent>ammunition_label</parent>
+						<anchor>left</anchor>
+						<offset>0</offset>
+					</left>
+					<top>
+						<parent>bolt_label</parent>
+						<anchor>bottom</anchor>
+						<offset>10</offset>
+					</top>
+					<size>
+						<width>50</width>
+						<height>15</height>
+					</size>
+				</anchored>
+				<font>sheetlabelsmallbold</font>
+				<static>Bullets:</static>
+			</stringcontrolX>
+			
+			<numberfieldX name="arrow_number" source="combat.ammunition.arrow">
+				<anchored>
+					<left>
+						<parent>arrow_label</parent>
+						<anchor>right</anchor>
+						<offset>10</offset>
+					</left>
+					<top>
+						<parent>arrow_label</parent>
+						<anchor>top</anchor>
+						<offset>-5</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						setVisible(true);
+						setEnabled(true);
+						onValueChanged();
+					end
+					
+					function onValueChanged()
+						local number = getValue();
+						local weight = (number/20) * 3;
+						weight = math.floor((weight*10) + 0.5)/10
+						window.arrow_weight.setValue(weight)
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>arrow_number</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Number</static>
+			</stringcontrolX>
+			<numberfieldX name="arrow_weight" source="inventory.ammunition.weight.arrow">
+				<anchored>
+					<left>
+						<parent>arrow_number</parent>
+						<anchor>right</anchor>
+						<offset>10</offset>
+					</left>
+					<top>
+						<parent>arrow_label</parent>
+						<anchor>top</anchor>
+						<offset>-5</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						setVisible(true);
+						setEnabled(true);
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>arrow_weight</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Weight</static>
+			</stringcontrolX>
+			<numberfieldX name="arrow_recovery" source="combat.ammunition.arrow_recovery">
+				<anchored>
+					<left>
+						<parent>arrow_weight</parent>
+						<anchor>right</anchor>
+						<offset>10</offset>
+					</left>
+					<top>
+						<parent>arrow_label</parent>
+						<anchor>top</anchor>
+						<offset>-5</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						setVisible(true);
+						setEnabled(true);
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>arrow_recovery</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Recov. %</static>
+			</stringcontrolX>
+			<numberfieldX name="bolt_number" source="combat.ammunition.bolt">
+				<anchored>
+					<left>
+						<parent>bolt_label</parent>
+						<anchor>right</anchor>
+						<offset>10</offset>
+					</left>
+					<top>
+						<parent>bolt_label</parent>
+						<anchor>top</anchor>
+						<offset>-5</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						setVisible(true);
+						setEnabled(true);
+						onValueChanged();
+					end
+					
+					function onValueChanged()
+						local number = getValue();
+						local weight = (number/20) * 3;
+						weight = math.floor((weight*10) + 0.5)/10
+						window.bolt_weight.setValue(weight)
+					end
+				</script>
+			</numberfieldX>
+			<numberfieldX name="bolt_weight" source="inventory.ammunition.weight.bolt">
+				<anchored>
+					<left>
+						<parent>bolt_number</parent>
+						<anchor>right</anchor>
+						<offset>10</offset>
+					</left>
+					<top>
+						<parent>bolt_label</parent>
+						<anchor>top</anchor>
+						<offset>-5</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						setVisible(true);
+						setEnabled(true);
+					end
+				</script>
+			</numberfieldX>
+			<numberfieldX name="bolt_recovery" source="combat.ammunition.bolt_recovery">
+				<anchored>
+					<left>
+						<parent>bolt_weight</parent>
+						<anchor>right</anchor>
+						<offset>10</offset>
+					</left>
+					<top>
+						<parent>bolt_label</parent>
+						<anchor>top</anchor>
+						<offset>-5</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						setVisible(true);
+						setEnabled(true);
+					end
+				</script>
+			</numberfieldX>
+			<numberfieldX name="bullet_number" source="combat.ammunition.bullet">
+				<anchored>
+					<left>
+						<parent>bullet_label</parent>
+						<anchor>right</anchor>
+						<offset>10</offset>
+					</left>
+					<top>
+						<parent>bullet_label</parent>
+						<anchor>top</anchor>
+						<offset>-5</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						setVisible(true);
+						setEnabled(true);
+						onValueChanged();
+					end
+					
+					function onValueChanged()
+						local number = getValue();
+						local weight = (number/100) * 3;
+						weight = math.floor((weight*10) + 0.5)/10
+						window.bullet_weight.setValue(weight)
+					end
+				</script>
+			</numberfieldX>
+			<numberfieldX name="bullet_weight" source="inventory.ammunition.weight.bullet">
+				<anchored>
+					<left>
+						<parent>bullet_number</parent>
+						<anchor>right</anchor>
+						<offset>10</offset>
+					</left>
+					<top>
+						<parent>bullet_label</parent>
+						<anchor>top</anchor>
+						<offset>-5</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						setVisible(true);
+						setEnabled(true);
+					end
+				</script>
+			</numberfieldX>
+			
+			<!-- armour -->
+			<genericcontrol name="armour_locations_frame">
+				<bounds>255,370,240,225</bounds>
+				<frame>
+					<name>sheetgroup</name>
+				</frame>
+			</genericcontrol>
+			<stringcontrolX name="armour_locations_label">
+				<anchored>
+					<to>armour_locations_frame</to>
+					<position>insidetopleft</position>
+					<offset>15,10</offset>
+				</anchored>
+				<font>sheetlabel</font>
+				<static>Armour</static>
+			</stringcontrolX>
+			<multitext name="head_armour" source="combat.defence.head_armour">
+				<anchored>
+					<left>
+						<parent>armour_locations_label</parent>
+						<anchor>left</anchor>
+						<offset>7</offset>
+					</left>
+					<top>
+						<parent>armour_locations_label</parent>
+						<anchor>bottom</anchor>
+						<offset>15</offset>
+					</top>
+					<size>
+						<width>95</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<statelabels>
+					<state>None</state>
+					<state>Soft Leather</state>
+					<state>Rigid Leather</state>
+					<state>Chain</state>
+					<state>Plate &amp; Chain</state>
+					<state>Plate</state>
+				</statelabels>
+			</multitext>
+			<stringcontrolX>
+				<anchored>
+					<to>head_armour</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Head</static>
+			</stringcontrolX>
+			
+			<multitext name="neck_armour" source="combat.defence.neck_armour">
+				<anchored>
+					<left>
+						<parent>head_armour</parent>
+						<anchor>right</anchor>
+						<offset>10</offset>
+					</left>
+					<top>
+						<parent>head_armour</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>95</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<statelabels>
+					<state>None</state>
+					<state>Soft Leather</state>
+					<state>Rigid Leather</state>
+					<state>Chain</state>
+					<state>Plate &amp; Chain</state>
+					<state>Plate</state>
+				</statelabels>
+			</multitext>
+			<stringcontrolX>
+				<anchored>
+					<to>neck_armour</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Neck</static>
+			</stringcontrolX>
+			
+			<multitext name="shoulder_armour" source="combat.defence.shoulder_armour">
+				<anchored>
+					<left>
+						<parent>armour_locations_label</parent>
+						<anchor>left</anchor>
+						<offset>7</offset>
+					</left>
+					<top>
+						<parent>neck_armour</parent>
+						<anchor>bottom</anchor>
+						<offset>15</offset>
+					</top>
+					<size>
+						<width>95</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<statelabels>
+					<state>None</state>
+					<state>Soft Leather</state>
+					<state>Rigid Leather</state>
+					<state>Chain</state>
+					<state>Plate &amp; Chain</state>
+					<state>Plate</state>
+				</statelabels>
+			</multitext>
+			<stringcontrolX>
+				<anchored>
+					<to>shoulder_armour</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Shoulder</static>
+			</stringcontrolX>
+			
+			<multitext name="torso_armour" source="combat.defence.torso_armour">
+				<anchored>
+					<left>
+						<parent>shoulder_armour</parent>
+						<anchor>right</anchor>
+						<offset>10</offset>
+					</left>
+					<top>
+						<parent>shoulder_armour</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>95</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<statelabels>
+					<state>None</state>
+					<state>Soft Leather</state>
+					<state>Rigid Leather</state>
+					<state>Chain</state>
+					<state>Plate &amp; Chain</state>
+					<state>Plate</state>
+				</statelabels>
+			</multitext>
+			<stringcontrolX>
+				<anchored>
+					<to>torso_armour</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Torso</static>
+			</stringcontrolX>
+			
+			<multitext name="abdomen_armour" source="combat.defence.abdomen_armour">
+				<anchored>
+					<left>
+						<parent>armour_locations_label</parent>
+						<anchor>left</anchor>
+						<offset>7</offset>
+					</left>
+					<top>
+						<parent>shoulder_armour</parent>
+						<anchor>bottom</anchor>
+						<offset>15</offset>
+					</top>
+					<size>
+						<width>95</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<statelabels>
+					<state>None</state>
+					<state>Soft Leather</state>
+					<state>Rigid Leather</state>
+					<state>Chain</state>
+					<state>Plate &amp; Chain</state>
+					<state>Plate</state>
+				</statelabels>
+			</multitext>
+			<stringcontrolX>
+				<anchored>
+					<to>abdomen_armour</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Abdomen</static>
+			</stringcontrolX>
+			
+			<multitext name="arm_armour" source="combat.defence.arm_armour">
+				<anchored>
+					<left>
+						<parent>abdomen_armour</parent>
+						<anchor>right</anchor>
+						<offset>10</offset>
+					</left>
+					<top>
+						<parent>abdomen_armour</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>95</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<statelabels>
+					<state>None</state>
+					<state>Soft Leather</state>
+					<state>Rigid Leather</state>
+					<state>Chain</state>
+					<state>Plate &amp; Chain</state>
+					<state>Plate</state>
+				</statelabels>
+			</multitext>
+			<stringcontrolX>
+				<anchored>
+					<to>arm_armour</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Arms</static>
+			</stringcontrolX>
+			
+			<multitext name="hand_armour" source="combat.defence.hand_armour">
+				<anchored>
+					<left>
+						<parent>armour_locations_label</parent>
+						<anchor>left</anchor>
+						<offset>7</offset>
+					</left>
+					<top>
+						<parent>abdomen_armour</parent>
+						<anchor>bottom</anchor>
+						<offset>15</offset>
+					</top>
+					<size>
+						<width>95</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<statelabels>
+					<state>None</state>
+					<state>Soft Leather</state>
+					<state>Rigid Leather</state>
+					<state>Chain</state>
+					<state>Plate &amp; Chain</state>
+					<state>Plate</state>
+				</statelabels>
+			</multitext>
+			<stringcontrolX>
+				<anchored>
+					<to>hand_armour</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Hands</static>
+			</stringcontrolX>
+			
+			<multitext name="groin_armour" source="combat.defence.groin_armour">
+				<anchored>
+					<left>
+						<parent>hand_armour</parent>
+						<anchor>right</anchor>
+						<offset>10</offset>
+					</left>
+					<top>
+						<parent>hand_armour</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>95</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<statelabels>
+					<state>None</state>
+					<state>Soft Leather</state>
+					<state>Rigid Leather</state>
+					<state>Chain</state>
+					<state>Plate &amp; Chain</state>
+					<state>Plate</state>
+				</statelabels>
+			</multitext>
+			<stringcontrolX>
+				<anchored>
+					<to>groin_armour</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Groin</static>
+			</stringcontrolX>
+			
+			<multitext name="leg_armour" source="combat.defence.leg_armour">
+				<anchored>
+					<left>
+						<parent>armour_locations_label</parent>
+						<anchor>left</anchor>
+						<offset>7</offset>
+					</left>
+					<top>
+						<parent>hand_armour</parent>
+						<anchor>bottom</anchor>
+						<offset>15</offset>
+					</top>
+					<size>
+						<width>95</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<statelabels>
+					<state>None</state>
+					<state>Soft Leather</state>
+					<state>Rigid Leather</state>
+					<state>Chain</state>
+					<state>Plate &amp; Chain</state>
+					<state>Plate</state>
+				</statelabels>
+			</multitext>
+			<stringcontrolX>
+				<anchored>
+					<to>leg_armour</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Legs</static>
+			</stringcontrolX>
+			
+			<multitext name="foot_armour" source="combat.defence.foot_armour">
+				<anchored>
+					<left>
+						<parent>leg_armour</parent>
+						<anchor>right</anchor>
+						<offset>10</offset>
+					</left>
+					<top>
+						<parent>leg_armour</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>95</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<statelabels>
+					<state>None</state>
+					<state>Soft Leather</state>
+					<state>Rigid Leather</state>
+					<state>Chain</state>
+					<state>Plate &amp; Chain</state>
+					<state>Plate</state>
+				</statelabels>
+			</multitext>
+			<stringcontrolX>
+				<anchored>
+					<to>foot_armour</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Feet</static>
+			</stringcontrolX>
+			
+			<genericcontrol name="armour_list_frame">
+				<bounds>15,245,240,225</bounds>
+				<frame>
+					<name>sheetgroup</name>
+				</frame>
+			</genericcontrol>
+			<stringcontrolX name="armour_list_label">
+				<anchored>
+					<to>armour_list_frame</to>
+					<position>insidetopleft</position>
+					<offset>15,10</offset>
+				</anchored>
+				<font>sheetlabel</font>
+				<static>Defensive Items</static>
+			</stringcontrolX>
+			<stringcontrolX>
+				<anchored>
+					<top>
+						<parent>armour_list_label</parent>
+						<anchor>bottom</anchor>
+						<offset>0</offset>
+					</top>
+					<left>
+						<parent>armour_list_frame</parent>
+						<anchor>left</anchor>
+						<offset>177</offset>
+					</left>
+					<size>
+						<width>30</width>
+						<height>13</height>
+					</size>
+				</anchored>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Fit.?</static>
+			</stringcontrolX>
+			<stringcontrolX>
+				<anchored>
+					<top>
+						<parent>armour_list_label</parent>
+						<anchor>bottom</anchor>
+						<offset>0</offset>
+					</top>
+					<left>
+						<parent>armour_list_frame</parent>
+						<anchor>left</anchor>
+						<offset>203</offset>
+					</left>
+					<size>
+						<width>30</width>
+						<height>13</height>
+					</size>
+				</anchored>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Use?</static>
+			</stringcontrolX>
+			<sortablelist name="armour_item_list">
+				<anchored>
+					<top>
+						<parent>armour_list_label</parent>
+						<anchor>bottom</anchor>
+						<offset>10</offset>
+					</top>
+					<bottom>
+						<parent>armour_list_frame</parent>
+						<anchor>bottom</anchor>
+						<offset>-15</offset>
+					</bottom>
+					<left>
+						<parent>armour_list_frame</parent>
+						<anchor>left</anchor>
+						<offset>15</offset>
+					</left>
+					<right>
+						<parent>armour_list_frame</parent>
+						<anchor>right</anchor>
+						<offset>-15</offset>
+					</right>
+				</anchored>
+				<class>charsheet_defence_window</class>
+				<datasource>.combat.defences</datasource>
+				<allowdelete />
+				<defaultsort>
+					<fieldname>name</fieldname>
+				</defaultsort>
+				<script file="charsheet/scripts/charsheet_armour_list.lua" />
+			</sortablelist>
+			<scrollbar>
+				<anchored>
+					<to>armour_item_list</to>
+					<position>right</position>
+					<offset>1,-4</offset>
+				</anchored>
+				<target>armour_item_list</target>
+			</scrollbar>
+			
+			<!-- DB -->
+			<genericcontrol name="db_frame">
+				<bounds>15,470,240,125</bounds>
+				<frame>
+					<name>sheetgroup</name>
+				</frame>
+			</genericcontrol>
+			<stringcontrolX name="db_frame_label">
+				<anchored>
+					<to>db_frame</to>
+					<position>insidetopleft</position>
+					<offset>15,10</offset>
+				</anchored>
+				<font>sheetlabel</font>
+				<static>Defensive Bonus</static>
+			</stringcontrolX>
+			<numberfieldX name="armour_db" source="combat.defence.armour_db">
+				<anchored>
+					<left>
+						<parent>db_frame_label</parent>
+						<anchor>left</anchor>
+						<offset>10</offset>
+					</left>
+					<top>
+						<parent>db_frame_label</parent>
+						<anchor>bottom</anchor>
+						<offset>15</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						setVisible(true);
+						setEnabled(true);
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>armour_db</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Armour</static>
+			</stringcontrolX>
+			<numberfieldX name="quickness_db" source="combat.defence.quickness_db">
+				<anchored>
+					<left>
+						<parent>armour_db</parent>
+						<anchor>right</anchor>
+						<offset>10</offset>
+					</left>
+					<top>
+						<parent>armour_db</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						setVisible(true);
+						setEnabled(true);
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>quickness_db</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Quick.</static>
+			</stringcontrolX>
+			<numberfieldX name="shield_db" source="combat.defence.shield_db">
+				<anchored>
+					<left>
+						<parent>quickness_db</parent>
+						<anchor>right</anchor>
+						<offset>10</offset>
+					</left>
+					<top>
+						<parent>armour_db</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						setVisible(true);
+						setEnabled(true);
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>shield_db</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Shield</static>
+			</stringcontrolX>
+			<numberfieldX name="known_magic_db" source="combat.defence.known_magic_db">
+				<anchored>
+					<left>
+						<parent>shield_db</parent>
+						<anchor>right</anchor>
+						<offset>10</offset>
+					</left>
+					<top>
+						<parent>armour_db</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						setVisible(true);
+						setEnabled(true);
+					end
+				</script>
+			</numberfieldX>
+			<numberfieldX name="unknown_magic_db" source="combat.defence.unknown_magic_db">
+				<bounds>0,0,0,0</bounds>
+				<invisible />
+			</numberfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>known_magic_db</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Magic</static>
+			</stringcontrolX>
+			
+			<numberfieldX name="maneuver_penalty" source="modifiers.armour_penalty">
+				<anchored>
+					<left>
+						<parent>armour_db</parent>
+						<anchor>left</anchor>
+						<offset>0</offset>
+					</left>
+					<top>
+						<parent>armour_db</parent>
+						<anchor>bottom</anchor>
+						<offset>15</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						setVisible(true);
+						setEnabled(true);
+					end
+				</script>
+			</numberfieldX>
+			<numberfieldX name="casting_penalty" source="modifiers.armour_cast_penalty">
+				<bounds>0,0,0,0</bounds>
+				<invisible />
+			</numberfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>maneuver_penalty</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Man. Pen.</static>
+			</stringcontrolX>
+			
+			<numberfieldX name="total_known_db" source="combat.defence.total_known_db">
+				<anchored>
+					<left>
+						<parent>known_magic_db</parent>
+						<anchor>left</anchor>
+						<offset>0</offset>
+					</left>
+					<top>
+						<parent>armour_db</parent>
+						<anchor>bottom</anchor>
+						<offset>15</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						setVisible(true);
+						setEnabled(true);
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>total_known_db</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Total DB</static>
+			</stringcontrolX>
+			<numberfieldX name="total_db" source="combat.defence.total_db">
+				<bounds>0,0,0,0</bounds>
+				<invisible />
+			</numberfieldX>
+		</sheetdata>
+	</windowclass>
+
+</root>

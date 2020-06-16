@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="utf-8" ?> 
+<root version="2.0">
+  
+  <windowclass name="referenceskills">
+    <frame>referencebox</frame>
+    <sizelimits>
+      <minimum>
+        <width>675</width>
+		<height>475</height>
+      </minimum>
+      <maximum>
+        <width>675</width>
+      </maximum>
+    </sizelimits>
+    <minimize>minimized_reference</minimize>
+	<sharable />
+    <tooltip>
+      <field>title</field>
+    </tooltip>
+    <script>
+      local columnHilight = nil;
+      
+      function hilight(ctrl)
+        if not columnHilight then
+          return;
+        end
+        if ctrl then
+          columnHilight.setAnchor("left","","left","absolute",ctrl.getPosition());
+          columnHilight.setAnchoredWidth(ctrl.getSize());
+          columnHilight.setVisible(true);
+        else
+          columnHilight.setVisible(false);
+        end
+      end
+      
+      function onInit()
+        if super and super.onInit then
+          super.onInit();
+        end
+        local dummy,width,height,top;
+        --[[ set window height, based on footnote bottom ]]
+        dummy,height = footnote.getSize();
+        dummy,top = footnote.getPosition();
+        width = getSize();
+        setSize(width,top + height + 17);
+        --[[ create the column hilight control ]]
+        columnHilight = createControl("hilight","columnHilight");
+        columnHilight.setVisible(false);
+        dummy,height = skllist.getSize();
+        dummy,top = skllist.getPosition();
+        columnHilight.setAnchor("top","","top","absolute",top);
+        columnHilight.setAnchor("bottom","","top","absolute",top + height);
+        columnHilight.setAnchor("left","","left");
+        --[[ place it behind the window list ]]
+        columnHilight.sendToBack();
+      end
+    </script>
+    <sheetdata>
+      <genericcontrol>
+        <bounds>0,0,-1,-1</bounds>
+        <script>
+          function onClickDown(button,x,y)
+            window.hilight(nil);
+          end
+        </script>
+      </genericcontrol>
+      <windowreferencecontrol>
+        <bounds>20,18,20,20</bounds>
+        <icon>
+          <normal>button_openwindow</normal>
+        </icon>
+        <class>referenceskills</class>
+        <description>
+          <field>title</field>
+        </description>
+      </windowreferencecontrol>
+      <stringfieldX name="title">
+        <bounds>45,22,-1,20</bounds>
+        <font>sheetlabel</font>
+        <readonly/>
+        <script>
+          function onClickDown(button,x,y)
+            window.hilight(nil);
+          end
+        </script>
+      </stringfieldX>
+      <stringcontrolX name="name">
+        <bounds>30,37,135,12</bounds>
+        <font>sheetlabelsmallbold</font>
+        <static>Name</static>
+        <script>
+          function onClickDown(button,x,y)
+            window.hilight(nil);
+          end
+        </script>
+      </stringcontrolX>
+      <stringcontrolX name="group">
+        <anchored>
+          <to>name</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>100</width>
+          </size>
+        </anchored>
+        <font>sheetlabelsmallbold</font>
+        <static>Category</static>
+        <center/>
+        <script>
+          function onClickDown(button,x,y)
+            window.hilight(nil);
+          end
+        </script>
+      </stringcontrolX>
+      <stringcontrolX name="stats">
+        <anchored>
+          <to>group</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>30</width>
+          </size>
+        </anchored>
+        <font>sheetlabelsmallbold</font>
+        <static>Stats</static>
+        <script>
+          function onClickDown(button,x,y)
+            window.hilight(nil);
+          end
+        </script>
+      </stringcontrolX>
+      
+
+      <windowlist name="skllist">
+        <anchored>
+          <top>
+            <parent>name</parent>
+            <offset>3</offset>
+            <anchor>bottom</anchor>
+          </top>
+          <left>
+            <offset>15</offset>
+            <anchor>left</anchor>
+          </left>
+          <right>
+            <offset>-19</offset>
+            <anchor>right</anchor>
+          </right>
+        </anchored>
+        <class>referenceskilllist_entry</class>
+        <datasource>.list</datasource>
+        <noscroll/>
+        <script>
+          function onListRearranged()
+            local alt = true;
+            --[[ set row shading ]]
+            for i,win in ipairs(getWindows()) do
+              if alt then
+                win.setFrame("rowshade");
+              end
+              alt = not alt;
+            end
+          end
+          
+          function onInit()
+            if super 
+            and super.onInit then
+              super.onInit();
+            end
+            local rows = #getWindows();
+            setAnchoredHeight(rows*12);
+          end
+        </script>
+      </windowlist>
+      
+      <stringfieldX name="footnote">
+        <anchored>
+          <top>
+            <parent>skllist</parent>
+            <offset>3</offset>
+            <anchor>bottom</anchor>
+          </top>
+          <left>
+            <offset>15</offset>
+            <anchor>left</anchor>
+          </left>
+          <right>
+            <offset>-19</offset>
+            <anchor>right</anchor>
+          </right>
+        </anchored>
+        <font>sheetlabelsmall</font>
+        <multilinespacing>10</multilinespacing>
+        <readonly/>
+        <script>
+          function onClickDown(button,x,y)
+            window.hilight(nil);
+          end
+        </script>
+      </stringfieldX>
+		<close_library />
+    </sheetdata>
+  </windowclass>
+
+  <windowclass name="referenceskilllist_entry">
+    <sizelimits>
+      <maximum>
+        <height>12</height>
+      </maximum>
+      <minimum>
+        <height>12</height>
+      </minimum>
+    </sizelimits>
+    <sheetdata>
+      <!-- hidden fields -->
+      <stringfieldX name="name">
+        <bounds>0,0,0,0</bounds>
+        <invisible>true</invisible>
+      </stringfieldX>
+      <checkbox name="gmonlyskill">
+        <bounds>0,0,0,0</bounds>
+        <invisible>true</invisible>
+      </checkbox>
+	  <numberfieldX name="armourfactor">
+        <bounds>0,0,0,0</bounds>
+        <invisible>true</invisible>
+      </numberfieldX>
+      <!-- visible fields -->
+      <windowreferencecontrol name="open">
+        <bounds>0,0,12,12</bounds>
+        <icon>
+          <normal>button_openwindow</normal>
+          <pressed>button_openwindow</pressed>
+        </icon>
+        <class>skill</class>
+        <description>
+          <field>name</field>
+        </description>
+      </windowreferencecontrol>
+      <stringfieldX name="fullname">
+        <bounds>15,0,135,12</bounds>
+        <font>sheetlabelsmall</font>
+        <script>
+          function onDragStart(button, x, y, draginfo)
+            draginfo.setType("shortcut");
+            draginfo.setShortcutData(window.open.getValue());
+            draginfo.setIcon(window.open.icon[1].normal[1]);
+            return true;
+          end
+
+          function onInit()
+            if super 
+            and super.onInit then
+              super.onInit();
+            end
+            setHoverCursor("hand");
+          end
+        </script>
+      </stringfieldX>
+      <multitext name="group">
+        <anchored>
+          <to>fullname</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>100</width>
+          </size>
+        </anchored>
+        <center />
+        <font>sheetlabelsmall</font>
+        <statelabels>
+          <state>Artistic</state>
+		  <state>Athletic</state>
+		  <state>Combat</state>
+		  <state>Concentration</state>
+		  <state>General</state>
+		  <state>Influence</state>
+		  <state>Mystical Arts</state>
+		  <state>Outdoor</state>
+		  <state>Physical</state>
+		  <state>Spells</state>
+		  <state>Subterfuge</state>
+        </statelabels>
+      </multitext>
+      <stringfieldX name="stats">
+        <anchored>
+          <to>group</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>30</width>
+          </size>
+        </anchored>
+        <font>sheetlabelsmall</font>
+      </stringfieldX>
+    </sheetdata>
+  </windowclass>
+
+</root>

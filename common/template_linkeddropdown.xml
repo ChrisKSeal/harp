@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<root version="2.0">
+
+  <template name="LinkedDropDown">
+    <genericcontrol>
+      <fonts>
+        <normal mergerule="replace">chatfont</normal>
+        <selected mergerule="replace">narratorfont</selected>
+      </fonts>
+      <frames>
+        <normal mergerule="replace"></normal>
+        <selected mergerule="replace">rowshade</selected>
+      </frames>
+      <position mergerule="replace">0,0</position>
+      <size mergerule="replace">0</size>
+      <lookup mergerule="resetandadd" />
+      <anchored>
+        <right>
+          <anchor>right</anchor>
+        </right>
+        <top>
+          <anchor>top</anchor>
+        </top>
+        <size>
+          <width>15</width>
+          <height>10</height>
+        </size>
+      </anchored>
+      <icon>indicator_dropdown</icon>
+      <script file="common/scripts/template_LinkedDropDown.lua"/>
+    </genericcontrol>
+  </template>
+
+</root>

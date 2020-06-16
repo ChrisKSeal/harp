@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<root version="2.0">
+  <windowclass name="charsheet_armourwindow">
+    <!--
+          Armour type:
+          1 = None
+          2 = Soft Leather
+          3 = Rigid Leather
+          4 = Chain
+          5 = Plate & Chain
+          6 = Plate
+    -->
+    <sizelimits>
+      <maximum>
+        <height>18</height>
+      </maximum>
+      <minimum>
+        <height>18</height>
+      </minimum>
+    </sizelimits>
+    <script>
+	  function onInit()
+		if super and super.onInit then
+		  super.onInit();
+		end
+		if type.getState() &lt; 1 then
+		  type.setState(6);
+		elseif type.getState() &gt; 6 then
+		  type.setState(1);
+		end
+			local node = getDatabaseNode().getParent().getParent();
+			node.createChild("combatSheetChgFlg").setValue(-1);
+	  end
+	
+      function isEquipped()
+        return isequipped.getState();
+      end
+	
+	  function isFitted()
+	    return isFitted.getState();
+	  end
+
+      
+      function testDelete()
+        local win = windowlist.getPrevWindow(self);
+        if name.getValue()~="" then
+          return;
+        end
+        if #(windowlist.getWindows())==1 then
+          return;
+        end
+        if not win then
+          win = windowlist.getNextWindow(self);
+        end
+        win.name.setFocus();
+        getDatabaseNode().delete();
+      end
+      
+      function testNew()
+        local win = windowlist.getNextWindow(self);
+        if name.getValue()=="" then
+          return;
+        end
+        if not win then
+          win = windowlist.createWindow();
+        end
+		win.type.setState(1);
+        win.name.setFocus();
+      end
+    </script>
+    <sheetdata>
+      <!-- Hidden fields -->
+      <multitext name="type">
+        <bounds>0,0,0,0</bounds>
+        <invisible/>
+        <statelabels>
+          <state>None</state>
+          <state>Soft Leather</state>
+          <state>Rigid Leather</state>
+          <state>Chain</state>
+		  <state>Plate &amp; Chain</state>
+		  <state>Plate</state>
+        </statelabels>
+        <!--<script>
+          function onStateChanged()
+            local iswpn = window.isWeapon();
+			local isrng = window.isRanged();
+            --[[ toggle field visibility, for shields vs weapons ]]
+            window.table.setVisible(iswpn);
+            window.dblabel.setVisible(not iswpn);
+            window.ob.setVisible(iswpn);
+            window.defensivebonus.setVisible(not iswpn);
+            window.fumble.setVisible(iswpn);
+            window.ranges.setVisible(isrng);
+          end
+        </script>-->
+        <readonly />
+      </multitext>
+      <stringfieldX name="table">
+        <bounds>0,0,0,0</bounds>
+        <invisible/>
+      </stringfieldX>
+	  <numberfieldX name="dbcastpenalty">
+	  <bounds>0,0,0,0</bounds>
+	  <invisible/>
+	  </numberfieldX>
+      <!-- Visible fields -->
+      <windowreferencecontrol name="open">
+        <bounds>0,2,14,14</bounds>
+        <icon>
+          <normal>button_openwindow</normal>
+          <pressed>button_openwindow</pressed>
+        </icon>
+        <class>harness</class>
+        <description>
+          <field>name</field>
+        </description>
+      </windowreferencecontrol>
+      <textlistitemvalue name="name">
+        <bounds>15,0,140,17</bounds>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+        <font>sheettextsmall</font>
+        <script>
+          function onDeleteDown()
+            window.testDelete();
+          end
+          
+          function onDeleteUp()
+            window.testDelete();
+          end
+          
+          function onEnter()
+            window.testNew();
+          end
+        </script>
+      </textlistitemvalue>
+      <checkbox name="isfitted">
+        <bounds>165,4,12,12</bounds>
+        <tooltip>
+          <text>fitted?</text>
+        </tooltip>
+		<script>
+		function onValueChanged()
+				local node = window.getDatabaseNode().getParent().getParent();
+				node.createChild("combatSheetChgFlg").setValue(-1);
+			end
+			</script>
+      </checkbox>
+      <checkbox name="isequipped">
+        <bounds>190,4,12,12</bounds>
+        <tooltip>
+          <text>Equipped?</text>
+        </tooltip>
+		<script>
+		function onValueChanged()
+				local node = window.getDatabaseNode().getParent().getParent();
+				node.createChild("combatSheetChgFlg").setValue(-1);
+			end
+			</script>
+      </checkbox>
+    </sheetdata>
+  </windowclass>
+
+</root>

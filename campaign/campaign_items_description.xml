@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<root version="2.0">
+	<windowclass name="item_description">
+		<script file="campaign/scripts/campaign_items_type.lua" />
+		<sheetdata>
+			
+			<!-- Weapon Type -->
+			
+			<!-- Defence Type -->
+			
+			<!-- Consumable Type -->
+			
+			<multitext name="cons_type">
+				<anchored>
+					<left>
+						<anchor>left</anchor>
+						<offset>7</offset>
+					</left>
+					<right>
+						<anchor>right</anchor>
+						<offset>-7</offset>
+					</right>
+					<top>
+						<anchor>top</anchor>
+						<offset>12</offset>
+					</top>
+				</anchored>
+				<font>sheettextsmall</font>
+				<statelabels>
+					<state>Potion</state>
+					<state>Runes</state>
+					<state>Herbs &amp; Poisons</state>
+					<state>Charms &amp; Fetishes</state>
+					<state>Crystals</state>
+					<state>Rods, Wands &amp; Staves</state>
+				</statelabels>
+			</multitext>
+			
+			<!-- General Type -->
+			
+			<stringcontrolX name="general_label">
+				<anchored>
+					<left>
+						<anchor>left</anchor>
+						<offset>7</offset>
+					</left>
+					<right>
+						<anchor>right</anchor>
+						<offset>-7</offset>
+					</right>
+					<top>
+						<anchor>top</anchor>
+						<offset>12</offset>
+					</top>
+				</anchored>
+				<font>sheetlabel</font>
+				<static>Notes</static>
+			</stringcontrolX>
+			<stringfieldX name="general_notes">
+				<anchored>
+					<top>
+						<parent>general_label</parent>
+						<anchor>bottom</anchor>
+						<offset>7</offset>
+					</top>
+					<left>
+						<anchor>left</anchor>
+						<offset>15</offset>
+					</left>
+					<right>
+						<anchor>right</anchor>
+						<offset>-15</offset>
+					</right>
+					<bottom>
+						<anchor>bottom</anchor>
+						<offset>-170</offset>
+					</bottom>
+				</anchored>
+				<multilinespacing>20</multilinespacing>
+				<font>sheettext</font>
+				<frame>
+					<name>textline</name>
+					<offset>2,0,2,0</offset>
+				</frame>
+			</stringfieldX>
+			<scrollbar>
+				<anchored>
+					<to>general_notes</to>
+					<position>right</position>
+					<offset>1,-4</offset>
+				</anchored>
+			<target>general_notes</target>
+		</scrollbar>
+		
+		<!-- GM Notes field -->
+		
+		<stringcontrolX name="bound_attacks_label">
+			<anchored>
+					<top>
+						<anchor>bottom</anchor>
+						<offset>-125</offset>
+					</top>
+					<left>
+						<anchor>left</anchor>
+						<offset>15</offset>
+					</left>
+					<size>
+						<width>90</width>
+						<height>13</height>
+					</size>
+				</anchored>
+				<font>sheetlabelsmallbold</font>
+				<static>Bound Attacks</static>
+		</stringcontrolX>
+		<stringcontrolX name="bound_attacks_size_label">
+			<anchored>
+					<top>
+						<parent>bound_attacks_label</parent>
+						<anchor>bottom</anchor>
+						<offset>7</offset>
+					</top>
+					<left>
+						<anchor>left</anchor>
+						<offset>75</offset>
+					</left>
+					<size>
+						<width>40</width>
+						<height>13</height>
+					</size>
+				</anchored>
+				<font>sheetlabelsmallbold</font>
+				<static>Size</static>
+		</stringcontrolX>
+		<stringcontrolX name="bound_attacks_table_label">
+			<anchored>
+					<top>
+						<parent>bound_attacks_label</parent>
+						<anchor>bottom</anchor>
+						<offset>7</offset>
+					</top>
+					<left>
+						<parent>bound_attacks_size_label</parent>
+						<anchor>right</anchor>
+						<offset>7</offset>
+					</left>
+					<size>
+						<width>45</width>
+						<height>13</height>
+					</size>
+				</anchored>
+				<font>sheetlabelsmallbold</font>
+				<static>Att. Table</static>
+		</stringcontrolX>
+		<stringcontrolX name="bound_attacks_daily_label">
+			<anchored>
+					<top>
+						<parent>bound_attacks_label</parent>
+						<anchor>bottom</anchor>
+						<offset>7</offset>
+					</top>
+					<left>
+						<parent>bound_attacks_table_label</parent>
+						<anchor>right</anchor>
+						<offset>7</offset>
+					</left>
+					<size>
+						<width>40</width>
+						<height>13</height>
+					</size>
+				</anchored>
+				<font>sheetlabelsmallbold</font>
+				<static>Daily x.</static>
+		</stringcontrolX>
+		<stringcontrolX name="bound_attacks_daily_label">
+			<anchored>
+					<top>
+						<parent>bound_attacks_label</parent>
+						<anchor>bottom</anchor>
+						<offset>7</offset>
+					</top>
+					<left>
+						<parent>bound_attacks_daily_label</parent>
+						<anchor>right</anchor>
+						<offset>7</offset>
+					</left>
+					<size>
+						<width>40</width>
+						<height>13</height>
+					</size>
+				</anchored>
+				<font>sheetlabelsmallbold</font>
+				<static>Bonus</static>
+		</stringcontrolX>
+		</sheetdata>
+	</windowclass>
+</root>

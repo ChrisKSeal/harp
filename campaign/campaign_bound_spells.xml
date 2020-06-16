@@ -1,0 +1,1324 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<root version="2.0">
+	<windowclass name="bound_spell">
+		<frame>charsheet</frame>
+		<placement>
+			<size>
+				<width>320</width>
+				<height>450</height>
+			</size>
+		</placement>
+		<sizelimits>
+			<dynamic />
+			<minimum>
+				<width>320</width>
+				<height>450</height>
+			</minimum>
+		</sizelimits>
+		<minimize>minimized_reference</minimize>
+		<script>
+			function onInit()
+				local node = getDatabaseNode();
+				node.createChild("description","string");
+			end					
+		</script>
+		<sharable/>
+		<nodelete/>
+		<tooltip>
+			<field>name</field>
+		</tooltip>
+		<sheetdata>
+			<!-- NAME -->
+			<genericcontrol name="nameframe">
+				<bounds>10,20,-15,35</bounds>
+				<frame>
+					<name>sheetgroup</name>
+				</frame>
+			</genericcontrol>
+			<windowopencontrol>
+				<anchored>
+					<to>nameframe</to>
+					<position>insidetopleft</position>
+					<offset>13,8</offset>
+					<size>
+						<width>20</width>
+						<height>20</height>
+					</size>
+				</anchored>
+				<icon>
+					<normal>button_openwindow</normal>
+					<pressed>button_emptytarget</pressed>
+				</icon>
+				<class>spell</class>
+				<description>
+					<field>name</field>
+				</description>
+			</windowopencontrol>
+			<stringfieldX name="name">
+				<anchored>
+					<top>
+						<parent>nameframe</parent>
+						<anchor>top</anchor>
+						<offset>9</offset>
+					</top>
+					<left>
+						<parent>nameframe</parent>
+						<anchor>left</anchor>
+						<offset>35</offset>
+					</left>
+					<right>
+						<parent>nameframe</parent>
+						<anchor>right</anchor>
+						<offset>-35</offset>
+					</right>
+				</anchored>
+				<empty>&#171; New Spell &#187;</empty>
+				<font>sheettext</font>
+			</stringfieldX>
+			<checkbox name="locked">
+				<anchored>
+					<to>nameframe</to>
+					<position>insidetopright</position>
+					<offset>9,11</offset>
+					<size>
+						<width>16</width>
+						<height>16</height>
+					</size>
+				</anchored>
+				<stateicons>
+					<on>locked</on>
+					<off>unlocked</off>
+				</stateicons>
+				<!-- TODO -->
+				<script>
+					function onValueChanged()
+						local state = getState();
+						window.name.setReadOnly(state);
+						window.cost.setReadOnly(state);
+						window.cast_bonus.setReadOnly(state);
+						window.spell_type.setEnabled(not state);
+						window.resolution_table.setEnabled(not state);
+						window.size.setEnabled(not state);
+						window.resistance_roll.setEnabled(not state);
+						window.range.setReadOnly(state);
+						window.duration.setReadOnly(state);
+						window.sphere.setReadOnly(state);
+						window.description.setReadOnly(state);
+					end
+				</script>
+			</checkbox>
+
+			<!-- Frame -->    
+			<genericcontrol name="contentframe">
+				<bounds>10,54,-15,-13</bounds>
+				<frame>
+					<name>sheetgroup</name>
+					<offset>0,1,0,0</offset>
+				</frame>
+			</genericcontrol>
+
+			<stringcontrolX name="spell_label">
+				<anchored>
+					<left>
+						<parent>contentframe</parent>
+						<anchor>left</anchor>
+						<offset>15</offset>
+					</left>
+					<top>
+						<parent>contentframe</parent>
+						<anchor>top</anchor>
+						<offset>15</offset>
+					</top>
+					<size>
+						<width>90</width>
+						<height>13</height>
+					</size>
+				</anchored>
+				<font>sheetlabelsmallbold</font>
+				<static>Casting Stats</static>
+			</stringcontrolX>
+			
+			<multitext name="spell_type">
+				<anchored>
+					<left>
+						<parent>spell_label</parent>
+						<anchor>left</anchor>
+						<offset>8</offset>
+					</left>
+					<top>
+						<parent>spell_label</parent>
+						<anchor>bottom</anchor>
+						<offset>19</offset>
+					</top>
+					<size>
+						<width>75</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<center />
+				<frame>
+					<name>modifier</name>
+					<offset>8,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>8,4,4,4</offset>
+				</keyeditframe>
+				<font>sheettextsmall</font>
+				<script>
+				  function onInit()
+					if super and super.onInit then
+					  super.onInit();
+					end
+					if getState() &lt; 1 then
+					  setState(1);
+					elseif getState() &gt; 3 then
+					  setState(1);
+					end
+				  end
+				</script>
+				<statelabels>
+					<state>Utility</state>
+					<state>Attack</state>
+					<state>Elemental</state>
+				</statelabels>
+			</multitext>
+			<stringcontrolX>
+				<anchored>
+					<to>spell_type</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Spell Type</static>
+			</stringcontrolX>
+			<numberfieldX name="cost">
+				<anchored>
+					<left>
+						<parent>spell_type</parent>
+						<anchor>right</anchor>
+						<offset>10</offset>
+					</left>
+					<top>
+						<parent>spell_type</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<gmonly/>
+				<script>
+		  			function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX name="cost_label">
+				<anchored>
+					<to>cost</to>
+					<position>above</position>
+					<offset>0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Cost</static>
+			</stringcontrolX>
+			<numberfieldX name="cost">
+				<anchored>
+					<left>
+						<parent>spell_type</parent>
+						<anchor>right</anchor>
+						<offset>10</offset>
+					</left>
+					<top>
+						<parent>spell_type</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<gmonly/>
+				<script>
+		  			function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>cost</to>
+					<position>above</position>
+					<offset>0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Cost</static>
+			</stringcontrolX>
+			<numberfieldX name="cast_bonus">
+				<anchored>
+					<left>
+						<parent>cost</parent>
+						<anchor>right</anchor>
+						<offset>10</offset>
+					</left>
+					<top>
+						<parent>spell_type</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<gmonly/>
+				<script>
+		  			function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>cast_bonus</to>
+					<position>above</position>
+					<offset>0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Bonus</static>
+			</stringcontrolX>
+			
+			<tablefield name="resolution_table">
+				<anchored>
+					<left>
+						<parent>spell_type</parent>
+						<anchor>left</anchor>
+						<offset>0</offset>
+					</left>
+					<top>
+						<parent>spell_type</parent>
+						<anchor>bottom</anchor>
+						<offset>15</offset>
+					</top>
+					<size>
+						<width>170</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<allowDrag/>
+				<empty>(none)</empty>
+				<center />
+				<frame>
+					<name>modifier</name>
+					<offset>8,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>8,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						if window.getDatabaseNode() and window.getDatabaseNode().isStatic() then
+							setAllowDrop(false);
+						else
+							setAllowDrop(true);
+						end
+					end
+				</script>
+			</tablefield>
+			<stringcontrolX>
+				<anchored>
+					<to>resolution_table</to>
+					<position>above</position>
+					<offset>0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Resolution Table</static>
+			</stringcontrolX>
+			<multitext name="size">
+				<anchored>
+					<left>
+						<parent>resolution_table</parent>
+						<anchor>right</anchor>
+						<offset>10</offset>
+					</left>
+					<top>
+						<parent>resolution_table</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>75</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<center />
+				<frame>
+					<name>modifier</name>
+					<offset>8,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>8,4,4,4</offset>
+				</keyeditframe>
+				<font>sheettextsmall</font>
+				<script>
+				  function onInit()
+					if super and super.onInit then
+					  super.onInit();
+					end
+					if getState() &lt; 1 then
+					  setState(1);
+					elseif getState() &gt; 5 then
+					  setState(1);
+					end
+				  end
+				</script>
+				<statelabels>
+					<state>Tiny</state>
+					<state>Small</state>
+					<state>Medium</state>
+					<state>Large</state>
+					<state>Huge</state>
+				</statelabels>
+			</multitext>
+			<stringcontrolX>
+				<anchored>
+					<to>size</to>
+					<position>above</position>
+					<offset>0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Size</static>
+			</stringcontrolX>
+			
+			<multitext name="resistance_roll">
+				<anchored>
+					<left>
+						<parent>resolution_table</parent>
+						<anchor>left</anchor>
+						<offset>0</offset>
+					</left>
+					<top>
+						<parent>resolution_table</parent>
+						<anchor>bottom</anchor>
+						<offset>15</offset>
+					</top>
+					<size>
+						<width>75</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<center />
+				<frame>
+					<name>modifier</name>
+					<offset>8,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>8,4,4,4</offset>
+				</keyeditframe>
+				<font>sheettextsmall</font>
+				<script>
+				  function onInit()
+					if super and super.onInit then
+					  super.onInit();
+					end
+					if getState() &lt; 1 then
+					  setState(1);
+					elseif getState() &gt; 4 then
+					  setState(1);
+					end
+				  end
+				</script>
+				<statelabels>
+					<state>---</state>
+					<state>Magic</state>
+					<state>Stamina</state>
+					<state>Will</state>
+				</statelabels>
+			</multitext>
+			<stringcontrolX>
+				<anchored>
+					<to>resistance_roll</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Resisted By</static>
+			</stringcontrolX>
+			
+			<stringfieldX name="range">
+				<anchored>
+					<left>
+						<parent>resistance_roll</parent>
+						<anchor>right</anchor>
+						<offset>10</offset>
+					</left>
+					<top>
+						<parent>resistance_roll</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>75</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<center />
+				<font>sheettextsmall</font>
+				<frame>
+					<name>textlinesmall</name>
+					<offset>0,0,0,0</offset>
+				</frame>
+				<keyeditframe>
+					<name>shadelinesmall</name>
+					<offset>0,0,0,0</offset>
+				</keyeditframe>
+			</stringfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>range</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Range</static>
+			</stringcontrolX>
+			
+			<stringfieldX name="duration">
+				<anchored>
+					<left>
+						<parent>range</parent>
+						<anchor>right</anchor>
+						<offset>10</offset>
+					</left>
+					<top>
+						<parent>resistance_roll</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>85</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<center />
+				<font>sheettextsmall</font>
+				<frame>
+					<name>textlinesmall</name>
+					<offset>0,0,0,0</offset>
+				</frame>
+				<keyeditframe>
+					<name>shadelinesmall</name>
+					<offset>0,0,0,0</offset>
+				</keyeditframe>
+			</stringfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>duration</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Duration</static>
+			</stringcontrolX>
+			
+			<stringcontrolX name="sphere_label">
+				<anchored>
+					<left>
+						<parent>resistance_roll</parent>
+						<anchor>left</anchor>
+						<offset>0</offset>
+					</left>
+					<top>
+						<parent>resistance_roll</parent>
+						<anchor>bottom</anchor>
+						<offset>15</offset>
+					</top>
+					<size>
+						<width>45</width>
+						<height>13</height>
+					</size>
+				</anchored>
+				<font>sheetlabelsmallbold</font>
+				<static>Spheres:</static>
+			</stringcontrolX>
+			<stringfieldX name="sphere">
+				<anchored>
+					<left>
+						<parent>sphere_label</parent>
+						<anchor>right</anchor>
+						<offset>10</offset>
+					</left>
+					<top>
+						<parent>sphere_label</parent>
+						<anchor>top</anchor>
+						<offset>-3</offset>
+					</top>
+					<right>
+						<parent>duration</parent>
+						<anchor>right</anchor>
+						<offset>0</offset>
+					</right>
+					<size>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>textlinesmall</name>
+					<offset>0,0,0,0</offset>
+				</frame>
+				<keyeditframe>
+					<name>shadelinesmall</name>
+					<offset>0,0,0,0</offset>
+				</keyeditframe>
+			</stringfieldX>
+			<stringfieldX name="description">
+				<anchored>
+					<left>
+						<parent>spell_type</parent>
+						<anchor>left</anchor>
+						<offset>0</offset>
+					</left>
+					<right>
+						<parent>sphere</parent>
+						<anchor>right</anchor>
+						<offset>0</offset>
+					</right>
+					<top>
+						<parent>sphere</parent>
+						<anchor>bottom</anchor>
+						<offset>15</offset>
+					</top>
+					<bottom>
+						<anchor>bottom</anchor>
+						<offset>-35</offset>
+					</bottom>
+				</anchored>
+				<frame>
+					<name>modifier</name>
+					<offset>7,5,7,5</offset>
+				</frame>
+				<font>sheettextsmall</font>
+				<multilinespacing>15</multilinespacing>
+			</stringfieldX>
+			<scrollbar>
+				<anchored>
+					<to>description</to>
+					<position>right</position>
+					<offset>-4,-4</offset>
+				</anchored>
+				<target>description</target>
+			</scrollbar>
+			<stringcontrolX>
+				<anchored>
+					<to>description</to>
+					<position>aboveleft</position>
+					<offset>0,1</offset>
+				</anchored>
+				<font>sheetlabelsmall</font>
+				<static>Description</static>
+			</stringcontrolX>
+			<close_adventure />
+		</sheetdata>
+	</windowclass>
+ 
+	<windowclass name="daily_bound_spell">
+		<frame>charsheet</frame>
+		<placement>
+			<size>
+				<width>320</width>
+				<height>450</height>
+			</size>
+		</placement>
+		<sizelimits>
+			<dynamic />
+			<minimum>
+				<width>320</width>
+				<height>450</height>
+			</minimum>
+		</sizelimits>
+		<minimize>minimized_reference</minimize>
+		<script>
+			function onInit()
+				local node = getDatabaseNode();
+				node.createChild("description","string");
+			end					
+		</script>
+		<sharable/>
+		<nodelete/>
+		<tooltip>
+			<field>name</field>
+		</tooltip>
+		<sheetdata>
+			<!-- NAME -->
+			<genericcontrol name="nameframe">
+				<bounds>10,20,-15,35</bounds>
+				<frame>
+					<name>sheetgroup</name>
+				</frame>
+			</genericcontrol>
+			<windowopencontrol>
+				<anchored>
+					<to>nameframe</to>
+					<position>insidetopleft</position>
+					<offset>13,8</offset>
+					<size>
+						<width>20</width>
+						<height>20</height>
+					</size>
+				</anchored>
+				<icon>
+					<normal>button_openwindow</normal>
+					<pressed>button_emptytarget</pressed>
+				</icon>
+				<class>spell</class>
+				<description>
+					<field>name</field>
+				</description>
+			</windowopencontrol>
+			<stringfieldX name="name">
+				<anchored>
+					<top>
+						<parent>nameframe</parent>
+						<anchor>top</anchor>
+						<offset>9</offset>
+					</top>
+					<left>
+						<parent>nameframe</parent>
+						<anchor>left</anchor>
+						<offset>35</offset>
+					</left>
+					<right>
+						<parent>nameframe</parent>
+						<anchor>right</anchor>
+						<offset>-35</offset>
+					</right>
+				</anchored>
+				<empty>&#171; New Spell &#187;</empty>
+				<font>sheettext</font>
+			</stringfieldX>
+			<checkbox name="locked">
+				<anchored>
+					<to>nameframe</to>
+					<position>insidetopright</position>
+					<offset>9,11</offset>
+					<size>
+						<width>16</width>
+						<height>16</height>
+					</size>
+				</anchored>
+				<stateicons>
+					<on>locked</on>
+					<off>unlocked</off>
+				</stateicons>
+				<!-- TODO -->
+				<script>
+					function onValueChanged()
+						local state = getState();
+						window.name.setReadOnly(state);
+						window.uses_per_day.setReadOnly(state);
+						window.cast_bonus.setReadOnly(state);
+						window.spell_type.setEnabled(not state);
+						window.resolution_table.setEnabled(not state);
+						window.size.setEnabled(not state);
+						window.resistance_roll.setEnabled(not state);
+						window.range.setReadOnly(state);
+						window.duration.setReadOnly(state);
+						window.sphere.setReadOnly(state);
+						window.description.setReadOnly(state);
+					end
+				</script>
+			</checkbox>
+
+			<!-- Frame -->    
+			<genericcontrol name="contentframe">
+				<bounds>10,54,-15,-13</bounds>
+				<frame>
+					<name>sheetgroup</name>
+					<offset>0,1,0,0</offset>
+				</frame>
+			</genericcontrol>
+
+			<stringcontrolX name="spell_label">
+				<anchored>
+					<left>
+						<parent>contentframe</parent>
+						<anchor>left</anchor>
+						<offset>15</offset>
+					</left>
+					<top>
+						<parent>contentframe</parent>
+						<anchor>top</anchor>
+						<offset>15</offset>
+					</top>
+					<size>
+						<width>90</width>
+						<height>13</height>
+					</size>
+				</anchored>
+				<font>sheetlabelsmallbold</font>
+				<static>Casting Stats</static>
+			</stringcontrolX>
+			
+			<multitext name="spell_type">
+				<anchored>
+					<left>
+						<parent>spell_label</parent>
+						<anchor>left</anchor>
+						<offset>8</offset>
+					</left>
+					<top>
+						<parent>spell_label</parent>
+						<anchor>bottom</anchor>
+						<offset>19</offset>
+					</top>
+					<size>
+						<width>75</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<center />
+				<frame>
+					<name>modifier</name>
+					<offset>8,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>8,4,4,4</offset>
+				</keyeditframe>
+				<font>sheettextsmall</font>
+				<script>
+				  function onInit()
+					if super and super.onInit then
+					  super.onInit();
+					end
+					if getState() &lt; 1 then
+					  setState(1);
+					elseif getState() &gt; 3 then
+					  setState(1);
+					end
+				  end
+				</script>
+				<statelabels>
+					<state>Utility</state>
+					<state>Attack</state>
+					<state>Elemental</state>
+				</statelabels>
+			</multitext>
+			<stringcontrolX>
+				<anchored>
+					<to>spell_type</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Spell Type</static>
+			</stringcontrolX>
+			<numberfieldX name="uses_per_day">
+				<anchored>
+					<left>
+						<parent>spell_type</parent>
+						<anchor>right</anchor>
+						<offset>10</offset>
+					</left>
+					<top>
+						<parent>spell_type</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<gmonly/>
+				<script>
+		  			function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>uses_per_day</to>
+					<position>above</position>
+					<offset>0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Uses</static>
+			</stringcontrolX>
+			<numberfieldX name="cast_bonus">
+				<anchored>
+					<left>
+						<parent>uses_per_day</parent>
+						<anchor>right</anchor>
+						<offset>10</offset>
+					</left>
+					<top>
+						<parent>spell_type</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<gmonly/>
+				<script>
+		  			function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>cast_bonus</to>
+					<position>above</position>
+					<offset>0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Bonus</static>
+			</stringcontrolX>
+			
+			<tablefield name="resolution_table">
+				<anchored>
+					<left>
+						<parent>spell_type</parent>
+						<anchor>left</anchor>
+						<offset>0</offset>
+					</left>
+					<top>
+						<parent>spell_type</parent>
+						<anchor>bottom</anchor>
+						<offset>15</offset>
+					</top>
+					<size>
+						<width>170</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<allowDrag/>
+				<empty>(none)</empty>
+				<center />
+				<frame>
+					<name>modifier</name>
+					<offset>8,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>8,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						if window.getDatabaseNode() and window.getDatabaseNode().isStatic() then
+							setAllowDrop(false);
+						else
+							setAllowDrop(true);
+						end
+					end
+				</script>
+			</tablefield>
+			<stringcontrolX>
+				<anchored>
+					<to>resolution_table</to>
+					<position>above</position>
+					<offset>0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Resolution Table</static>
+			</stringcontrolX>
+			<multitext name="size">
+				<anchored>
+					<left>
+						<parent>resolution_table</parent>
+						<anchor>right</anchor>
+						<offset>10</offset>
+					</left>
+					<top>
+						<parent>resolution_table</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>75</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<center />
+				<frame>
+					<name>modifier</name>
+					<offset>8,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>8,4,4,4</offset>
+				</keyeditframe>
+				<font>sheettextsmall</font>
+				<script>
+				  function onInit()
+					if super and super.onInit then
+					  super.onInit();
+					end
+					if getState() &lt; 1 then
+					  setState(1);
+					elseif getState() &gt; 5 then
+					  setState(1);
+					end
+				  end
+				</script>
+				<statelabels>
+					<state>Tiny</state>
+					<state>Small</state>
+					<state>Medium</state>
+					<state>Large</state>
+					<state>Huge</state>
+				</statelabels>
+			</multitext>
+			<stringcontrolX>
+				<anchored>
+					<to>size</to>
+					<position>above</position>
+					<offset>0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Size</static>
+			</stringcontrolX>
+			
+			<multitext name="resistance_roll">
+				<anchored>
+					<left>
+						<parent>resolution_table</parent>
+						<anchor>left</anchor>
+						<offset>0</offset>
+					</left>
+					<top>
+						<parent>resolution_table</parent>
+						<anchor>bottom</anchor>
+						<offset>15</offset>
+					</top>
+					<size>
+						<width>75</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<center />
+				<frame>
+					<name>modifier</name>
+					<offset>8,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>8,4,4,4</offset>
+				</keyeditframe>
+				<font>sheettextsmall</font>
+				<script>
+				  function onInit()
+					if super and super.onInit then
+					  super.onInit();
+					end
+					if getState() &lt; 1 then
+					  setState(1);
+					elseif getState() &gt; 4 then
+					  setState(1);
+					end
+				  end
+				</script>
+				<statelabels>
+					<state>---</state>
+					<state>Magic</state>
+					<state>Stamina</state>
+					<state>Will</state>
+				</statelabels>
+			</multitext>
+			<stringcontrolX>
+				<anchored>
+					<to>resistance_roll</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Resisted By</static>
+			</stringcontrolX>
+			
+			<stringfieldX name="range">
+				<anchored>
+					<left>
+						<parent>resistance_roll</parent>
+						<anchor>right</anchor>
+						<offset>10</offset>
+					</left>
+					<top>
+						<parent>resistance_roll</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>75</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<center />
+				<font>sheettextsmall</font>
+				<frame>
+					<name>textlinesmall</name>
+					<offset>0,0,0,0</offset>
+				</frame>
+				<keyeditframe>
+					<name>shadelinesmall</name>
+					<offset>0,0,0,0</offset>
+				</keyeditframe>
+			</stringfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>range</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Range</static>
+			</stringcontrolX>
+			
+			<stringfieldX name="duration">
+				<anchored>
+					<left>
+						<parent>range</parent>
+						<anchor>right</anchor>
+						<offset>10</offset>
+					</left>
+					<top>
+						<parent>resistance_roll</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>85</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<center />
+				<font>sheettextsmall</font>
+				<frame>
+					<name>textlinesmall</name>
+					<offset>0,0,0,0</offset>
+				</frame>
+				<keyeditframe>
+					<name>shadelinesmall</name>
+					<offset>0,0,0,0</offset>
+				</keyeditframe>
+			</stringfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>duration</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Duration</static>
+			</stringcontrolX>
+			
+			<stringcontrolX name="sphere_label">
+				<anchored>
+					<left>
+						<parent>resistance_roll</parent>
+						<anchor>left</anchor>
+						<offset>0</offset>
+					</left>
+					<top>
+						<parent>resistance_roll</parent>
+						<anchor>bottom</anchor>
+						<offset>15</offset>
+					</top>
+					<size>
+						<width>45</width>
+						<height>13</height>
+					</size>
+				</anchored>
+				<font>sheetlabelsmallbold</font>
+				<static>Spheres:</static>
+			</stringcontrolX>
+			<stringfieldX name="sphere">
+				<anchored>
+					<left>
+						<parent>sphere_label</parent>
+						<anchor>right</anchor>
+						<offset>10</offset>
+					</left>
+					<top>
+						<parent>sphere_label</parent>
+						<anchor>top</anchor>
+						<offset>-3</offset>
+					</top>
+					<right>
+						<parent>duration</parent>
+						<anchor>right</anchor>
+						<offset>0</offset>
+					</right>
+					<size>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>textlinesmall</name>
+					<offset>0,0,0,0</offset>
+				</frame>
+				<keyeditframe>
+					<name>shadelinesmall</name>
+					<offset>0,0,0,0</offset>
+				</keyeditframe>
+			</stringfieldX>
+			<stringfieldX name="description">
+				<anchored>
+					<left>
+						<parent>spell_type</parent>
+						<anchor>left</anchor>
+						<offset>0</offset>
+					</left>
+					<right>
+						<parent>sphere</parent>
+						<anchor>right</anchor>
+						<offset>0</offset>
+					</right>
+					<top>
+						<parent>sphere</parent>
+						<anchor>bottom</anchor>
+						<offset>15</offset>
+					</top>
+					<bottom>
+						<anchor>bottom</anchor>
+						<offset>-35</offset>
+					</bottom>
+				</anchored>
+				<frame>
+					<name>modifier</name>
+					<offset>7,5,7,5</offset>
+				</frame>
+				<font>sheettextsmall</font>
+				<multilinespacing>15</multilinespacing>
+			</stringfieldX>
+			<scrollbar>
+				<anchored>
+					<to>description</to>
+					<position>right</position>
+					<offset>-4,-4</offset>
+				</anchored>
+				<target>description</target>
+			</scrollbar>
+			<stringcontrolX>
+				<anchored>
+					<to>description</to>
+					<position>aboveleft</position>
+					<offset>0,1</offset>
+				</anchored>
+				<font>sheetlabelsmall</font>
+				<static>Description</static>
+			</stringcontrolX>
+			<close_adventure />
+		</sheetdata>
+	</windowclass>
+</root>

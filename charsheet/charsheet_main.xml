@@ -1,0 +1,1741 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<root version="2.0">
+
+  <windowclass name="charsheet_main">
+    <placement>
+      <size>
+        <width>525</width>
+        <height>611</height>
+      </size>
+    </placement>
+    <nodelete />
+    <sheetdata>
+      <!-- LOGO AND PORTRAIT -->
+      <genericcontrol name="logo">
+        <bounds>432,32,60,60</bounds>
+        <icon>cs_logo</icon>
+      </genericcontrol>
+      <genericcontrol>
+        <bounds>432,96,60,13</bounds>
+        <icon>rmc_logo</icon>
+      </genericcontrol>
+      <genericcontrol name="FullPortraitFrame">
+        <bounds>431,26,65,65</bounds>
+        <icon>cs_logo</icon>
+        <script file="charsheet/scripts/charsheet_portrait.lua" />
+      </genericcontrol>
+	  <portraitselectioncontrol name="localportrait">
+        <bounds>431,26,65,65</bounds>
+        <base>charlist_base</base>
+        <mask>charlist_mask</mask>
+        <invisible />
+        <script file="charsheet/scripts/charsheet_localportrait.lua" />
+      </portraitselectioncontrol>
+
+      <buttoncontrol>
+        <bounds>-30,22,23,22</bounds>
+        <invisible/>
+        <icon>
+          <normal>button_identityactivate</normal>
+          <pressed>button_identityactivate_down</pressed>
+        </icon>
+        <script>
+          function onInit()
+            if User.isHost() then
+              setVisible(true);
+            end
+          end
+          
+          function onButtonPress()
+            GmIdentityManager.addIdentity(window.name.getValue());
+          end
+        </script>
+      </buttoncontrol>
+
+      <!-- OVERVIEW -->
+      <genericcontrol name="overviewframe">
+        <bounds>15,20,415,100</bounds>
+        <frame>
+          <name>sheetgroup</name>
+        </frame>
+        <script>
+          function onDrop(x,y,draginfo)
+            if draginfo.isType("race") then
+              local win = draginfo.getCustomData();
+              local source = win.getDatabaseNode();
+			  setRace(source);
+              return true;
+            elseif draginfo.isType("shortcut") then
+              local class = draginfo.getShortcutData();
+              local source = draginfo.getDatabaseNode();
+              if source and class == "race" then
+				setRace(source);
+                return true;
+              end
+            end
+            return false;
+          end
+          
+          function setRace(source)
+            local node = window.getDatabaseNode();
+			Rules_PC.SetRace(node, source);
+			--[[ race name ]]
+			if source.getChild("name") then
+				node.createChild("race","string").setValue(source.getChild("name").getValue());
+			end
+          end
+        </script>
+      </genericcontrol>
+
+      <labeledstring name="name">
+        <anchored>
+          <to>overviewframe</to>
+          <position>insidetopleft</position>
+          <offset>15,10</offset>
+          <size>
+            <width>305</width>
+            <height>18</height>
+          </size>
+        </anchored>
+        <anchorto>overviewframe</anchorto>
+        <height>20</height>
+        <label>Name</label>
+        <tabtarget>
+          <next>level</next>
+          <prev>hair</prev>
+        </tabtarget>
+      </labeledstring>
+	  <labeledstring name="level">
+        <anchored>
+          <to>name</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>75</width>
+          </size>
+        </anchored>
+        <anchorto>overviewframe</anchorto>
+        <height>20</height>
+        <label>Level</label>
+        <tabtarget>
+          <next>profession</next>
+          <prev>name</prev>
+        </tabtarget>
+      </labeledstring>
+	  <labeledstring name="profession">
+        <anchored>
+          <to>overviewframe</to>
+          <position>insidetopleft</position>
+          <offset>15,37</offset>
+          <size>
+            <width>200</width>
+            <height>18</height>
+          </size>
+        </anchored>
+        <anchorto>overviewframe</anchorto>
+        <height>20</height>
+        <label>Profession</label>
+        <tabtarget>
+          <next>race</next>
+          <prev>level</prev>
+        </tabtarget>
+      </labeledstring>
+      <labeledstring name="race" source="race.name">
+	    <anchored>
+          <to>profession</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>100</width>
+          </size>
+        </anchored>
+		<anchorto>overviewframe</anchorto>
+        <height>20</height>
+        <label>Race</label>
+        <tabtarget>
+          <next>size</next>
+          <prev>profession</prev>
+        </tabtarget>
+        <script>
+			function onInit()
+				super.onInit();
+				onValueChanged();
+			end
+			
+			function onDrop(x,y,dragdata)
+				return window.overviewframe.onDrop(x,y,dragdata);
+			end
+			
+			function onValueChanged()
+				local source = Rules_Races.Node(getValue());
+				if source then
+					local node = window.getDatabaseNode();
+					Rules_PC.SetRace(node, source);
+				end
+				window.magic.refresh();
+				window.stamina.refresh();
+				window.will.refresh();	
+			end
+        </script>
+      </labeledstring>
+	<DropDown name="racedropdown">
+		<target>race</target>
+		<position>0,3</position>
+		<script>
+			function onInit()
+				super.onInit();
+				addItems(Rules_Races.List());
+			end
+		</script>
+	</DropDown>
+	<multitext name="size">
+	<anchored>
+          <to>race</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>75</width>
+          </size>
+        </anchored>
+		<tabtarget>
+          <next>height</next>
+          <prev>race</prev>
+        </tabtarget>
+	<statelabels>
+          <state>Tiny</state>
+          <state>Small</state>
+          <state>Medium</state>
+          <state>Large</state>
+		  <state>Huge</state>
+        </statelabels>
+		<script>
+		function onInit()
+				super.onInit();
+				window.race.onValueChanged();
+				setEnabled(false);
+				if getState() &lt; 1 or getState() &gt; 5 then
+				  setState(3);
+				end
+			end
+		</script>
+	</multitext>
+	<labeledstring name="height" source="appearance.height">
+        <anchored>
+          <to>overviewframe</to>
+          <position>insidetopleft</position>
+          <offset>15,64</offset>
+          <size>
+            <width>47</width>
+          </size>
+        </anchored>
+        <label>Height</label>
+        <center/>
+        <tabtarget>
+          <next>weight</next>
+          <prev>xp</prev>
+        </tabtarget>
+		<script>
+			function onInit()
+				onValueChanged();
+			end
+			
+			function onValueChanged()
+				Rules_PC.SetBaseMoveRate(window.getDatabaseNode());
+			end
+		</script>
+	  </labeledstring>
+      <labelednumber name="weight" source="appearance.weight">
+        <anchored>
+          <to>height</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>45</width>
+          </size>
+        </anchored>
+        <label>Weight</label>
+        <tabtarget>
+          <next>age</next>
+          <prev>height</prev>
+        </tabtarget>
+      </labelednumber>
+      <labeledstring name="age" source="appearance.age">
+        <anchored>
+          <to>weight</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>30</width>
+          </size>
+        </anchored>
+        <label>Age</label>
+        <center/>
+        <tabtarget>
+          <next>sex</next>
+          <prev>weight</prev>
+        </tabtarget>
+      </labeledstring>
+      <labeledstring name="sex" source="appearance.sex">
+        <anchored>
+          <to>age</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>44</width>
+          </size>
+        </anchored>
+        <label>Sex</label>
+        <tabtarget>
+          <next>eyes</next>
+          <prev>age</prev>
+        </tabtarget>
+      </labeledstring>
+	  <labeledstring name="eyes" source="appearance.eyes">
+        <anchored>
+          <to>sex</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>55</width>
+          </size>
+        </anchored>
+        <label>Eyes</label>
+        <tabtarget>
+          <next>hair</next>
+          <prev>sex</prev>
+        </tabtarget>
+      </labeledstring>
+      <labeledstring name="hair" source="appearance.hair">
+        <anchored>
+          <to>eyes</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>60</width>
+          </size>
+        </anchored>
+        <label>Hair</label>
+        <tabtarget>
+          <next>xp</next>
+          <prev>eyes</prev>
+        </tabtarget>
+      </labeledstring>
+	  <labelednumber name="xp">
+        <anchored>
+          <to>hair</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>75</width>
+          </size>
+        </anchored>
+        <label>XP</label>
+        <tabtarget>
+          <next>name</next>
+          <prev>hair</prev>
+        </tabtarget>
+      </labelednumber>  
+      <!-- ABILITIES -->
+      <genericcontrol name="abilityframe">
+        <anchored>
+          <to>overviewframe</to>
+          <position>belowleft</position>
+          <offset>0,0</offset>
+          <size>
+            <width>270</width>
+            <height>209</height>
+          </size>
+        </anchored>
+        <frame>
+          <name>sheetgroup</name>
+        </frame>
+      </genericcontrol>
+      <stringcontrolX>
+        <anchored>
+          <to>abilityframe</to>
+          <position>insidetopleft</position>
+          <offset>55,15</offset>
+          <size>
+            <width>35</width>
+          </size>
+        </anchored>
+        <center/>
+        <font>sheetlabelsmall</font>
+        <static>Stat</static>
+      </stringcontrolX>
+      <stringcontrolX>
+        <anchored>
+          <to>abilityframe</to>
+          <position>insidetopleft</position>
+          <offset>95,15</offset>
+          <size>
+            <width>35</width>
+          </size>
+        </anchored>
+        <center />
+        <font>sheetlabelsmall</font>
+        <static>Bonus</static>
+      </stringcontrolX>
+      <stringcontrolX>
+        <anchored>
+          <to>abilityframe</to>
+          <position>insidetopleft</position>
+          <offset>135,15</offset>
+          <size>
+            <width>35</width>
+          </size>
+        </anchored>
+        <center />
+        <font>sheetlabelsmall</font>
+        <static>Race</static>
+      </stringcontrolX>
+      <stringcontrolX>
+        <anchored>
+          <to>abilityframe</to>
+          <position>insidetopleft</position>
+          <offset>175,15</offset>
+          <size>
+            <width>35</width>
+          </size>
+        </anchored>
+        <center />
+        <font>sheetlabelsmall</font>
+        <static>Spec</static>
+      </stringcontrolX>
+      <stringcontrolX>
+        <anchored>
+          <to>abilityframe</to>
+          <position>insidetopleft</position>
+          <offset>215,15</offset>
+          <size>
+            <width>35</width>
+          </size>
+        </anchored>
+        <center />
+        <font>sheetlabelsmall</font>
+        <static>Total</static>
+      </stringcontrolX>
+
+
+      <windowlist name="abilities">
+        <anchored>
+          <to>abilityframe</to>
+          <position>over</position>
+          <offset>-15,-25</offset>
+        </anchored>
+        <class>abilitywindow</class>
+        <datasource>.abilities</datasource>
+        <noscroll/>
+       <script>
+          function onInit()
+            if super 
+            and super.onInit then
+              super.onInit();
+            end
+			--[[ load the stat list ]]
+			local statList = Rules_Stats.List();
+			for i = 1, #statList do
+				addEntry(statList[i].name, statList[i].label, statList[i].order);
+			end
+            --[[ force a re-sort ]]
+            applySort();
+          end
+
+          function addEntry(name, label, order)
+            local node = getDatabaseNode().getChild(name);
+            local win;
+            if not node then
+              node = getDatabaseNode().createChild(name);
+            end
+              for i,w in ipairs(getWindows()) do
+                if w.getDatabaseNode().getName()==name then
+                  win = w;
+                end
+              end
+            if win then
+				win.label.setValue(label);
+				win.order.setValue(order);
+            end
+          end
+          
+          function onSortCompare(w1, w2)
+            return (w1.order.getValue() &gt; w2.order.getValue());
+          end
+        </script>
+        <skipempty/>
+      </windowlist>
+
+      <genericcontrol name="fateframe">
+        <anchored>
+          <to>overviewframe</to>
+          <position>belowleft</position>
+          <offset>273,0</offset>
+          <size>
+            <width>144</width>
+            <height>35</height>
+          </size>
+        </anchored>
+		<!--<anchored>
+          <to>abilityframe</to>
+          <position>right</position>
+          <offset>0</offset>
+          <size>
+            <width>133</width>
+          </size>
+        </anchored>-->
+        <frame>
+          <name>sheetgroup</name>
+        </frame>
+      </genericcontrol>
+      <stringcontrolX name="fatelabel">
+        <anchored>
+          <to>fateframe</to>
+          <position>insidetopleft</position>
+          <offset>15,10</offset>
+        </anchored>
+        <font>sheetlabel</font>
+        <static>Fate Points</static>
+      </stringcontrolX>
+      <numberfieldX name="fate_points">
+        <anchored>
+          <to>fatelabel</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>35</width>
+            <!--<height>18</height>-->
+          </size>
+        </anchored>
+        <frame>
+          <name>modifier</name>
+          <offset>4,4,4,4</offset>
+        </frame>
+        <keyeditframe>
+          <name>sheetfocus</name>
+          <offset>4,4,4,4</offset>
+        </keyeditframe>
+        <font>sheettext</font>
+      </numberfieldX>
+      
+	  <genericcontrol name="endframe">
+        <anchored>
+          <to>fateframe</to>
+          <position>belowleft</position>
+          <offset>0,0</offset>
+          <size>
+            <width>205</width>
+            <height>95</height>
+          </size>
+        </anchored>
+		<!--<anchored>
+          <to>abilityframe</to>
+          <position>right</position>
+          <offset>0</offset>
+          <size>
+            <width>133</width>
+          </size>
+        </anchored>-->
+        <frame>
+          <name>sheetgroup</name>
+        </frame>
+		</genericcontrol>
+		<stringcontrolX name="endlabel">
+        <anchored>
+          <to>endframe</to>
+          <position>insidetopleft</position>
+          <offset>15,10</offset>
+        </anchored>
+        <font>sheetlabel</font>
+        <static>Endurance</static>
+      </stringcontrolX>
+	  
+	  <stringcontrolX>
+        <anchored>
+          <to>endlabel</to>
+          <position>belowleft</position>
+          <offset>0,7</offset>
+        </anchored>
+        <font>sheetlabelsmall</font>
+        <static>Endurance</static>
+      </stringcontrolX>
+      <numberfieldX name="endurance" source="hits.total">
+        <anchored>
+          <to>endlabel</to>
+          <position>belowleft</position>
+          <offset>60,3</offset>
+          <size>
+            <width>35</width>
+            <height>18</height>
+          </size>
+        </anchored>
+        <frame>
+          <name>modifier</name>
+          <offset>4,4,4,4</offset>
+        </frame>
+        <keyeditframe>
+          <name>sheetfocus</name>
+          <offset>4,4,4,4</offset>
+        </keyeditframe>
+        <font>sheettext</font>
+		<script>
+			function onInit()
+				if super and super.onInit then
+					super.onInit();
+				end
+				refresh();
+			end
+			
+			function refresh()
+				setValue(Rules_PC.Hits(window.getDatabaseNode()));
+				setReadOnly(true);
+			end
+		</script>
+      </numberfieldX>
+      <stringcontrolX>
+        <anchored>
+          <to>endlabel</to>
+          <position>belowleft</position>
+          <offset>100,7</offset>
+        </anchored>
+        <font>sheetlabelsmall</font>
+        <static>Damage</static>
+      </stringcontrolX>
+      <numberfieldX name="damage" source="hits.damage">
+        <anchored>
+          <to>endlabel</to>
+          <position>belowleft</position>
+          <offset>140,3</offset>
+          <size>
+            <width>35</width>
+            <height>18</height>
+          </size>
+        </anchored>
+        <frame>
+          <name>modifier</name>
+          <offset>4,4,4,4</offset>
+        </frame>
+        <keyeditframe>
+          <name>sheetfocus</name>
+          <offset>4,4,4,4</offset>
+        </keyeditframe>
+        <font>sheettext</font>
+        <script>
+          function onValueChanged()
+            if getValue() &lt; 0 or getValue() &gt; window.endurance.getValue() then
+              setInvalid();
+            else
+              setValid();
+            end
+          end
+          
+          function onInit()
+            if super and super.onInit then
+              super.onInit();
+            end
+            onValueChanged();
+          end
+        </script>
+      </numberfieldX>
+	  <stringcontrolX name="pplabel">
+        <anchored>
+          <to>endframe</to>
+          <position>insidetopleft</position>
+          <offset>15,50</offset>
+        </anchored>
+        <font>sheetlabel</font>
+        <static>Power Points</static>
+      </stringcontrolX>
+	  
+	  <stringcontrolX>
+        <anchored>
+          <to>pplabel</to>
+          <position>belowleft</position>
+          <offset>0,7</offset>
+        </anchored>
+        <font>sheetlabelsmall</font>
+        <static>Power Points</static>
+      </stringcontrolX>
+      <numberfieldX name="powerpoint" source="powerpoints.total">
+        <anchored>
+          <to>pplabel</to>
+          <position>belowleft</position>
+          <offset>60,3</offset>
+          <size>
+            <width>35</width>
+            <height>18</height>
+          </size>
+        </anchored>
+        <frame>
+          <name>modifier</name>
+          <offset>4,4,4,4</offset>
+        </frame>
+        <keyeditframe>
+          <name>sheetfocus</name>
+          <offset>4,4,4,4</offset>
+        </keyeditframe>
+        <font>sheettext</font>
+		<script>
+			function onInit()
+				if super and super.onInit then
+					super.onInit();
+				end
+				refresh();
+			end
+			
+			function refresh()
+				setValue(Rules_PC.PowerPoints(window.getDatabaseNode()));
+				setReadOnly(true);
+			end
+		</script>
+      </numberfieldX>
+      <stringcontrolX>
+        <anchored>
+          <to>pplabel</to>
+          <position>belowleft</position>
+          <offset>100,7</offset>
+        </anchored>
+        <font>sheetlabelsmall</font>
+        <static>Current</static>
+      </stringcontrolX>
+      <numberfieldX name="ppdamage" source="powerpoints.damage">
+        <anchored>
+          <to>pplabel</to>
+          <position>belowleft</position>
+          <offset>140,3</offset>
+          <size>
+            <width>35</width>
+            <height>18</height>
+          </size>
+        </anchored>
+        <frame>
+          <name>modifier</name>
+          <offset>4,4,4,4</offset>
+        </frame>
+        <keyeditframe>
+          <name>sheetfocus</name>
+          <offset>4,4,4,4</offset>
+        </keyeditframe>
+        <font>sheettext</font>
+      </numberfieldX>
+		
+		<genericcontrol name="initframe">
+        <anchored>
+          <to>endframe</to>
+          <position>belowleft</position>
+          <offset>0,0</offset>
+          <size>
+            <width>205</width>
+            <height>80</height>
+          </size>
+        </anchored>
+        <frame>
+          <name>sheetgroup</name>
+        </frame>
+	  </genericcontrol>
+	  <stringcontrolX name="initlabel">
+        <anchored>
+          <to>initframe</to>
+          <position>insidetopleft</position>
+          <offset>15,10</offset>
+        </anchored>
+        <font>sheetlabel</font>
+        <static>Initiative</static>
+      </stringcontrolX>
+	  <stringcontrolX>
+        <anchored>
+          <to>initframe</to>
+          <position>insidetopleft</position>
+          <offset>15,26</offset>
+          <size>
+            <width>35</width>
+          </size>
+        </anchored>
+        <center/>
+        <font>sheetlabelsmall</font>
+        <static>Stat</static>
+      </stringcontrolX>
+      <stringcontrolX>
+        <anchored>
+          <to>initframe</to>
+          <position>insidetopleft</position>
+          <offset>55,26</offset>
+          <size>
+            <width>35</width>
+          </size>
+        </anchored>
+        <center />
+        <font>sheetlabelsmall</font>
+        <static>Race</static>
+      </stringcontrolX>
+      <stringcontrolX>
+        <anchored>
+          <to>initframe</to>
+          <position>insidetopleft</position>
+          <offset>95,26</offset>
+          <size>
+            <width>35</width>
+          </size>
+        </anchored>
+        <center />
+        <font>sheetlabelsmall</font>
+        <static>Spec</static>
+      </stringcontrolX>
+      <stringcontrolX>
+        <anchored>
+          <to>initframe</to>
+          <position>insidetopleft</position>
+          <offset>155,26</offset>
+          <size>
+            <width>35</width>
+          </size>
+        </anchored>
+        <center />
+        <font>sheetlabelsmall</font>
+        <static>Total</static>
+      </stringcontrolX>
+      <numberfieldX name="initstat" source="initiative.stat_bonus">
+        <anchored>
+          <to>initlabel</to>
+          <position>belowleft</position>
+          <offset>0,15</offset>
+          <size>
+            <width>35</width>
+            <height>18</height>
+          </size>
+        </anchored>
+        <frame>
+          <name>modifier</name>
+          <offset>4,4,4,4</offset>
+        </frame>
+        <keyeditframe>
+          <name>sheetfocus</name>
+          <offset>4,4,4,4</offset>
+        </keyeditframe>
+        <font>sheettext</font>
+		<script>
+			function onInit()
+				if super and super.onInit then
+					super.onInit();
+				end
+				getDatabaseNode().getParent().getParent().getChild("abilities").getChild("insight").onChildUpdate = refresh;
+				getDatabaseNode().getParent().getParent().getChild("abilities").getChild("quickness").onChildUpdate = refresh;
+			end
+			
+			function refresh()
+				local bonus = 0;
+				local node = window.getDatabaseNode();
+				if node.getChild("abilities.insight.total") then
+					bonus = bonus + node.createChild("abilities.insight.total").getValue();
+				end
+				if node.getChild("abilities.quickness.total") then
+					bonus = bonus + node.createChild("abilities.quickness.total").getValue();
+				end
+				setValue(bonus);
+			end
+			
+			function onValueChanged()
+				window.inittotal.refresh();
+			end
+		</script>
+      </numberfieldX>
+	  <numberfieldX name="initrace" source="race.initiative">
+        <anchored>
+          <to>initstat</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>35</width>
+          </size>
+        </anchored>
+        <frame>
+          <name>modifier</name>
+          <offset>4,4,4,4</offset>
+        </frame>
+        <keyeditframe>
+          <name>sheetfocus</name>
+          <offset>4,4,4,4</offset>
+        </keyeditframe>
+        <font>sheettext</font>
+		<script>
+			function onInit()
+				if super and super.onInit then
+					super.onInit();
+				end
+			end
+			
+			function onValueChanged()
+				window.inittotal.refresh();
+			end
+		</script>
+      </numberfieldX>
+	  <numberfieldX name="initspec" source="initiative.special">
+        <anchored>
+          <to>initrace</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>35</width>
+          </size>
+        </anchored>
+        <frame>
+          <name>modifier</name>
+          <offset>4,4,4,4</offset>
+        </frame>
+        <keyeditframe>
+          <name>sheetfocus</name>
+          <offset>4,4,4,4</offset>
+        </keyeditframe>
+        <font>sheettext</font>
+		<script>
+			function onInit()
+				if super and super.onInit then
+					super.onInit();
+				end
+			end
+			
+			function onValueChanged()
+				window.inittotal.refresh();
+			end
+		</script>
+      </numberfieldX>
+	  <numberfieldX name="inittotal" source="initiative.total">
+        <anchored>
+          <to>initspec</to>
+          <position>right</position>
+          <offset>25</offset>
+          <size>
+            <width>35</width>
+          </size>
+        </anchored>
+        <frame>
+          <name>modifier</name>
+          <offset>4,4,4,4</offset>
+        </frame>
+        <keyeditframe>
+          <name>sheetfocus</name>
+          <offset>4,4,4,4</offset>
+        </keyeditframe>
+        <font>sheettext</font>
+		<script>
+			function onInit()
+				if super and super.onInit then
+					super.onInit();
+				end
+				refresh();
+			end
+			
+			function refresh()
+				local bonus = window.initstat.getValue() + window.initrace.getValue() + window.initspec.getValue();
+				setValue(bonus);
+			end
+		</script>
+      </numberfieldX>
+	  <!-- Talent window-->
+	  <genericcontrol name="talentframe">
+        <anchored>
+          <to>abilityframe</to>
+          <position>belowleft</position>
+          <offset>0,0</offset>
+          <size>
+            <width>237</width>
+            <height>260</height>
+          </size>
+        </anchored>
+        <frame>
+          <name>sheetgroup</name>
+        </frame>
+      </genericcontrol>
+	  <stringcontrolX name="talentlabel">
+        <anchored>
+          <to>talentframe</to>
+          <position>insidetopleft</position>
+          <offset>15,10</offset>
+        </anchored>
+        <font>sheetlabel</font>
+        <static>Talents and Traits</static>
+      </stringcontrolX>
+	  <sortablelist name="talents">
+        <anchored>
+          <to>talentframe</to>
+          <position>over</position>
+          <offset>-15,-23</offset>
+          <top>
+            <parent>talentframe</parent>
+            <anchor>top</anchor>
+            <offset>25</offset>
+          </top>
+        </anchored>
+        <datasource>.talents</datasource>
+        <class>charsheet_talentwindow</class>
+        <acceptdrop>
+          <class>talent</class>
+          <field>name</field>
+          <field>fullname</field>
+          <field>description</field>
+          <field>notes</field>
+          <field>locked</field>
+        </acceptdrop>
+        <defaultsort>
+          <fieldname>name</fieldname>
+        </defaultsort>
+        <sortfield>
+          <fieldname>name</fieldname>
+        </sortfield>
+        <script file="charsheet/scripts/charsheet_talentlist.lua" />
+      </sortablelist>
+ 		<scrollbar>
+			<anchored>
+				<to>talents</to>
+				<position>right</position>
+				<offset>1,-4</offset>
+			</anchored>
+			<target>talents</target>
+		</scrollbar>
+		
+      <genericcontrol name="rrframe">
+        <anchored>
+          <to>overviewframe</to>
+          <position>belowleft</position>
+          <offset>243,209</offset>
+          <size>
+            <width>237</width>
+            <height>80</height>
+          </size>
+        </anchored>
+        <frame>
+          <name>sheetgroup</name>
+        </frame>
+	  </genericcontrol>
+	  <stringcontrolX name="rrlabel">
+        <anchored>
+          <to>rrframe</to>
+          <position>insidetopleft</position>
+          <offset>15,10</offset>
+        </anchored>
+        <font>sheetlabel</font>
+        <static>Resistance Rolls</static>
+      </stringcontrolX>
+	  <stringcontrolX name="magiclabel">
+        <anchored>
+          <position>insidetopleft</position>
+          <offset>31,30</offset>
+          <size>
+            <width>50</width>
+            <height>17</height>
+          </size>
+		  <to>rrframe</to>
+        </anchored>
+        <font>sheetlabel</font>
+       <static>Magic</static>
+      </stringcontrolX>
+      <genericcontrol name="magicdiceholder">
+        <!--<bounds>15,2,70,17</bounds>-->
+		<anchored>
+          <position>insidetopleft</position>
+          <offset>23,28</offset>
+          <size>
+            <width>50</width>
+            <height>17</height>
+          </size>
+		  <to>rrframe</to>
+        </anchored>
+        <frame>
+          <name>ghostdice</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+		<script>
+          function onDoubleClick()
+		    local customData = {type=Rules_Constants.DataType.DieRoll,tableType=Rules_Constants.TableType.Other,modifiers={}};
+			customData.dieType = Rules_Constants.DieType.HighOpenEnded;
+			customData.tableID = "";
+			ChatManager.throwDice("dice", {"d100","d10"}, window.magic.getValue(), "Magic Resistance Roll",customData);
+		  end
+			
+		</script>
+      </genericcontrol>
+	  <numberfieldX name="magic" source="resistance_rolls.magic.total">
+        <anchored>
+          <to>rrframe</to>
+          <position>belowleft</position>
+          <offset>31,-30</offset>
+          <size>
+            <width>35</width>
+            <height>18</height>
+          </size>
+        </anchored>
+        <frame>
+          <name>modifier</name>
+          <offset>4,4,4,4</offset>
+        </frame>
+        <keyeditframe>
+          <name>sheetfocus</name>
+          <offset>4,4,4,4</offset>
+        </keyeditframe>
+        <font>sheettext</font>
+		<script>
+			function onInit()
+				if super and super.onInit then
+					super.onInit();
+				end
+				getDatabaseNode().getParent().getParent().getParent().getChild("skills").onChildUpdate = refresh;
+				getDatabaseNode().getParent().getParent().getParent().getChild("abilities").getChild("insight").onChildUpdate = refresh;
+				refresh();
+			end
+			
+			function refresh()
+				setValue(Rules_PC.RRMagic(window.getDatabaseNode()));
+				setReadOnly(true);
+			end
+		</script>
+      </numberfieldX>
+	  
+	  <stringcontrolX name="staminalabel">
+        <anchored>
+          <position>insidetopleft</position>
+          <offset>90,30</offset>
+          <size>
+            <width>50</width>
+            <height>17</height>
+          </size>
+		  <to>rrframe</to>
+        </anchored>
+        <font>sheetlabel</font>
+       <static>Stamina</static>
+      </stringcontrolX>
+      <genericcontrol name="staminadiceholder">
+        <!--<bounds>15,2,70,17</bounds>-->
+		<anchored>
+          <position>insidetopleft</position>
+          <offset>90,28</offset>
+          <size>
+            <width>50</width>
+            <height>17</height>
+          </size>
+		  <to>rrframe</to>
+        </anchored>
+        <frame>
+          <name>ghostdice</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+		<script>
+          function onDoubleClick()
+		    local customData = {type=Rules_Constants.DataType.DieRoll,tableType=Rules_Constants.TableType.Other,modifiers={}};
+			customData.tableID = "";
+			customData.dieType = Rules_Constants.DieType.HighOpenEnded;
+		    ChatManager.throwDice("dice", {"d100","d10"}, window.stamina.getValue(), "Stamina Resistance Roll", customData);
+  		  end
+			
+		</script>
+      </genericcontrol>
+	  <numberfieldX name="stamina" source="resistance_rolls.stamina.total">
+        <anchored>
+          <to>rrframe</to>
+          <position>belowleft</position>
+          <offset>95,-30</offset>
+          <size>
+            <width>35</width>
+            <height>18</height>
+          </size>
+        </anchored>
+        <frame>
+          <name>modifier</name>
+          <offset>4,4,4,4</offset>
+        </frame>
+        <keyeditframe>
+          <name>sheetfocus</name>
+          <offset>4,4,4,4</offset>
+        </keyeditframe>
+        <font>sheettext</font>
+		<script>
+			function onInit()
+				if super and super.onInit then
+					super.onInit();
+				end
+				getDatabaseNode().getParent().getParent().getParent().getChild("skills").onChildUpdate = refresh;
+				getDatabaseNode().getParent().getParent().getParent().getChild("abilities").getChild("constitution").onChildUpdate = refresh;
+				refresh();
+			end
+			
+			function refresh()
+				setValue(Rules_PC.RRStamina(window.getDatabaseNode()));
+				setReadOnly(true);
+			end
+		</script>
+      </numberfieldX>
+	  
+	  <stringcontrolX name="willlabel">
+        <anchored>
+          <position>insidetopleft</position>
+          <offset>172,30</offset>
+          <size>
+            <width>50</width>
+            <height>17</height>
+          </size>
+		  <to>rrframe</to>
+        </anchored>
+        <font>sheetlabel</font>
+       <static>Will</static>
+      </stringcontrolX>
+      <genericcontrol name="willdiceholder">
+        <!--<bounds>15,2,70,17</bounds>-->
+		<anchored>
+          <position>insidetopleft</position>
+          <offset>160,28</offset>
+          <size>
+            <width>50</width>
+            <height>17</height>
+          </size>
+		  <to>rrframe</to>
+        </anchored>
+        <frame>
+          <name>ghostdice</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+		<script>
+          function onDoubleClick()
+			local customData = {type=Rules_Constants.DataType.DieRoll,tableType=Rules_Constants.TableType.Other,modifiers={}};
+			customData.dieType = Rules_Constants.DieType.HighOpenEnded;
+			customData.tableID = "";
+			ChatManager.throwDice("dice", {"d100","d10"}, window.will.getValue(), "Will Resistance Roll", customData);
+		  end
+			
+		</script>
+      </genericcontrol>
+	  <numberfieldX name="will"  source="resistance_rolls.will.total">
+        <anchored>
+          <to>rrframe</to>
+          <position>belowleft</position>
+          <offset>165,-30</offset>
+          <size>
+            <width>35</width>
+            <height>18</height>
+          </size>
+        </anchored>
+        <frame>
+          <name>modifier</name>
+          <offset>4,4,4,4</offset>
+        </frame>
+        <keyeditframe>
+          <name>sheetfocus</name>
+          <offset>4,4,4,4</offset>
+        </keyeditframe>
+        <font>sheettext</font>
+		<script>
+			function onInit()
+				if super and super.onInit then
+					super.onInit();
+				end
+				getDatabaseNode().getParent().getParent().getParent().getChild("skills").onChildUpdate = refresh;
+				getDatabaseNode().getParent().getParent().getParent().getChild("abilities").getChild("selfdiscipline").onChildUpdate = refresh;
+				refresh();
+			end
+			
+			function refresh()
+				setValue(Rules_PC.RRWill(window.getDatabaseNode()));
+				setReadOnly(true);
+			end
+		</script>
+      </numberfieldX>
+	  
+	  <genericcontrol name="languageframe">
+        <anchored>
+          <to>rrframe</to>
+          <position>belowleft</position>
+          <offset>0,5</offset>
+          <size>
+            <width>237</width>
+			<height>175</height>
+          </size>
+        </anchored>
+        <frame>
+          <name>sheetgroup</name>
+        </frame>
+      </genericcontrol>
+      <stringcontrolX>
+        <anchored>
+          <to>languageframe</to>
+          <position>insidetopleft</position>
+          <offset>15,8</offset>
+          <size>
+            <width>75</width>
+          </size>
+        </anchored>
+        <font>sheetlabel</font>
+        <static>Languages</static>
+      </stringcontrolX>
+      <windowlist name="languages">
+        <anchored>
+          <to>languageframe</to>
+          <position>over</position>
+          <offset>-15,-20</offset>
+        </anchored>
+        <class>languagewindow</class>
+        <datasource>.languages</datasource>
+        <allowcreate/>
+        <allowdelete/>
+      </windowlist>
+ 		<scrollbar>
+			<anchored>
+				<to>languages</to>
+				<position>right</position>
+				<offset>1,-4</offset>
+			</anchored>
+			<target>languages</target>
+		</scrollbar>
+	  
+	</sheetdata>
+  </windowclass>
+  
+  <windowclass name="abilitywindow">
+    <sizelimits>
+      <maximum>
+        <height>20</height>
+      </maximum>
+      <minimum>
+        <height>20</height>
+      </minimum>
+    </sizelimits>
+    <script>
+      function refresh()
+        local tot;
+        bonus.setValue(Rules_Stats.Bonus(temp.getValue()));
+        tot = bonus.getValue() + race.getValue() + special.getValue();
+        total.setValue(tot);
+      end
+	  
+	  	function rollStat()
+			Rules_Stats.Roll(getDatabaseNode().getNodeName());
+		end
+
+		function dragStat(button, x, y, dragData)
+			return Rules_Stats.Drag(dragData, label.getValue(), getDatabaseNode().getNodeName());
+		end
+
+      function onInit()
+        refresh();
+        temp.getDatabaseNode().onUpdate = refresh;
+        race.getDatabaseNode().onUpdate = refresh;
+        special.getDatabaseNode().onUpdate = refresh;
+      end
+    </script>
+    <sheetdata>
+      <numbercontrol name="order">
+        <bounds>0,0,0,0</bounds>
+        <invisible/>
+      </numbercontrol>
+      <stringfieldX name="label">
+        <anchored>
+          <position>insidetopleft</position>
+          <offset>10,4</offset>
+          <size>
+            <width>25</width>
+            <height>17</height>
+          </size>
+        </anchored>
+        <font>sheetlabel</font>
+        <static/>
+		<script>
+          function onDoubleClick()
+            window.rollStat();
+          end
+			function onDragStart(button, x, y, dragData)
+				return window.dragStat(button, x, y, dragData);
+			end
+		</script>
+      </stringfieldX>
+      <genericcontrol name="diceholder">
+        <bounds>5,2,30,17</bounds>
+        <frame>
+          <name>ghostdice</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+		<script>
+          function onDoubleClick()
+            window.rollStat();
+          end
+			function onDragStart(button, x, y, dragData)
+				return window.dragStat(button, x, y, dragData);
+			end
+		</script>
+      </genericcontrol>
+      <numberfieldX name="temp">
+        <anchored>
+          <position>insidetopleft</position>
+          <offset>40,1</offset>
+          <size>
+            <width>35</width>
+            <height>18</height>
+          </size>
+        </anchored>
+        <font>sheettext</font>
+        <frame>
+          <name>modifier</name>
+          <offset>4,4,4,4</offset>
+        </frame>
+        <keyeditframe>
+          <name>sheetfocus</name>
+          <offset>4,4,4,4</offset>
+        </keyeditframe>
+        <script>
+          function onValueChanged()
+            if getValue() &lt; 0 or getValue() &gt; 105 then
+              setInvalid();
+            else
+              setValid();
+            end
+          end
+          
+          function onInit()
+            if super 
+            and super.onInit then
+              super.onInit();
+            end
+            onValueChanged();
+          end
+        </script>
+        <tabtarget>
+          <prev>special</prev>
+          <next>potential</next>
+        </tabtarget>
+      </numberfieldX>
+      <numbercontrolX name="bonus">
+        <anchored>
+          <to>temp</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>35</width>
+          </size>
+        </anchored>
+        <font>sheettext</font>
+        <frame>
+          <name>modifier</name>
+          <offset>4,4,4,4</offset>
+        </frame>
+        <displaysign/>
+        <readonly/>
+        <hideonvalue>0</hideonvalue>
+      </numbercontrolX>
+      <numberfieldX name="race">
+        <anchored>
+          <to>bonus</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>35</width>
+          </size>
+        </anchored>
+        <font>sheettext</font>
+        <frame>
+          <name>modifier</name>
+          <offset>4,4,4,4</offset>
+        </frame>
+        <keyeditframe>
+          <name>sheetfocus</name>
+          <offset>4,4,4,4</offset>
+        </keyeditframe>
+        <displaysign/>
+        <hideonvalue>0</hideonvalue>
+        <tabtarget>
+          <prev>potential</prev>
+          <next>special</next>
+        </tabtarget>
+      </numberfieldX>
+      <numberfieldX name="special">
+        <anchored>
+          <to>race</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>35</width>
+          </size>
+        </anchored>
+        <font>sheettext</font>
+        <frame>
+          <name>modifier</name>
+          <offset>4,4,4,4</offset>
+        </frame>
+        <keyeditframe>
+          <name>sheetfocus</name>
+          <offset>4,4,4,4</offset>
+        </keyeditframe>
+        <displaysign/>
+        <hideonvalue>0</hideonvalue>
+        <tabtarget>
+          <prev>race</prev>
+          <next>temp</next>
+        </tabtarget>
+      </numberfieldX>
+      <numberfieldX name="total">
+        <anchored>
+          <to>special</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>35</width>
+          </size>
+        </anchored>
+        <font>sheettext</font>
+        <frame>
+          <name>modifier</name>
+          <offset>4,4,4,4</offset>
+        </frame>
+        <readonly/>
+		<script>
+			function onDoubleClick(x, y)
+				ModifierStack.addSlot(window.label.getValue(), getValue());
+			end
+
+			function onDragStart(button, x, y, draginfo)
+				draginfo.setType("number");
+				draginfo.setDescription(window.label.getValue().." Bonus");
+				if getValue() &gt;= 0 then
+					draginfo.setStringData(window.label.getValue().." Bonus +"..getValue());
+				else
+					draginfo.setStringData(window.label.getValue().." Bonus "..getValue());
+				end
+				draginfo.setNumberData(getValue());
+				return true;
+			end
+		</script>
+        <displaysign/>
+      </numberfieldX>
+		<modifier>
+			<anchored>
+				<to>total</to>
+			</anchored>
+		</modifier>
+
+    </sheetdata>
+  </windowclass> 
+  
+  <windowclass name="charsheet_talentwindow">
+    <sizelimits>
+      <minimum>
+        <height>18</height>
+      </minimum>
+      <maximum>
+        <height>18</height>
+      </maximum>
+    </sizelimits>
+    <script file="charsheet/scripts/charsheet_talentwindow.lua" />
+    <sheetdata>
+      <!-- hidden fields -->
+      <numberfieldX name="locked">
+        <bounds>0,0,0,0</bounds>
+        <invisible/>
+        <script>
+          function onValueChanged()
+            if getValue()==1 then
+              window.shortname.setReadOnly(true);
+              window.shortname.setFrame("",0,1,0,0);
+            else
+              window.shortname.setReadOnly(false);
+              window.shortname.setFrame("textline",0,1,0,0);
+            end
+            window.setMenus();
+			window.refresh();
+          end
+          
+          function onInit()
+            if super and super.onInit then
+              super.onInit();
+            end
+            onValueChanged();
+          end
+        </script>
+      </numberfieldX>
+      <stringfieldX name="name">
+        <bounds>0,0,0,0</bounds>
+        <invisible/>
+		<script>
+		function onValueChanged()
+		  window.refresh();
+		end
+		</script>
+      </stringfieldX>
+      <stringfieldX name="fullname">
+        <bounds>0,0,0,0</bounds>
+        <invisible/>
+      </stringfieldX>
+      
+      <!-- visible fields -->
+      <windowreferencecontrol name="open">
+        <bounds>0,2,14,14</bounds>
+        <icon>
+          <normal>button_openwindow</normal>
+          <pressed>button_openwindow</pressed>
+        </icon>
+        <description>
+          <field>name</field>
+        </description>
+        <class>talent</class>
+      </windowreferencecontrol>
+      <stringcontrolX name="shortname">
+        <anchored>
+          <to>open</to>
+          <position>right</position>
+        </anchored>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+		<tooltip />
+        <script>
+          local sem = false;
+          
+          function onValueChanged()
+            if sem then
+              return;
+            else
+              sem = true;
+              window.parseShortName();
+              sem = false;
+            end
+          end
+
+          function onDragStart(button, x, y, dragData)
+            return window.dragTalent(button, x, y, dragData);
+          end
+          
+          function update()
+            if sem then
+              return;
+            else
+              sem = true;
+              local nm = window.name.getValue();
+			  local name = nm;
+			  setValue(name);
+			  setTooltipText(name);
+			  window.refresh();
+              sem = false;
+            end
+          end
+          
+          function onInit()
+            if super and super.onInit then
+              super.onInit();
+            end
+            update();
+          end
+        </script>
+      </stringcontrolX>
+    </sheetdata>
+  </windowclass>
+  
+  <windowclass name="languagewindow">
+    <script>
+      function testDelete()
+        local win = windowlist.getPrevWindow(self);
+        if name.getValue()~="" then
+          return;
+        end
+        if #(windowlist.getWindows())==1 then
+          return;
+        end
+        if not win then
+          win = windowlist.getNextWindow(self);
+        end
+        win.name.setFocus();
+        getDatabaseNode().delete();
+      end
+      
+      function testNew()
+        local win = windowlist.getNextWindow(self);
+        if name.getValue()=="" then
+          return;
+        end
+        if not win then
+          win = windowlist.createWindow();
+        end
+        win.name.setFocus();
+      end
+    </script>
+    <sizelimits>
+      <maximum>
+        <height>33</height>
+      </maximum>
+      <minimum>
+        <height>20</height>
+      </minimum>
+    </sizelimits>
+    <sheetdata>
+      <stringfieldX name="name">
+        <bounds>0,2,103,17</bounds>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+        <script>
+          function onDeleteDown()
+            window.testDelete();
+          end
+          
+          function onDeleteUp()
+            window.testDelete();
+          end
+          
+          function onEnter()
+            window.testNew();
+          end
+        </script>
+        <tabtarget>
+          <prev>spoken</prev>
+          <next>written</next>
+        </tabtarget>
+      </stringfieldX>
+      <stringcontrolX>
+        <bounds>108,0,20,17</bounds>
+        <font>sheettextsmall</font>
+        <static>W:</static>
+      </stringcontrolX>
+      <numberfieldX name="written">
+        <bounds>130,0,25,17</bounds>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+        <tabtarget>
+          <prev>name</prev>
+          <next>spoken</next>
+        </tabtarget>
+      </numberfieldX>
+      <stringcontrolX>
+        <bounds>166,0,15,17</bounds>
+        <font>sheettextsmall</font>
+        <static>S:</static>
+      </stringcontrolX>
+      <numberfieldX name="spoken">
+        <bounds>181,0,25,17</bounds>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+        <tabtarget>
+          <prev>written</prev>
+          <next>name</next>
+        </tabtarget>
+      </numberfieldX>
+    </sheetdata>
+  </windowclass>
+</root>

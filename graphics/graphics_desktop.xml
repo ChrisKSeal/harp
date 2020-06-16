@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<root>
+	<!-- Desktop background -->
+	<framedef name="desktop">
+		<bitmap file="graphics/frames/3_Towers.jpg" />
+		<right rect="0,0,0,0" />
+		<middle rect="0,0,1920,1080" />
+	</framedef>
+</root>

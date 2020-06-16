@@ -1,0 +1,1703 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root version="2.0">
+
+<windowclass name="attack_selector">
+
+<frame>charsheet</frame>
+    <placement>
+      <size>
+        <width>450</width>
+        <height>350</height>
+      </size>
+    </placement>
+    <sizelimits>
+      <minimum>
+        <width>450</width>
+        <height>350</height>
+      </minimum>
+      <maximum>
+        <width>450</width>
+        <height>350</height>
+      </maximum>
+    </sizelimits>
+    <minimize>minimized_pc</minimize>
+    <sharable/>
+    <nodelete/>
+    <tooltip>
+      <field>name</field>
+    </tooltip>
+	
+	<nodelete/>
+	<sharable />
+    <sheetdata>
+	<close_adventure />
+	<numberfieldX name="attackorspell">
+		<bounds>0,0,0,0</bounds>
+		<invisible />
+	</numberfieldX>
+	<stringfieldX name="attacknode">
+		<bounds>0,0,0,0</bounds>
+		<invisible />
+		<script>
+			function onInit()
+				window.attack.update();
+			end
+			
+			function onValueChanged()
+				window.attack.update();
+			end
+		</script>
+	</stringfieldX>
+	<stringfieldX name="ctnode">
+		<bounds>0,0,0,0</bounds>
+		<invisible />
+	</stringfieldX>
+	<!-- Name selector and total bonus plus pps & casting time or reload if spell or ranged -->
+	<genericcontrol name="nameframe">
+        <bounds>10,20,-15,90</bounds>
+        <frame>
+          <name>sheetgroup</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+      </genericcontrol>
+	  <stringcontrolX>
+		<anchored>
+          <to>nameframe</to>
+          <position>insidetopleft</position>
+          <offset>10,14</offset>
+          <size>
+            <width>150</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <font>sheetlabel</font>
+        <static>Spell/Attack</static>
+	  </stringcontrolX>
+	  <stringcontrolX name="attacklabel">
+			<anchored>
+				<to>nameframe</to>
+				<position>insidetopleft</position>
+				<offset>10,34</offset>
+				<size>
+					<width>120</width>
+					<height>13</height>
+				</size>
+			</anchored>
+			<font>sheetlabelsmallbold</font>
+			<static>Spell/Attack Name</static>
+		</stringcontrolX>
+		<stringfieldX name="attack">
+			<anchored>
+				<to>nameframe</to>
+				<position>insidetopleft</position>
+				<offset>125,30</offset>
+				<size>
+					<width>150</width>
+					<height>17</height>
+				</size>
+			</anchored>
+			<font>sheettextsmall</font>
+			<center />
+			<frame>
+				<name>modifier</name>
+				<offset>4,4,4,4</offset>
+			</frame>
+			<keyeditframe>
+				<name>sheetfocus</name>
+				<offset>4,4,4,4</offset>
+			</keyeditframe>
+			<script file="attackselector/scripts/attackwindows.lua" />
+		</stringfieldX>
+		<LinkedDropDown name="attackdropdown">
+			<target>attack</target>
+			<nodelink>attacknode</nodelink>
+			<position>0,3</position>
+			<script>				
+				function onInit()
+					super.onInit();
+					local node = window.getDatabaseNode().getParent();
+					if node.getChild("ctlink") then
+						window.ctnode.setValue(node.getChild("ctlink").getValue());
+						Debug.chat("Enabling CT button");
+						window.ctbutton.setEnabled(true);
+					else
+						Debug.chat("Disabling CT button");
+						window.ctbutton.setEnabled(false);
+					end
+					local flg = true;
+					if node.getChild("spells") then
+						for k, spl in pairs(node.getChild("spells").getChildren()) do
+							if spl.getChild("name") then
+								local name = spl.createChild("name").getValue();
+								local targetNode = spl.getNodeName();
+								add(targetNode, name);
+								flg = false;
+							end
+						end
+					end
+					if node.getChild("weapons") then
+						for k, wpn in pairs(node.getChild("weapons").getChildren()) do
+							if wpn.getChild("name") then
+								local name = wpn.createChild("name").getValue();
+								local targetNode = wpn.getNodeName();
+								add(targetNode, name);
+								flg = false;
+							end
+						end
+					end	
+					if flg then
+						window.attacklabel.setVisible(false);
+						window.attack.setVisible(false);
+						setVisible(false);
+					end
+				end
+			</script>
+		</LinkedDropDown>
+		<stringcontrolX>
+        <anchored>
+          <to>nameframe</to>
+          <position>insidetopleft</position>
+          <offset>290,34</offset>
+          <size>
+            <width>90</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <font>sheetlabelsmallbold</font>
+        <static>Mod Bonus.</static>
+      </stringcontrolX>
+	  <numberfieldX name="modbonus">
+	  <anchored>
+		  <to>nameframe</to>
+		  <position>insidetopleft</position>
+          <offset>375,30</offset>
+		  <size>
+						<width>40</width>
+						<height>17</height>
+			</size>
+        </anchored>
+		<font>sheettextsmall</font>
+				<center/>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+		<script>
+		  function onInit()
+				if super and super.onInit then
+							super.onInit();
+				end
+				setReadOnly(true);
+			end
+		</script>
+	  </numberfieldX>
+		<stringcontrolX>
+				<anchored>
+					<to>nameframe</to>
+					<position>insidetopleft</position>
+					<offset>175,58</offset>
+					<size>
+						<width>50</width>
+						<height>13</height>
+					</size>
+				</anchored>
+				<font>sheetlabelsmallbold</font>
+				<static>Table</static>
+			</stringcontrolX>
+		<tablefield name="table">
+				<anchored>
+					<to>nameframe</to>
+					<position>insidetopleft</position>
+					<offset>225,55</offset>
+					<size>
+						<width>135</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<allowDrag/>
+				<empty>(none)</empty>
+				<center />
+				<frame>
+					<name>modifier</name>
+					<offset>8,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>8,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						if window.getDatabaseNode() and window.getDatabaseNode().isStatic() then
+							setAllowDrop(false);
+						else
+							setAllowDrop(true);
+						end
+					end
+				</script>
+			</tablefield>
+			<stringcontrolX>
+        <anchored>
+          <to>nameframe</to>
+          <position>insidetopleft</position>
+          <offset>10,60</offset>
+          <size>
+            <width>90</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <font>sheetlabelsmallbold</font>
+        <static>Attack Size</static>
+      </stringcontrolX>
+      <multitext name="size">
+				<anchored>
+				  <to>nameframe</to>
+				  <position>insidetopleft</position>
+				  <offset>85,55</offset>
+				  <size>
+					<width>75</width>
+					<height>17</height>
+				  </size>
+				</anchored>
+				<font>sheettextsmall</font>
+			<center />
+			<frame>
+				<name>modifier</name>
+				<offset>4,4,4,4</offset>
+			</frame>
+			<keyeditframe>
+				<name>sheetfocus</name>
+				<offset>4,4,4,4</offset>
+			</keyeditframe>
+				<script>
+				  function onInit()
+					if super and super.onInit then
+					  super.onInit();
+					end
+					if getState() &lt; 1 then
+					  setState(1);
+					elseif getState() &gt; 5 then
+					  setState(1);
+					end
+				end				  
+				</script>
+				<statelabels>
+					<state>Tiny</state>
+					<state>Small</state>
+					<state>Medium</state>
+					<state>Large</state>
+					<state>Huge</state>
+				</statelabels>
+			</multitext>
+		<checkbox name="primary_weapon">
+        <anchored>
+				  <to>nameframe</to>
+				  <position>insidetopleft</position>
+				  <offset>375,60</offset>
+				  <size>
+					<width>15</width>
+					<height>15</height>
+				  </size>
+				</anchored>
+        <tooltip>
+          <text>Scaled?</text>
+        </tooltip>
+		<script>	
+		local sem = false;
+		
+		function onValueChanged()
+			if sem then
+              return;
+			else
+				sem = true;
+				if getState() then
+					window.secondary_weapon.setState(false);
+				end
+				window.attack.update();
+				sem = false;
+			end
+		end
+		</script>
+		</checkbox>
+		<stringcontrolX name="primary_weapon_label">
+        <anchored>
+          <to>nameframe</to>
+          <position>insidetopleft</position>
+          <offset>370,50</offset>
+          <size>
+            <width>90</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <font>sheetlabelsmallbold</font>
+        <static>Pri.</static>
+      </stringcontrolX>
+	  <stringcontrolX name="secondary_weapon_label">
+        <anchored>
+          <to>nameframe</to>
+          <position>insidetopleft</position>
+          <offset>392,50</offset>
+          <size>
+            <width>90</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <font>sheetlabelsmallbold</font>
+        <static>Sec.</static>
+      </stringcontrolX>
+		
+		<checkbox name="secondary_weapon">
+        <anchored>
+				  <to>nameframe</to>
+				  <position>insidetopleft</position>
+				  <offset>395,60</offset>
+				  <size>
+					<width>15</width>
+					<height>15</height>
+				  </size>
+				</anchored>
+        <tooltip>
+          <text>Scaled?</text>
+        </tooltip>
+		<script>	
+		local sem = false;
+		
+		function onValueChanged()
+			if sem then
+              return;
+			else
+				sem = true;
+				if getState() then
+					window.primary_weapon.setState(false);
+					window.attack.update();
+				end
+				sem = false;
+			end
+		end
+		</script>
+		</checkbox>
+	
+		<genericcontrol name="active_window">
+		<bounds>10,110,-15,-25</bounds>
+        <frame>
+          <name>sheetgroup</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+      </genericcontrol>
+		
+		<stringcontrolX>
+		<anchored>
+		<to>active_window</to>
+		<position>insidetopleft</position>
+          <offset>10,40</offset>
+          <size>
+            <width>100</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <font>sheetlabel</font>
+        <static>Associated Skill</static>
+	  </stringcontrolX>
+	  <stringfieldX name="associated_skill">
+	  <anchored>
+		<to>active_window</to>
+          <position>insidetopleft</position>
+          <offset>115,37</offset>
+				<size>
+					<width>150</width>
+					<height>17</height>
+				</size>
+			</anchored>
+			<font>sheettextsmall</font>
+			<center />
+			<frame>
+				<name>modifier</name>
+				<offset>4,4,4,4</offset>
+			</frame>
+			<keyeditframe>
+				<name>sheetfocus</name>
+				<offset>4,4,4,4</offset>
+			</keyeditframe>
+       <font>sheettextsmall</font>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+					end
+				</script>
+	  </stringfieldX>
+	  <stringcontrolX>
+		<anchored>
+		<to>active_window</to>
+		<position>insidetopleft</position>
+          <offset>275,20</offset>
+          <size>
+            <width>75</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <font>sheetlabel</font>
+        <static>Fumble</static>
+	  </stringcontrolX>
+	  <numberfieldX name="fumble">
+	  <anchored>
+		  <to>active_window</to>
+		  <position>insidetopleft</position>
+          <offset>350,17</offset>
+		  <size>
+						<width>40</width>
+						<height>17</height>
+			</size>
+        </anchored>
+		<font>sheettextsmall</font>
+				<center/>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+		<script>
+		  function onInit()
+				if super and super.onInit then
+							super.onInit();
+				end
+				setReadOnly(true);
+			end
+		</script>
+	  </numberfieldX>
+	  <stringcontrolX>
+		<anchored>
+		<to>active_window</to>
+		<position>insidetopleft</position>
+          <offset>275,40</offset>
+          <size>
+            <width>75</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <font>sheetlabel</font>
+        <static>Skill Bonus</static>
+	  </stringcontrolX>
+	  <numberfieldX name="skill_bonus">
+	  <anchored>
+		  <to>active_window</to>
+		  <position>insidetopleft</position>
+          <offset>350,37</offset>
+		  <size>
+						<width>40</width>
+						<height>17</height>
+			</size>
+        </anchored>
+		<font>sheettextsmall</font>
+				<center/>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+		<script>
+		  function onInit()
+				if super and super.onInit then
+							super.onInit();
+				end
+				setReadOnly(true);
+			end
+		</script>
+	  </numberfieldX>
+	  <stringcontrolX>
+		<anchored>
+		<to>active_window</to>
+		<position>insidetopleft</position>
+          <offset>275,60</offset>
+          <size>
+            <width>75</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <font>sheetlabel</font>
+        <static>Armour Pen</static>
+	  </stringcontrolX>
+	  <numberfieldX name="armour_penalty">
+	  <anchored>
+		  <to>active_window</to>
+		  <position>insidetopleft</position>
+          <offset>350,57</offset>
+		  <size>
+						<width>40</width>
+						<height>17</height>
+			</size>
+        </anchored>
+		<font>sheettextsmall</font>
+				<center/>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+		<script>
+		  function onInit()
+				if super and super.onInit then
+							super.onInit();
+				end
+				setReadOnly(true);
+				refresh();
+			end
+			
+			function refresh()
+				local node = getDatabaseNode().getParent().getParent();
+				local skillPen = 0;
+				local castPen = 0;
+				if node.getChild("harnessmanpenalty") then
+					skillPen = node.createChild("harnessmanpenalty").getValue();
+				end
+				if node.getChild("harnesscastpenalty") then
+					castPen = node.createChild("harnesscastpenalty").getValue();
+				end
+				if window.attackorspell.getValue() == 1 then
+					setValue(skillPen);
+				elseif window.attackorspell.getValue() == 0 then
+					setValue(castPen);
+				end
+			end
+				
+		</script>
+	  </numberfieldX>
+		<buttoncontrol name="ctbutton">
+	  <bounds>360,260,-35,-33</bounds>
+          <size>
+            <width>40</width>
+            <height>40</height>
+          </size>
+	    <frame>
+          <name>ctbt</name>
+        </frame>
+		<script>
+			function onButtonPress()
+			Debug.chat("Pressed");
+				local link = window.attacknode.getValue();
+				local targnode = nil;
+				local target = nil;
+				local ctNode = DB.findNode(window.ctnode.getValue());
+				if window.attackorspell.getValue() == 1 then
+					targnode = ctNode.getChild("attacks");
+				else
+					targnode = ctNode.getChild("spells");
+				end
+				for i, nd in pairs(targnode.getChildren()) do
+					local tmp, testlink = nd.getChild("open").getValue();
+					if link == testlink then
+						target = nd;
+					end
+				end
+				Debug.chat(window.attackorspell.getValue());
+				if window.attackorspell.getValue() == 1 then
+					target.createChild("ob","number").setValue(window.modbonus.getValue());
+					target.createChild("obbonus","number").setValue(window.ob_bonus.getValue());
+					local tableid, name = window.table.getValue();
+					target.createChild("attacktable.name","string").setValue(name);
+					target.createChild("attacktable.tableid","string").setValue(tableid);
+					target.createChild("size","number").setValue(window.size.getState());
+					target.createChild("dbbonus","number").setValue(window.db_bonus.getValue());
+					local class = window.weapon_class.getState();
+					local cat = 0;
+					if class &lt; 5 then
+						cat = 2;
+					elseif class &lt; 7 then
+						cat = 1;
+					elseif class &lt; 10 then
+						cat = 5;
+					elseif class &lt; 13 then
+						cat = 6;
+					elseif class == 13 then
+						cat = 4;
+					elseif class &lt; 18 then
+						cat = 3;
+					else
+						cat = 7;
+					end		
+					target.createChild("wpnclass","number").setValue(cat);
+					target.createChild("fumble","number").setValue(window.fumble.getValue());
+					target.createChild("combat_actions","string").setValue(window.combat_action.getValue());
+					if AttackManager.isRanged(window.weapon_class.getState()) then
+						target.createChild("pbrange","number").setValue(window.pb_range.getValue());
+						target.createChild("pbbonus","number").setValue(window.pb_bonus.getValue());
+						target.createChild("rnginc","number").setValue(window.range_inc.getValue());
+						target.createChild("reload_time","number").setValue(window.reload.getValue());
+					else
+						target.createChild("pbrange","number").setValue(0);
+						target.createChild("pbbonus","number").setValue(0);
+						target.createChild("rnginc","number").setValue(0);
+						target.createChild("reload","number").setValue(0);					
+					end
+				else
+					Debug.chat("Spell stuff");
+				end
+			end
+		</script>
+	  </buttoncontrol>
+	  
+		<!-- Melee Options -->
+		<stringcontrolX name="meleeLabel">
+		<anchored>
+          <to>active_window</to>
+          <position>insidetopleft</position>
+          <offset>10,14</offset>
+          <size>
+            <width>150</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <font>sheetlabel</font>
+        <static>Melee</static>
+		</stringcontrolX>
+		<stringcontrolX name="combat_action_label">
+			<anchored>
+				<to>active_window</to>
+				<position>insidetopleft</position>
+				<offset>10,80</offset>
+				<size>
+					<width>120</width>
+					<height>13</height>
+				</size>
+			</anchored>
+			<font>sheetlabel</font>
+			<static>Combat Maneuver</static>
+		</stringcontrolX>
+		<stringfieldX name="combat_action">
+			<anchored>
+				<to>active_window</to>
+				<position>insidetopleft</position>
+				<offset>125,77</offset>
+				<size>
+					<width>140</width>
+					<height>17</height>
+				</size>
+			</anchored>
+			<font>sheettextsmall</font>
+			<center />
+			<frame>
+				<name>modifier</name>
+				<offset>4,4,4,4</offset>
+			</frame>
+			<keyeditframe>
+				<name>sheetfocus</name>
+				<offset>4,4,4,4</offset>
+			</keyeditframe>
+			<script>
+				function onInit()
+				  if super and super.onInit then
+				    super.onInit();
+				  end
+				  onValueChanged();
+				end
+				
+				function reset()
+					window.attack.setMeleeWeapon()
+				end
+				
+				function onValueChanged()
+					local modbon = window.skill_bonus.getValue() + window.ob_bonus.getValue();
+					window.combat_error.setVisible(false);
+					window.charge_distance_label.setVisible(false);
+					window.charge_distance.setVisible(false);
+					window.charge_distance.setEnabled(false);
+					if getValue() == "Attack and Parry" then
+						reset();
+						window.modbonus.setValue(modbon);
+					end
+					if getValue() == "Blade Slap" then
+						if window.weapon_class.getState() &lt; 4 or window.weapon_class.getState() == 14 then
+							Debug.chat("Do something to incorporate blade slap");
+							window.table.setValue("HML-01","Crush");
+							window.modbonus.setValue(modbon-10);
+							local size = window.size.getState();
+							if size &gt; 1 then
+								window.size.setState(size -1);
+							end
+							window.combat_error.setVisible(false);
+						else
+							window.combat_error.setVisible(true);
+							window.combat_error.setValue("Blade slap can't be used with this weapon");
+						end
+					end
+					if getValue() == "Charge" then
+						reset();
+						window.charge_distance_label.setVisible(true);
+						window.charge_distance.setVisible(true);
+						window.charge_distance.setEnabled(true);
+						window.charge_distance.setValue(0);
+					end
+				end
+			</script>
+		</stringfieldX>
+		<DropDown name="combat_action_dropdown">
+			<target>combat_action</target>
+			<position>0,3</position>
+			<script>
+				function onInit()
+					super.onInit();
+					refresh();
+				end
+				
+				function refresh()
+				    add("Attack and Parry",0);
+					add("Blade Slap",1);
+					add("Charge", 2);
+				end
+			</script>
+		</DropDown>
+		<stringcontrolX name="combat_error">
+		<anchored>
+				<to>active_window</to>
+				<position>insidetopleft</position>
+				<offset>10,100</offset>
+				<size>
+					<width>400</width>
+					<height>17</height>
+				</size>
+			</anchored>
+			<font>sheetlabel</font>
+		</stringcontrolX>
+	  <stringcontrolX name="charge_distance_label">
+		<anchored>
+				<to>active_window</to>
+				<position>insidetopleft</position>
+				<offset>10,100</offset>
+				<size>
+					<width>100</width>
+					<height>17</height>
+				</size>
+			</anchored>
+			<font>sheetlabel</font>
+			<static>Charge Distance</static>
+		</stringcontrolX>
+		<numberfieldX name="charge_distance">
+	  <anchored>
+		  <to>active_window</to>
+		  <position>insidetopleft</position>
+          <offset>125,97</offset>
+		  <size>
+						<width>40</width>
+						<height>17</height>
+			</size>
+        </anchored>
+		<font>sheettextsmall</font>
+				<center/>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+		<script>
+		  function onInit()
+				if super and super.onInit then
+							super.onInit();
+				end
+			end
+		</script>
+	  </numberfieldX>
+		<!-- End of melee options -->
+		
+		<!-- Ranged Options -->
+		
+		<stringcontrolX name="rangedLabel">
+		<anchored>
+          <to>active_window</to>
+          <position>insidetopleft</position>
+          <offset>10,14</offset>
+          <size>
+            <width>150</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <font>sheetlabel</font>
+        <static>Ranged</static>
+		</stringcontrolX>
+		
+		<stringcontrolX name="pb_label">
+			<anchored>
+				<to>active_window</to>
+				<position>insidetopleft</position>
+				<offset>10,80</offset>
+				<size>
+					<width>120</width>
+					<height>13</height>
+				</size>
+			</anchored>
+			<font>sheetlabel</font>
+			<static>PB Rng</static>
+		</stringcontrolX>
+		<numberfieldX name="pb_range">
+	  <anchored>
+		  <to>active_window</to>
+		  <position>insidetopleft</position>
+          <offset>90,77</offset>
+		  <size>
+						<width>40</width>
+						<height>17</height>
+			</size>
+        </anchored>
+		<font>sheettextsmall</font>
+				<center/>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+		</numberfieldX>
+		<stringcontrolX name = "pb_bonus_label">
+		<anchored>
+		<to>active_window</to>
+		<position>insidetopleft</position>
+          <offset>150,80</offset>
+          <size>
+            <width>75</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <font>sheetlabel</font>
+        <static>PB Bonus</static>
+	  </stringcontrolX>
+	  <numberfieldX name="pb_bonus">
+	  <anchored>
+		  <to>active_window</to>
+		  <position>insidetopleft</position>
+          <offset>225,77</offset>
+		  <size>
+						<width>40</width>
+						<height>17</height>
+			</size>
+        </anchored>
+		<font>sheettextsmall</font>
+				<center/>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+		<script>
+		  function onInit()
+				if super and super.onInit then
+							super.onInit();
+				end
+				setReadOnly(true);
+			end			
+		</script>
+	  </numberfieldX>
+	  <stringcontrolX name="range_inc_label">
+			<anchored>
+				<to>active_window</to>
+				<position>insidetopleft</position>
+				<offset>10,100</offset>
+				<size>
+					<width>120</width>
+					<height>13</height>
+				</size>
+			</anchored>
+			<font>sheetlabel</font>
+			<static>Rngc. In</static>
+		</stringcontrolX>
+		<numberfieldX name="range_inc">
+	  <anchored>
+		  <to>active_window</to>
+		  <position>insidetopleft</position>
+          <offset>90,97</offset>
+		  <size>
+						<width>40</width>
+						<height>17</height>
+			</size>
+        </anchored>
+		<font>sheettextsmall</font>
+				<center/>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+		</numberfieldX>
+		<stringcontrolX name = "reload_label">
+		<anchored>
+		<to>active_window</to>
+		<position>insidetopleft</position>
+          <offset>150,100</offset>
+          <size>
+            <width>75</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <font>sheetlabel</font>
+        <static>Reload</static>
+	  </stringcontrolX>
+	  <numberfieldX name="reload">
+	  <anchored>
+		  <to>active_window</to>
+		  <position>insidetopleft</position>
+          <offset>225,97</offset>
+		  <size>
+						<width>40</width>
+						<height>17</height>
+			</size>
+        </anchored>
+		<font>sheettextsmall</font>
+				<center/>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+		<script>
+		  function onInit()
+				if super and super.onInit then
+							super.onInit();
+				end
+				setReadOnly(true);
+			end			
+		</script>
+	  </numberfieldX>
+		<!-- End of ranged options -->
+		
+		<!-- General weapon options -->
+		<stringcontrolX name="weapon_class_label">
+			<anchored>
+          <to>active_window</to>
+          <position>insidetopleft</position>
+          <offset>10,60</offset>
+          <size>
+            <width>150</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <font>sheetlabel</font>
+        <static>Weapon Class</static>
+		</stringcontrolX>
+		<multitext name="weapon_class">
+	  <anchored>
+		<to>active_window</to>
+          <position>insidetopleft</position>
+          <offset>115,57</offset>
+				<size>
+					<width>150</width>
+					<height>17</height>
+				</size>
+			</anchored>
+			<font>sheettextsmall</font>
+			<center />
+			<frame>
+				<name>modifier</name>
+				<offset>4,4,4,4</offset>
+			</frame>
+			<keyeditframe>
+				<name>sheetfocus</name>
+				<offset>4,4,4,4</offset>
+			</keyeditframe>
+       <font>sheettextsmall</font>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+					end
+				</script>
+				<statelabels>
+					<state>Axes</state>
+					<state>Long Blades</state>
+					<state>Short Blades</state>
+					<state>Thrusting Blades</state>
+					<state>Chains Plus</state>
+					<state>Clubs</state>
+					<state>Polearms Thrown</state>
+					<state>Thrown Blades</state>
+					<state>Thrown Projectiles</state>
+					<state>Bows</state>
+					<state>Crossbows</state>
+					<state>Slings</state>
+					<state>Polearms</state>
+					<state>Great Blades</state>
+					<state>Great Chains</state>
+					<state>Long Spikes</state>
+					<state>Staves</state>
+					<state>Pistols</state>
+					<state>Long Guns</state>
+				</statelabels>
+	  </multitext>
+	  <stringcontrolX name = "ob_label">
+		<anchored>
+		<to>active_window</to>
+		<position>insidetopleft</position>
+          <offset>275,80</offset>
+          <size>
+            <width>75</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <font>sheetlabel</font>
+        <static>Offense Bon</static>
+	  </stringcontrolX>
+	  <numberfieldX name="ob_bonus">
+	  <anchored>
+		  <to>active_window</to>
+		  <position>insidetopleft</position>
+          <offset>350,77</offset>
+		  <size>
+						<width>40</width>
+						<height>17</height>
+			</size>
+        </anchored>
+		<font>sheettextsmall</font>
+				<center/>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+		<script>
+		  function onInit()
+				if super and super.onInit then
+							super.onInit();
+				end
+				setReadOnly(true);
+			end			
+		</script>
+	  </numberfieldX>
+	  <stringcontrolX name = "db_label">
+		<anchored>
+		<to>active_window</to>
+		<position>insidetopleft</position>
+          <offset>275,100</offset>
+          <size>
+            <width>75</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <font>sheetlabel</font>
+        <static>Defence Bon</static>
+	  </stringcontrolX>
+	  <numberfieldX name="db_bonus">
+	  <anchored>
+		  <to>active_window</to>
+		  <position>insidetopleft</position>
+          <offset>350,97</offset>
+		  <size>
+						<width>40</width>
+						<height>17</height>
+			</size>
+        </anchored>
+		<font>sheettextsmall</font>
+				<center/>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+		<script>
+		  function onInit()
+				if super and super.onInit then
+							super.onInit();
+				end
+				setReadOnly(true);
+			end			
+		</script>
+	  </numberfieldX>
+		
+		<!-- Spell Options -->
+		<stringcontrolX name="spellLabel">
+		<anchored>
+          <to>active_window</to>
+          <position>insidetopleft</position>
+          <offset>10,14</offset>
+          <size>
+            <width>150</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <font>sheetlabel</font>
+        <static>Spell</static>
+	  </stringcontrolX>
+		<stringcontrolX name = "base_cost_label">
+		<anchored>
+		<to>active_window</to>
+		<position>insidetopleft</position>
+          <offset>10,60</offset>
+          <size>
+            <width>75</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <font>sheetlabel</font>
+        <static>Base Cost</static>
+	  </stringcontrolX>
+	  <numberfieldX name="base_cost">
+	  <anchored>
+		  <to>active_window</to>
+		  <position>insidetopleft</position>
+          <offset>90,57</offset>
+		  <size>
+						<width>40</width>
+						<height>17</height>
+			</size>
+        </anchored>
+		<font>sheettextsmall</font>
+				<center/>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+		<script>
+		  function onInit()
+				if super and super.onInit then
+							super.onInit();
+				end
+				setReadOnly(true);
+			end			
+		</script>
+	  </numberfieldX>
+	  <stringcontrolX name = "pp_add_label">
+		<anchored>
+		<to>active_window</to>
+		<position>insidetopleft</position>
+          <offset>150,60</offset>
+          <size>
+            <width>75</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <font>sheetlabel</font>
+        <static>PP Adder</static>
+	  </stringcontrolX>
+	  <numberfieldX name="pp_add">
+	  <anchored>
+		  <to>active_window</to>
+		  <position>insidetopleft</position>
+          <offset>225,57</offset>
+		  <size>
+						<width>40</width>
+						<height>17</height>
+			</size>
+        </anchored>
+		<font>sheettextsmall</font>
+				<center/>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+		<script>
+		  function onInit()
+				if super and super.onInit then
+							super.onInit();
+				end
+				setReadOnly(true);
+				local node = getDatabaseNode().getParent().getParent();
+				if node.getChild("powerpointadder") then
+					setValue(node.createChild("powerpointadder").getValue());
+				end
+			end			
+		</script>
+	  </numberfieldX>
+	  
+	  <stringcontrolX name="opts_name_label">
+        <anchored>
+          <to>active_window</to>
+          <position>insidetopleft</position>
+          <offset>10,80</offset>
+          <size>
+            <width>90</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <font>sheetlabelsmallbold</font>
+        <static>Scaling Options</static>
+		<script>
+  </script>
+      </stringcontrolX>
+	  <stringcontrolX name="opts_cost_label">
+        <anchored>
+          <to>active_window</to>
+          <position>insidetopleft</position>
+          <offset>172,80</offset>
+          <size>
+            <width>90</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <font>sheetlabelsmallbold</font>
+        <static>Cost</static>
+		<script>
+  </script>
+      </stringcontrolX>
+	  <stringcontrolX name="opts_times_label">
+        <anchored>
+          <to>active_window</to>
+          <position>insidetopleft</position>
+          <offset>220,80</offset>
+          <size>
+            <width>90</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <font>sheetlabelsmallbold</font>
+        <static>x.</static>
+		<script>
+  </script>
+      </stringcontrolX>
+	  <stringcontrolX name="opts_used_label">
+        <anchored>
+          <to>active_window</to>
+          <position>insidetopleft</position>
+          <offset>235,80</offset>
+          <size>
+            <width>90</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <font>sheetlabelsmallbold</font>
+        <static>Used?</static>
+		<script>
+  </script>
+      </stringcontrolX>
+	  
+	  <sortablelist name="scaleopts">
+        <anchored>
+          <top>
+            <parent>active_window</parent>
+            <anchor>top</anchor>
+            <offset>100</offset>
+          </top>
+          <bottom>
+            <parent>active_window</parent>
+            <anchor>bottom</anchor>
+            <offset>-24</offset>
+          </bottom>
+          <left>
+            <parent>active_window</parent>
+            <anchor>left</anchor>
+            <offset>15</offset>
+          </left>
+          <right>
+            <parent>active_window</parent>
+            <anchor>right</anchor>
+            <offset>300</offset>
+          </right>
+        </anchored>
+        <allowdelete />
+        <datasource>.spellopts</datasource>
+        <class>optswindow</class>
+        <defaultsort>
+          <fieldname>name</fieldname>
+        </defaultsort>
+        <sortfield>
+          <fieldname>name</fieldname>
+        </sortfield>
+        <script>
+		function addScaleOpt(source)
+			local newentry = createWindow();
+			local newnode = newentry.getDatabaseNode();
+			if source.getChild("name") then
+				newentry.name.setValue(source.createChild("name").getValue());
+				newentry.cost.setValue(source.createChild("cost").getValue());
+				newentry.ismult.setValue(source.createChild("ismultiple").getValue());
+				return newentry;
+			else
+				return nil;
+			end
+		end
+
+		function onInit()
+			resetMenuItems();
+			registerMenuItem("New Scaling Option","insert",5);
+			clear();
+			getDatabaseNode().onChildUpdate = update;
+			update();
+		end
+
+		function onMenuSelection(item)
+			if item and item==5 then
+				local win = createWindow();
+			end
+		end
+
+		function clear()
+			for k,win in pairs(getWindows()) do
+				win.getDatabaseNode().delete();
+			end
+		end
+		
+		function update()
+			local tot = 0;
+            for i,win in ipairs(getWindows()) do
+              tot = tot + win.extraPP.getValue();
+            end
+			local pen = tot+window.base_cost.getValue()+window.armour_penalty.getValue()-window.pp_add.getValue();
+			if pen &lt; 1 then
+				pen = 1;
+			end
+            window.total_cost.setValue(pen);
+			window.rec_time.setValue(Rules_Spells.calcRounds(pen));
+			if window.cast_time.getValue() &lt; 1 then
+				window.cast_time.setValue(1);
+			end
+		end
+</script>
+      </sortablelist>	  
+	  <scrollbar>
+			<anchored>
+				<to>scaleopts</to>
+				<position>right</position>
+				<offset>1,-4</offset>
+			</anchored>
+			<target>scaleopts</target>
+		</scrollbar>
+		
+		<stringcontrolX name="total_cost_label">
+		<anchored>
+		<to>active_window</to>
+		<position>insidetopleft</position>
+          <offset>275,80</offset>
+          <size>
+            <width>75</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <font>sheetlabel</font>
+        <static>Total Cost</static>
+	  </stringcontrolX>
+	  <numberfieldX name="total_cost">
+	  <anchored>
+		  <to>active_window</to>
+		  <position>insidetopleft</position>
+          <offset>350,77</offset>
+		  <size>
+						<width>40</width>
+						<height>17</height>
+			</size>
+        </anchored>
+		<font>sheettextsmall</font>
+				<center/>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+	  </numberfieldX>
+	  <stringcontrolX name="rec_time_label">
+		<anchored>
+		<to>active_window</to>
+		<position>insidetopleft</position>
+          <offset>275,100</offset>
+          <size>
+            <width>75</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <font>sheetlabel</font>
+        <static>Rec. Time</static>
+	  </stringcontrolX>
+	  <numberfieldX name="rec_time">
+	  <anchored>
+		  <to>active_window</to>
+		  <position>insidetopleft</position>
+          <offset>350,97</offset>
+		  <size>
+						<width>40</width>
+						<height>17</height>
+			</size>
+        </anchored>
+		<font>sheettextsmall</font>
+				<center/>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+				function onInit()
+				if super and super.onInit then
+							super.onInit();
+				end
+					setReadOnly(true);
+				end
+				</script>
+	  </numberfieldX>
+	  <stringcontrolX name="cast_time_label">
+		<anchored>
+		<to>active_window</to>
+		<position>insidetopleft</position>
+          <offset>275,120</offset>
+          <size>
+            <width>75</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <font>sheetlabel</font>
+        <static>Cast Time</static>
+	  </stringcontrolX>
+	  <numberfieldX name="cast_time">
+	  <anchored>
+		  <to>active_window</to>
+		  <position>insidetopleft</position>
+          <offset>350,117</offset>
+		  <size>
+						<width>40</width>
+						<height>17</height>
+			</size>
+        </anchored>
+		<font>sheettextsmall</font>
+				<center/>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+	  </numberfieldX>
+	  <buttoncontrol name="cast_button">
+	  <bounds>300,260,-95,-33</bounds>
+          <size>
+            <width>40</width>
+            <height>40</height>
+          </size>
+	    <frame>
+          <name>castbt</name>
+        </frame>
+		<script>
+		function onButtonPress()
+			local node = window.getDatabaseNode();
+			local nodePath = DB.getPath(node);
+			local rollType = Rules_Constants.SkillType.Attack;
+			if window.class == 1 then
+			  rollType = Rules_Constants.SkillType.Spell;
+			end
+			local customData = Rules_CustomData.BaseSpellCastingRoll(nodePath, node.getChild("table").createChild("tableid").getValue(),node.getChild("size").getValue(),rollType);
+			ChatManager.throwDice("dice",{"d100","d10"},0,"",customData);
+		end
+		</script>
+	  </buttoncontrol>
+		<!-- End of spell options -->
+	</sheetdata>
+</windowclass>
+
+
+<windowclass name="optswindow">
+      <sizelimits>
+      <maximum>
+        <height>18</height>
+      </maximum>
+      <minimum>
+        <height>18</height>
+      </minimum>
+    </sizelimits>
+	<script>
+	  function onInit()
+		if super and super.onInit then
+		  super.onInit();
+		end
+	  end
+	  
+      function testDelete()
+        local win = windowlist.getPrevWindow(self);
+        if name.getValue()~="" then
+          return;
+        end
+        if #(windowlist.getWindows())==1 then
+          return;
+        end
+        if not win then
+          win = windowlist.getNextWindow(self);
+        end
+        win.name.setFocus();
+        getDatabaseNode().delete();
+      end
+      
+      function testNew()
+        local win = windowlist.getNextWindow(self);
+        if name.getValue()=="" then
+          return;
+        end
+        if not win then
+          win = windowlist.createWindow();
+        end
+        win.name.setFocus();
+      end
+    </script>
+	<sheetdata>
+	<stringfieldX name="table">
+        <bounds>0,0,0,0</bounds>
+        <invisible/>
+      </stringfieldX>
+	  <numberfieldX name="ismult">
+	  <bounds>0,0,0,0</bounds>
+        <invisible/>
+		<script>
+		function onValueChanged()
+		  window.times.refresh();
+		end
+		</script>
+	</numberfieldX>
+	<numberfieldX name="extraPP">
+	  <bounds>0,0,0,0</bounds>
+        <invisible/>
+	</numberfieldX>
+	  <textlistitemvalue name="name">
+        <bounds>5,0,140,17</bounds>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+        <font>sheettextsmall</font>
+        <script>
+		  function onInit()
+		    setEnabled(false);
+		  end
+		  
+          function onDeleteDown()
+            window.testDelete();
+          end
+          
+          function onDeleteUp()
+            window.testDelete();
+          end
+          
+          function onEnter()
+            window.testNew();
+          end
+        </script>
+      </textlistitemvalue>
+	  <numberfieldX name="cost">
+        <bounds>155,4,30,13</bounds>
+        <font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+        <script>
+          function onInit()
+            if super and super.onInit then
+              super.onInit();
+            end
+			setEnabled(false);
+          end
+        </script>
+      </numberfieldX>
+	  <numberfieldX name="times">
+        <bounds>190,4,30,13</bounds>
+        <font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+        <script>
+          function onInit()
+            if super and super.onInit then
+              super.onInit();
+            end
+			setValue(1);
+			refresh();
+          end
+		  
+		  function refresh()
+		  if window.ismult.getValue() == 1 then
+			  setEnabled(true);
+			  setVisible(true);
+			else
+			  setEnabled(false);
+			  setVisible(false);
+			end
+		end
+		 
+		  function onValueChanged()
+		    window.isused.onValueChanged();
+		  end
+        </script>
+      </numberfieldX>
+	  <checkbox name="isused">
+        <bounds>225,4,12,12</bounds>
+        <tooltip>
+          <text>Scaled?</text>
+        </tooltip>
+		<script>
+		function onValueChanged()
+			if getState() then
+				local ppcost = window.cost.getValue();
+				local mult = window.times.getValue();
+				if window.ismult.getValue() == 1 then
+					if mult &lt; 1 then
+						mult = 1;
+					end
+				else
+					mult = 1;
+				end
+				window.extraPP.setValue(mult*ppcost);
+			else
+				window.extraPP.setValue(0);
+			end
+		end
+		</script>
+		</checkbox>
+    </sheetdata>
+  </windowclass>
+</root>

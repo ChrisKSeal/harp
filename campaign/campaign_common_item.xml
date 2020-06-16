@@ -1,0 +1,1052 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<root version="2.0">
+	<windowclass name="item_main">
+		<sheetdata>
+			<stringcontrolX name="general_label">
+				<anchored>
+					<left>
+						<anchor>left</anchor>
+						<offset>7</offset>
+					</left>
+					<right>
+						<anchor>right</anchor>
+						<offset>-7</offset>
+					</right>
+					<top>
+						<anchor>top</anchor>
+						<offset>39</offset>
+					</top>
+				</anchored>
+				<font>sheetlabelsmallbold</font>
+				<static>General Stats</static>
+			</stringcontrolX>
+			<stringcontrolX>
+				<anchored>
+					<left>
+						<anchor>left</anchor>
+						<offset>7</offset>
+					</left>
+					<top>
+						<anchor>top</anchor>
+						<offset>12</offset>
+					</top>
+					<size>
+						<width>40</width>
+					</size>
+				</anchored>
+				<font>sheetlabelsmallbold</font>
+				<static>Type:</static>
+			</stringcontrolX>
+			<multitext name="item_type">
+				<anchored>
+					<left>
+						<anchor>left</anchor>
+						<offset>57</offset>
+					</left>
+					<top>
+						<anchor>top</anchor>
+						<offset>8</offset>
+					</top>
+					<size>
+						<width>120</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<statelabels>
+					<state>Weapon</state>
+					<state>Defence</state>
+					<state>Consumable</state>
+					<state>General</state>
+				</statelabels>
+				<script>
+					function onInit()
+						if super and super.onInit() then
+							super.onInit()
+						end
+						setEnabled(false);
+					end
+				</script>
+			</multitext>
+			<numberfieldX name="item_weight">
+				<anchored>
+					<left>
+						<anchor>left</anchor>
+						<offset>90</offset>
+					</left>
+					<top>
+						<parent>item_type</parent>
+						<anchor>bottom</anchor>
+						<offset>12</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						setVisible(true);
+						setEnabled(true);
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>item_weight</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<static>Weight</static>
+			</stringcontrolX>
+			<numberfieldX name="item_length">
+				<anchored>
+					<left>
+						<parent>item_weight</parent>
+						<anchor>right</anchor>
+						<offset>15</offset>
+					</left>
+					<top>
+						<parent>item_weight</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						setVisible(true);
+						setEnabled(true);
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>item_length</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<static>Length</static>
+			</stringcontrolX>
+			<numberfieldX name="item_apparent_value">
+				<anchored>
+					<left>
+						<parent>item_length</parent>
+						<anchor>right</anchor>
+						<offset>15</offset>
+					</left>
+					<top>
+						<parent>item_weight</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						setVisible(true);
+						setEnabled(true);
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>item_apparent_value</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<static>App. Val.</static>
+			</stringcontrolX>
+
+			<stringfieldX name="nonidentified">
+				<anchored>
+					<left>
+						<anchor>left</anchor>
+						<offset>7</offset>
+					</left>
+					<right>
+						<anchor>right</anchor>
+						<offset>-7</offset>
+					</right>
+					<top>
+						<parent>item_weight</parent>
+						<anchor>bottom</anchor>
+						<offset>25</offset>
+					</top>
+				</anchored>
+				<frame>
+					<name>modifier</name>
+					<offset>7,5,7,5</offset>
+				</frame>
+				<font>sheettextsmall</font>
+				<multilinespacing>15</multilinespacing>
+			</stringfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>nonidentified</to>
+					<position>aboveleft</position>
+					<offset>0,1</offset>
+				</anchored>
+				<font>sheetlabelsmall</font>
+				<static>At a glance</static>
+			</stringcontrolX>
+
+		  <!-- Identified -->  
+			<stringfieldX name="identified">
+				<anchored>
+					<left>
+						<anchor>left</anchor>
+						<offset>7</offset>
+					</left>
+					<right>
+						<anchor>right</anchor>
+						<offset>-7</offset>
+					</right>
+					<top>
+						<parent>nonidentified</parent>
+						<anchor>bottom</anchor>
+						<offset>19</offset>
+					</top>
+				</anchored>
+				<frame>
+					<name>modifier</name>
+					<offset>7,5,7,5</offset>
+				</frame>
+				<font>sheettextsmall</font>
+				<multilinespacing>15</multilinespacing>
+			</stringfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>identified</to>
+					<position>aboveleft</position>
+					<offset>0,1</offset>
+				</anchored>
+				<font>sheetlabelsmall</font>
+				<static>When identified</static>
+			</stringcontrolX>
+			<checkbox name="isidentified">
+				<anchored>
+					<to>identified</to>
+					<position>aboveright</position>
+					<offset>0,1</offset>
+					<size>
+						<width>12</width>
+						<height>12</height>
+					</size>
+				</anchored>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+					end
+						
+					function onValueChanged()
+						window.parentcontrol.window.tabs.setVisible(getState());
+					end
+				</script>
+			</checkbox>
+			
+			<stringcontrolX name="value_label">
+				<anchored>
+					<left>
+						<anchor>left</anchor>
+						<offset>7</offset>
+					</left>
+					<top>
+						<parent>identified</parent>
+						<anchor>bottom</anchor>
+						<offset>19</offset>
+					</top>
+					<size>
+						<width>90</width>
+						<height>13</height>
+					</size>
+				</anchored>
+				<font>sheetlabelsmallbold</font>
+				<static>True Value</static>
+			</stringcontrolX>
+			<numberfieldX name="true_value">
+				<anchored>
+					<left>
+						<parent>value_label</parent>
+						<anchor>right</anchor>
+						<offset>20</offset>
+					</left>
+					<top>
+						<parent>identified</parent>
+						<anchor>bottom</anchor>
+						<offset>19</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+		  			function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+					end
+				</script>
+			</numberfieldX>
+		  
+			<stringcontrolX name="magic_label">
+				<anchored>
+					<left>
+						<anchor>left</anchor>
+						<offset>7</offset>
+					</left>
+					<top>
+						<parent>value_label</parent>
+						<anchor>bottom</anchor>
+						<offset>19</offset>
+					</top>
+					<size>
+						<width>90</width>
+						<height>13</height>
+					</size>
+				</anchored>
+				<font>sheetlabelsmallbold</font>
+				<static>Magic/Quality</static>
+			</stringcontrolX>
+			
+			<stringcontrolX name="intelligent_label">
+				<anchored>
+					<left>
+						<parent>magic_label</parent>
+						<anchor>right</anchor>
+						<offset>50</offset>
+					</left>
+					<top>
+						<parent>value_label</parent>
+						<anchor>bottom</anchor>
+						<offset>19</offset>
+					</top>
+					<size>
+						<width>90</width>
+						<height>13</height>
+					</size>
+				</anchored>
+				<font>sheetlabelsmall</font>
+				<static>Intelligent Item?</static>
+			</stringcontrolX>
+			<checkbox name="isintelligent">
+				<anchored>
+					<left>
+						<parent>intelligent_label</parent>
+						<anchor>right</anchor>
+						<offset>5</offset>
+					</left>
+					<top>
+						<parent>value_label</parent>
+						<anchor>bottom</anchor>
+						<offset>19</offset>
+					</top>
+					<size>
+						<width>12</width>
+						<height>12</height>
+					</size>
+				</anchored>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						update();
+					end
+					
+					function onValueChanged()
+						update();
+					end
+				
+					function update()
+						window.int_label.setVisible(getState());
+						window.int_insight.setVisible(getState());
+						window.int_insight_label.setVisible(getState());
+						window.int_presence.setVisible(getState());
+						window.int_presence_label.setVisible(getState());
+						window.int_reasoning.setVisible(getState());
+						window.int_reasoning_label.setVisible(getState());
+						window.int_selfdiscipline.setVisible(getState());
+						window.int_selfdiscipline_label.setVisible(getState());
+						window.int_willpower.setVisible(getState());
+						window.int_willpower_label.setVisible(getState());
+						window.int_personality.setVisible(getState());
+						window.int_personality_label.setVisible(getState());
+					end
+				</script>
+			</checkbox>
+			
+			<numberfieldX name="ob_bonus">
+				<anchored>
+					<left>
+						<anchor>left</anchor>
+						<offset>20</offset>
+					</left>
+					<top>
+						<parent>magic_label</parent>
+						<anchor>bottom</anchor>
+						<offset>19</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+		  			function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>ob_bonus</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<static>Att. Bon.</static>
+			</stringcontrolX>
+			
+			<numberfieldX name="db_bonus">
+				<anchored>
+					<left>
+						<parent>ob_bonus</parent>
+						<anchor>right</anchor>
+						<offset>15</offset>
+					</left>
+					<top>
+						<parent>ob_bonus</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+		  			function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>db_bonus</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<static>Def. Bon.</static>
+			</stringcontrolX>
+			
+			<!-- Magic Info -->
+			<numberfieldX name="spell_adder">
+				<anchored>
+					<left>
+						<parent>db_bonus</parent>
+						<anchor>right</anchor>
+						<offset>15</offset>
+					</left>
+					<top>
+						<parent>ob_bonus</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<gmonly/>
+				<script>
+		  			function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>spell_adder</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<static>Spl Add</static>
+			</stringcontrolX>
+			
+			<numberfieldX name="pp_adder">
+				<anchored>
+					<left>
+						<parent>spell_adder</parent>
+						<anchor>right</anchor>
+						<offset>15</offset>
+					</left>
+					<top>
+						<parent>ob_bonus</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>pp_adder</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<static>PP Add</static>
+			</stringcontrolX>
+			<stringcontrolX name="skill_label">
+				<anchored>
+					<left>
+						<anchor>left</anchor>
+						<offset>7</offset>
+					</left>
+					<top>
+						<parent>ob_bonus</parent>
+						<anchor>bottom</anchor>
+						<offset>19</offset>
+					</top>
+					<size>
+						<width>90</width>
+						<height>13</height>
+					</size>
+				</anchored>
+				<font>sheetlabelsmallbold</font>
+				<static>Skill Bonuses</static>
+			</stringcontrolX>
+
+		  <!-- Spacer -->
+		  
+		 
+			<genericcontrol>
+				<anchored>
+					<to>identified</to>
+					<position>below</position>
+					<size>
+						<height>15</height>
+					</size>
+				</anchored>
+			</genericcontrol>
+			
+			<sortablelist name="skillbonus">
+				<anchored>
+					<left>
+						<anchor>left</anchor>
+						<offset>7</offset>
+					</left>
+					<right>
+						<anchor>right</anchor>
+						<offset>-20</offset>
+					</right>
+					<top>
+						<parent>skill_label</parent>
+						<anchor>bottom</anchor>
+						<offset>7</offset>
+					</top>
+					<bottom>
+						<parent>skill_label</parent>
+						<anchor>bottom</anchor>
+						<offset>95</offset>
+					</bottom>
+				</anchored>
+				<datasource>.skillbonuses</datasource>
+				<class>item_skill_bonus_listitem</class>
+				<script file="campaign/scripts/campaign_items_skill_bonuslist.lua" />
+			</sortablelist>
+			<scrollbar>
+				<anchored>
+					<to>skillbonus</to>
+					<position>right</position>
+					<offset>1,-4</offset>
+				</anchored>
+			<target>skillbonus</target>
+			</scrollbar>
+			
+			<!-- intelligence -->
+			<stringcontrolX name="int_label">
+				<anchored>
+					<left>
+						<anchor>left</anchor>
+						<offset>7</offset>
+					</left>
+					<top>
+						<parent>skillbonus</parent>
+						<anchor>bottom</anchor>
+						<offset>19</offset>
+					</top>
+					<size>
+						<width>90</width>
+						<height>13</height>
+					</size>
+				</anchored>
+				<font>sheetlabelsmallbold</font>
+				<static>Intelligence</static>
+			</stringcontrolX>
+			<numberfieldX name="int_insight">
+				<anchored>
+					<left>
+						<anchor>left</anchor>
+						<offset>7</offset>
+					</left>
+					<top>
+						<parent>int_label</parent>
+						<anchor>bottom</anchor>
+						<offset>19</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+		  			function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX name="int_insight_label">
+				<anchored>
+					<to>int_insight</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<static>Ins.</static>
+			</stringcontrolX>
+			
+			<numberfieldX name="int_presence">
+				<anchored>
+					<left>
+						<parent>int_insight</parent>
+						<anchor>right</anchor>
+						<offset>10</offset>
+					</left>
+					<top>
+						<parent>int_insight</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+		  			function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+					end
+					
+					function onValueChanged()
+						window.int_willpower.refresh()
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX name="int_presence_label">
+				<anchored>
+					<to>int_presence</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<static>Pres.</static>
+			</stringcontrolX>
+			
+			<numberfieldX name="int_reasoning">
+				<anchored>
+					<left>
+						<parent>int_presence</parent>
+						<anchor>right</anchor>
+						<offset>10</offset>
+					</left>
+					<top>
+						<parent>int_insight</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+		  			function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX name="int_reasoning_label">
+				<anchored>
+					<to>int_reasoning</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<static>Reason.</static>
+			</stringcontrolX>
+			
+			<numberfieldX name="int_selfdiscipline">
+				<anchored>
+					<left>
+						<parent>int_reasoning</parent>
+						<anchor>right</anchor>
+						<offset>10</offset>
+					</left>
+					<top>
+						<parent>int_insight</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+		  			function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+					end
+					
+					function onValueChanged()
+						window.int_willpower.refresh()
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX name="int_selfdiscipline_label">
+				<anchored>
+					<to>int_selfdiscipline</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<static>Self Disc.</static>
+			</stringcontrolX>
+			
+			<numberfieldX name="int_willpower">
+				<anchored>
+					<left>
+						<parent>int_selfdiscipline</parent>
+						<anchor>right</anchor>
+						<offset>10</offset>
+					</left>
+					<top>
+						<parent>int_insight</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+		  			function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						refresh();
+					end
+					
+					function refresh()
+						local sdbonus = Rules_Stats.Bonus(window.int_selfdiscipline.getValue());
+						local prbonus = Rules_Stats.Bonus(window.int_presence.getValue());
+						setValue(2*sdbonus + prbonus);
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX name="int_willpower_label">
+				<anchored>
+					<to>int_willpower</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<static>Will.</static>
+			</stringcontrolX>
+			<stringcontrolX name="int_personality_label">
+				<anchored>
+					<left>
+						<anchor>left</anchor>
+						<offset>7</offset>
+					</left>
+					<top>
+						<parent>int_insight</parent>
+						<anchor>bottom</anchor>
+						<offset>19</offset>
+					</top>
+					<size>
+						<width>200</width>
+						<height>13</height>
+					</size>
+				</anchored>
+				<font>sheetlabelsmallbold</font>
+				<static>Personality &amp; Purpose</static>
+			</stringcontrolX>
+			<stringfieldX name="int_personality">
+				<anchored>
+					<left>
+						<anchor>left</anchor>
+						<offset>7</offset>
+					</left>
+					<right>
+						<anchor>right</anchor>
+						<offset>-7</offset>
+					</right>
+					<top>
+						<parent>int_personality_label</parent>
+						<anchor>bottom</anchor>
+						<offset>7</offset>
+					</top>
+				</anchored>
+				<frame>
+					<name>modifier</name>
+					<offset>7,5,7,5</offset>
+				</frame>
+				<font>sheettextsmall</font>
+				<multilinespacing>15</multilinespacing>
+			</stringfieldX>
+		</sheetdata>
+	</windowclass>
+		
+	<windowclass name="item_skill_bonus_listitem">
+		<script file="campaign/scripts/campaign_items_skill_bonusitem.lua" />
+		<sheetdata>
+			<stringfieldX name="name">
+				<bounds>15,0,156,17</bounds>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>textline</name>
+					<offset>0,1,0,0</offset>
+				</frame>
+				<keyeditframe>
+					<name>shadeline</name>
+					<offset>0,1,0,0</offset>
+				</keyeditframe>
+			</stringfieldX>
+			<DropDown name="namedropdown">
+				<target>name</target>
+				<position>0,3</position>
+				<script>				
+					function onInit()
+						super.onInit();
+						addItems(Rules_Items.buildSkillList());
+					end
+				</script>
+			</DropDown>
+			<numberfieldX name="skill_bonus">
+				<anchored>
+					<left>
+						<parent>name</parent>
+						<anchor>right</anchor>
+						<offset>15</offset>
+					</left>
+					<top>
+						<parent>name</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+					end
+				</script>
+			</numberfieldX>
+		</sheetdata>
+	</windowclass>
+	
+
+</root>

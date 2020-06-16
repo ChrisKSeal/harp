@@ -1,0 +1,2395 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- 
+  Please see the license.html file included with this distribution for 
+  attribution and copyright information.
+-->
+
+<root>
+		<windowclass name="npc">
+		<frame>charsheet</frame>
+		<nodelete/>
+		<sharable />
+		<placement>
+			<size>
+				<width>320</width>
+				<height>450</height>
+			</size>
+		</placement>
+		<sizelimits>
+			<minimum>
+				<width>320</width>
+					<height>450</height>
+			</minimum>
+			<dynamic />
+		</sizelimits>
+		<minimize>minimized_npc</minimize>
+		<tooltip>
+			<field>name</field>
+		</tooltip>
+		<sheetdata>
+			<!-- NAME -->
+			<genericcontrol name="nameframe">
+				<bounds>38,20,-35,35</bounds>
+				<frame>
+					<name>sheetgroup</name>
+				</frame>
+			</genericcontrol>
+			<windowopencontrol>
+				<anchored>
+					<to>nameframe</to>
+					<position>insidetopleft</position>
+					<offset>13,8</offset>
+					<size>
+						<width>20</width>
+						<height>20</height>
+					</size>
+				</anchored>
+				<icon>
+					<normal>button_openwindow</normal>
+					<pressed>button_emptytarget</pressed>
+				</icon>
+				<class>npc</class>
+				<description>
+					<field>name</field>
+				</description>
+			</windowopencontrol>
+			<stringfieldX name="name">
+				<anchored>
+					<top>
+						<parent>nameframe</parent>
+						<anchor>top</anchor>
+						<offset>9</offset>
+					</top>
+					<left>
+						<parent>nameframe</parent>
+						<anchor>left</anchor>
+						<offset>35</offset>
+					</left>
+					<right>
+						<parent>nameframe</parent>
+						<anchor>right</anchor>
+						<offset>-15</offset>
+					</right>
+				</anchored>
+				<empty>&#171; New Personality &#187;</empty>
+				<font>sheettext</font>
+			</stringfieldX>
+			<tokenfield name="token">
+				<bounds>13,25,25,25</bounds>
+				<empty>indicator_emptytoken</empty>
+			</tokenfield>
+			<buttoncontrol>
+				<bounds>-36,27,23,22</bounds>
+				<icon>
+					<normal>button_identityactivate</normal>
+					<pressed>button_identityactivate_down</pressed>
+				</icon>
+				<script>
+					function onButtonPress()
+						GmIdentityManager.addIdentity(window.name.getValue());
+					end
+				</script>
+			</buttoncontrol>
+
+			<genericcontrol name="tabcontentframe">
+				<bounds>10,54,-25,-15</bounds>
+				<frame>
+					<name>sheetgroup</name>
+					<offset>0,1,0,0</offset>
+				</frame>
+			</genericcontrol>
+
+			<!-- SUBWINDOWS -->
+			<subwindow name="winmain">
+				<anchored>
+					<to>tabcontentframe</to>
+					<position>over</position>
+					<offset>-15,-7</offset>
+				</anchored>
+				<class>npc_main</class>
+			</subwindow>
+			<subwindow name="windescription">
+				<anchored>
+					<to>tabcontentframe</to>
+					<position>over</position>
+					<offset>-15,-7</offset>
+				</anchored>
+				<class>npc_combat</class>
+			</subwindow>
+			<subwindow name="winarchetype">
+				<anchored>
+					<to>tabcontentframe</to>
+					<position>over</position>
+					<offset>-15,-7</offset>
+				</anchored>
+				<class>npc_archetype</class>
+			</subwindow>
+			<subwindow name="winskills">
+				<anchored>
+					<to>tabcontentframe</to>
+					<position>over</position>
+					<offset>-15,-7</offset>
+				</anchored>
+				<class>npc_skills</class>
+			</subwindow>
+			<subwindow name="wincreature">
+				<anchored>
+					<to>tabcontentframe</to>
+					<position>over</position>
+					<offset>-15,-7</offset>
+				</anchored>
+				<class>npc_notes</class>
+			</subwindow>
+
+			<!-- Scrollers for each tab</tab> -->
+			<scrollbar name="sclmain">
+				<anchored>
+					<to>winmain</to>
+					<position>right</position>
+					<offset>1,-4</offset>
+				</anchored>
+				<target>winmain</target>
+			</scrollbar>
+			<scrollbar name="sclarchetype">
+				<anchored>
+					<to>winarchetype</to>
+					<position>right</position>
+					<offset>1,-4</offset>
+				</anchored>
+				<target>winarchetype</target>
+			</scrollbar>
+			<scrollbar name="scldescription">
+				<anchored>
+					<to>windescription</to>
+					<position>right</position>
+					<offset>1,-4</offset>
+				</anchored>
+				<target>windescription</target>
+			</scrollbar>
+			<scrollbar name="sclskills">
+				<anchored>
+					<to>winskills</to>
+					<position>right</position>
+					<offset>1,-4</offset>
+				</anchored>
+				<target>winskills</target>
+			</scrollbar>
+			<scrollbar name="sclcreature">
+				<anchored>
+					<to>wincreature</to>
+					<position>right</position>
+					<offset>1,-4</offset>
+				</anchored>
+				<target>wincreature</target>
+			</scrollbar>
+
+			<tabcontrol name="tabs">
+				<!--<bounds>-22,50,18,223(290)</bounds>-->
+				<bounds>-22,50,18,357</bounds>
+				<tab>
+					<icon>tab_main</icon>
+					<subwindow>winmain</subwindow>
+					<scroller>sclmain</scroller>
+				</tab>
+				<tab>
+					<icon>tab_combat</icon>
+					<subwindow>winarchetype</subwindow>
+					<scroller>sclarchetype</scroller>
+				</tab>
+				<tab>
+					<icon>tab_spells</icon>
+					<subwindow>winskills</subwindow>
+					<scroller>sclskills</scroller>
+				</tab>
+				<tab>
+					<icon>tab_skills</icon>
+					<subwindow>windescription</subwindow>
+					<scroller>scldescription</scroller>
+				</tab>
+				<tab>
+					<icon>tab_notes</icon>
+					<subwindow>wincreature</subwindow>
+					<scroller>sclcreature</scroller>
+				</tab>
+				<activate>1</activate>
+			</tabcontrol>
+			<close_adventure />
+		</sheetdata>
+	</windowclass>
+	
+	<!-- Window Classes -->
+	<windowclass name="npc_main">
+		<sheetdata>
+		  
+			<!-- Glance -->
+			<npc_strfield name="glance">
+				<anchored>
+					<position>insidetopleft</position>
+					<offset>70,5</offset>
+					<size>
+						<width>270</width>
+					</size>
+				</anchored>
+				<tabtarget next="level" prev="aq" />
+			</npc_strfield>
+			<npc_label name="lblglance">
+				<anchored>
+					<to>glance</to>
+					<size>
+						<width>65</width>
+					</size>
+				</anchored>
+				<static>First Glance</static>
+			</npc_label>
+			
+			<npc_multitext name="size">
+				<center/>
+				<anchored>
+					<left>
+						<anchor>left</anchor>
+						<offset>40</offset>
+					</left>
+					<top>
+						<parent>glance</parent>
+						<anchor>bottom</anchor>
+						<offset>15</offset>
+					</top>
+					<size>
+						<width>50</width>
+					</size>
+				</anchored>
+				<statelabels>
+					<state>Tiny</state>
+					<state>Small</state>
+					<state>Medium</state>
+					<state>Big</state>
+					<state>Large</state>
+					<state>Huge</state>
+				</statelabels>
+				<tooltip><text>Size</text></tooltip>
+				<script>
+					function onInit()
+						if super and super.onInit then
+						  super.onInit();
+						end
+						if getState() &lt; 1 or getState() &gt; 13 then 
+							setState(5); 
+						end
+					end
+					
+				</script>
+			</npc_multitext>
+			<npc_label name="size_label">
+				<anchored>
+					<to>size</to>
+					<size>
+						<width>35</width>
+					</size>
+				</anchored>
+				<static>Size:</static>
+			</npc_label>
+			
+			<npc_multitext name="crit_size">
+				<center/>
+				<anchored>
+					<left>
+						<parent>size</parent>
+						<anchor>right</anchor>
+						<offset>65</offset>
+					</left>
+					<top>
+						<parent>glance</parent>
+						<anchor>bottom</anchor>
+						<offset>15</offset>
+					</top>
+					<size>
+						<width>50</width>
+					</size>
+				</anchored>
+				<statelabels>
+					<state>Tiny</state>
+					<state>Small</state>
+					<state>Medium</state>
+					<state>Big</state>
+					<state>Large</state>
+					<state>Huge</state>
+				</statelabels>
+				<tooltip><text>Critical size</text></tooltip>
+				<script>
+					function onInit()
+						if super and super.onInit then
+						  super.onInit();
+						end
+						if getState() &lt; 1 or getState() &gt; 13 then 
+							setState(5); 
+						end
+					end
+					
+				</script>
+			</npc_multitext>
+			<npc_label name="crit_size_label">
+				<anchored>
+					<to>crit_size</to>
+					<size>
+						<width>55</width>
+					</size>
+				</anchored>
+				<static>Crit Mod:</static>
+			</npc_label>
+			<npc_numfield name='lvl'>
+				<center/>
+				<anchored>
+					<left>
+						<parent>crit_size</parent>
+						<anchor>right</anchor>
+						<offset>5</offset>
+					</left>
+					<top>
+						<parent>glance</parent>
+						<anchor>bottom</anchor>
+						<offset>15</offset>
+					</top>
+					<size>
+						<width>40</width>
+					</size>
+				</anchored>
+			</npc_numfield>
+			<npc_labeltop>
+				<anchored>
+					<to>lvl</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<static>Level</static>
+			</npc_labeltop>
+			
+			<npc_strfield name="bmr">
+				<anchored>
+					<left>
+						<anchor>left</anchor>
+						<offset>40</offset>
+					</left>
+					<top>
+						<parent>size</parent>
+						<anchor>bottom</anchor>
+						<offset>15</offset>
+					</top>
+					<size>
+						<width>50</width>
+					</size>
+				</anchored>
+			</npc_strfield>
+			<npc_label>
+				<anchored>
+					<to>bmr</to>
+					<size>
+						<width>35</width>
+					</size>
+				</anchored>
+				<static>BMR:</static>
+			</npc_label>
+			<npc_strfield name="bmr_type">
+				<anchored>
+					<left>
+						<parent>bmr</parent>
+						<anchor>right</anchor>
+						<offset>65</offset>
+					</left>
+					<top>
+						<parent>size</parent>
+						<anchor>bottom</anchor>
+						<offset>15</offset>
+					</top>
+					<size>
+						<width>95</width>
+					</size>
+				</anchored>
+			</npc_strfield>
+			<npc_label>
+				<anchored>
+					<to>bmr_type</to>
+					<size>
+						<width>55</width>
+					</size>
+				</anchored>
+				<static>BMR Type:</static>
+			</npc_label>
+			<npc_heading name="rr_label">
+				<anchored>
+					<left>
+						<anchor>left</anchor>
+						<offset>5</offset>
+					</left>
+					<top>
+						<parent>bmr</parent>
+						<anchor>bottom</anchor>
+						<offset>15</offset>
+					</top>
+					<size>
+						<width>225</width>
+					</size>
+				</anchored>
+				<static>Resistance Rolls</static>
+			</npc_heading>
+			<npc_numfield name="magic_rr">
+				<anchored>
+					<left>
+						<anchor>left</anchor>
+						<offset>40</offset>
+					</left>
+					<top>
+						<parent>rr_label</parent>
+						<anchor>bottom</anchor>
+						<offset>15</offset>
+					</top>
+					<size>
+						<width>40</width>
+					</size>
+				</anchored>
+			</npc_numfield>
+			<npc_labeltop>
+				<anchored>
+					<to>magic_rr</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<static>Magic</static>
+			</npc_labeltop>
+			<npc_numfield name="stamina_rr">
+				<anchored>
+					<left>
+						<parent>magic_rr</parent>
+						<anchor>right</anchor>
+						<offset>30</offset>
+					</left>
+					<top>
+						<parent>rr_label</parent>
+						<anchor>bottom</anchor>
+						<offset>15</offset>
+					</top>
+					<size>
+						<width>40</width>
+					</size>
+				</anchored>
+			</npc_numfield>
+			<npc_labeltop>
+				<anchored>
+					<to>stamina_rr</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<static>Stamina</static>
+			</npc_labeltop>
+			<npc_numfield name="will_rr">
+				<anchored>
+					<left>
+						<parent>stamina_rr</parent>
+						<anchor>right</anchor>
+						<offset>30</offset>
+					</left>
+					<top>
+						<parent>rr_label</parent>
+						<anchor>bottom</anchor>
+						<offset>15</offset>
+					</top>
+					<size>
+						<width>40</width>
+					</size>
+				</anchored>
+			</npc_numfield>
+			<npc_labeltop>
+				<anchored>
+					<to>will_rr</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<static>Will</static>
+			</npc_labeltop>
+			
+			<npc_strfield name="enc">
+				<center/>
+				<anchored>
+					<left>
+						<anchor>left</anchor>
+						<offset>60</offset>
+					</left>
+					<top>
+						<parent>magic_rr</parent>
+						<anchor>bottom</anchor>
+						<offset>15</offset>
+					</top>
+					<size>
+						<width>40</width>
+					</size>
+				</anchored>
+			</npc_strfield>
+			<npc_label>
+				<anchored>
+					<to>enc</to>
+				</anchored>
+				<static># Enc.</static>
+			</npc_label>
+			
+			<npc_strfield name="treasure_code">
+				<center/>
+				<anchored>
+					<left>
+						<parent>enc</parent>
+						<anchor>right</anchor>
+						<offset>60</offset>
+					</left>
+					<top>
+						<parent>magic_rr</parent>
+						<anchor>bottom</anchor>
+						<offset>15</offset>
+					</top>
+					<size>
+						<width>90</width>
+					</size>
+				</anchored>
+			</npc_strfield>
+			<npc_label>
+				<anchored>
+					<to>treasure_code</to>
+				</anchored>
+				<static>Treasure</static>
+			</npc_label>
+			
+			<multitext name="outlook_d">
+				<anchored>
+					<to>enc</to>
+					<position>belowleft</position>
+					<offset>0,10</offset>
+					<size>
+						<width>200</width>
+						<height>40</height>
+					</size>
+				</anchored>
+				<font>sheetlabelsmall</font>
+				<multilinespacing>14</multilinespacing>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						local outlook = window.getDatabaseNode().getChild("outlook");
+						if outlook ~= nil then setState(outlook.getValue()); end
+					end
+				</script>
+				<readonly/>
+				<sourceless/>
+				<statelabels>
+					<state>-</state>
+					<state>Aggressive and will attack if provoked or hungry.</state>
+					<state>Ignores other creatures unless interfered with or attack.</state>
+					<state>Altruistic, has an unselfish regard for the interests of others, often to the extent of risking his own safety.</state>
+					<state>Belligerent, often attacks without provocation.</state>
+					<state>Attacks cloest living creature until it is destroyed.</state>
+					<state>Does not believe that danger or misfortune exists for it.</state>
+					<state>Not only hostile, but delights in death, pain, and suffering.</state>
+					<state>Desires power, attempts to control or dominate other creatures.</state>
+					<state>Opposed to "evil" (e.g., those who are cruel, hostile, belligerent, etc.); supportive of those who are "good".</state>
+					<state>Will attack or attempt to steal from other creatures if the risk does not seem too high.</state>
+					<state>Normally attacks other creatures on sight.</state>
+					<state>If hungry, will attack anything edible; otherwise Normal.</state>
+					<state>Inquisitive/Curious will approach and examine unusual situations.</state>
+					<state>Normally bolts at any sign of other creatures.</state>
+					<state>Watches and is wary of other creatures, will sometimes attack if hungry.</state>
+					<state>Ignores the presence of other creatures unless threatened.</state>
+					<state>Mischievous/Playful, will attempt to play with or play pranks on other creatures.</state>
+					<state>Protective of a thing, place, other creature, etc.</state>
+					<state>Skittish around other creatures, runs at the slightest hint of danger.</state>
+					<state> </state>
+				</statelabels>
+			</multitext>  
+			<npc_label name="lbloutlook">
+				<anchored>
+					<to>outlook_d</to>
+					<position>lefthigh</position>
+				</anchored>
+				<static>Outlook</static>
+			</npc_label>     
+			<multitext name="outlook">
+				<center/>
+				<font>sheettextsmall</font>
+				<anchored>
+					<to>lbloutlook</to>
+					<position>belowleft</position>
+					<offset>0,10</offset>
+					<size><width>50</width></size>
+				</anchored>
+				<script>
+					function onValueChanged()
+						if window.outlook_d then
+							window.outlook_d.setState(getState());
+						end
+					end
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						if getState() &lt; 1 then
+							setState(1);
+						elseif getState() &gt; 20 then
+							setState(20);
+						end
+					end
+				</script>
+				<statelabels>
+					<state>-</state>
+					<state>Aggres.</state>
+					<state>Aloof</state>
+					<state>Altru.</state>
+					<state>Bellig.</state>
+					<state>Berserk</state>
+					<state>Carefree</state>
+					<state>Cruel</state>
+					<state>Domin.</state>
+					<state>Good</state>
+					<state>Greedy</state>
+					<state>Hostile</state>
+					<state>Hungry</state>
+					<state>Inquis.</state>
+					<state>Jumpy</state>
+					<state>Normal</state>
+					<state>Passive</state>
+					<state>Playful</state>
+					<state>Protect</state>
+					<state>Timid</state>
+					<state>Varies</state>
+				</statelabels>
+				<frame>
+					<name>textlinesmall</name>
+					<offset>0,-1,0,0</offset>
+				</frame>
+			</multitext>
+			
+			<npc_strfield name="iq">
+				<anchored>
+					<left>
+						<anchor>leftt</anchor>
+						<offset>30</offset>
+					</left>
+					<top>
+						<parent>outlook</parent>
+						<anchor>bottom</anchor>
+						<offset>15</offset>
+					</top>
+					<size>
+						<width>200</width>
+						<height>60</height>
+					</size>
+				</anchored>
+			</npc_strfield>
+			<npc_label>
+				<anchored>
+					<to>iq</to>
+					<size>
+						<width>25</width>
+					</size>
+				</anchored>
+				<static>IQ:</static>
+			</npc_label>
+			
+		</sheetdata>
+	</windowclass>
+  
+	<windowclass name="npc_notes">
+		<sheetdata>
+			<npc_heading name="lblnotes">
+				<anchored>
+					<position>insidetop</position>
+					<offset>0,5</offset>
+				</anchored>
+				<static>Notes</static>
+			</npc_heading>
+			<npc_text name="notes">
+				<anchored>
+					<to>lblnotes</to>
+				</anchored>
+				<tabtarget next="abilities" prev="description" />
+			</npc_text>
+
+			<!-- Abilities -->
+			<npc_heading name="lblabilities">
+				<anchored>
+					<to>notes</to>
+					<offset>0,5</offset>
+				</anchored>
+				<static>Abilities</static>
+			</npc_heading>
+			<npc_text name="abilities">
+				<anchored>
+					<to>lblabilities</to>
+				</anchored>
+				<tabtarget next="description" prev="notes" />
+			</npc_text>
+		  
+			<!-- Description -->
+			<npc_heading name="lbldescription">
+				<anchored>
+					<to>abilities</to>
+					<offset>0,5</offset>
+				</anchored>
+				<static>Description</static>
+			</npc_heading>
+			<npc_text name="description">
+				<!-- Doesn't work??? <footer>footer_wide</footer> -->
+				<anchored>
+					<to>lbldescription</to>
+				</anchored>
+				<tabtarget next="notes" prev="abilities" />
+			</npc_text>
+
+			  <!-- Notes 
+			   <npc_heading name="lblnotes">
+				<anchored>
+				  <to>description</to>
+				</anchored>
+				<static>Additional Notes</static>
+			  </npc_heading>
+			  <npc_strfield name="notes">
+				<anchored>
+				  <to>lblnotes</to>
+				  <position>below</position>
+				</anchored>
+				<multilinespacing>14</multilinespacing>
+				<tabtarget next="glance" prev="description" />
+			  </npc_strfield>-->
+
+			  <!-- Spacer -->
+			  <!--<genericcontrol>
+				<anchored>
+				  <to>special</to>
+				  <position>below</position>
+				  <size>
+					<height>15</height>
+				  </size>
+				</anchored>
+			  </genericcontrol>-->
+		</sheetdata>
+	</windowclass>
+
+	<windowclass name="npc_skills">
+		<sheetdata>  
+			<npc_heading name="lblspells">
+				<anchored>
+					<position>insidetopleft</position>
+					<offset>0,4</offset>
+					<size><width>225</width></size>
+				</anchored>
+				<static>SPELLS</static>
+			</npc_heading>
+			<sortablelist name="spells">
+				<allowcreate/>
+				<allowdelete/>
+				<noscroll/>
+				<class>npc_spelllist_item</class>
+				<datasource>.spells</datasource>
+				<anchored>
+					<to>lblspells</to>
+					<position>belowleft</position>
+					<offset>0,20</offset>
+					<size><width>225</width></size>
+				</anchored>
+				<sortfield><fieldname>name</fieldname><menuname>Name</menuname></sortfield>
+				<sortfield><fieldname>maxlevel</fieldname><menuname>Level</menuname></sortfield>
+				<defaultsort><fieldname>name</fieldname></defaultsort>
+				<tabtarget next="profession" prev="skills" />
+				<script>
+					function addItem(source)
+						local newentry = createWindow();
+						local newnode = newentry.getDatabaseNode();
+						
+						--[[ Descriptive fields ]]
+						if source.getChild("name") then
+							newentry.name.setValue(source.getChild("name").getValue());
+						end
+						
+						--[[ Custom? ]]
+						if source.getChild("custom") and source.getChild("custom").getValue()==1 then
+							newentry.custom.setState(true);
+						else
+							newentry.custom.setState(false);
+						end
+						
+						--[[ Shortcut ]]
+						newentry.open.setValue("spelllist",source.getNodeName());
+						newentry.open.setVisible(true);
+						
+						--[[ re-initialise 
+						newentry.onInit(); ]]
+						
+						return newentry;
+					end
+
+					function onDrop(x, y, draginfo)
+						if draginfo.isType("spelllist") then
+							local win = draginfo.getCustomData();
+							local source = win.getDatabaseNode();
+							addItem(source);
+							return true;
+						elseif draginfo.isType("shortcut") then
+							local class = draginfo.getShortcutData();
+							local source = draginfo.getDatabaseNode();
+							if source and class == "spelllist" then
+								addItem(source);
+								return true;
+							end
+						end
+						return false;
+					end
+				  
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						setAnchoredHeight((#getWindows()+1)*17);
+					end
+				</script>
+			</sortablelist>  
+			<npc_labeltop>
+				<anchored>
+					<to>spells</to>
+					<position>aboveleft</position>
+					<offset>20,5</offset>
+				</anchored>
+				<static>Spell List</static>
+				<tooltip><text>Click to sort by list name</text></tooltip>
+				<script>
+					function onInit()
+						if super and super.onInit then super.onInit(); end
+					end
+					function onClickDown(button, x, y)
+						return true;
+					end
+					function onClickRelease(button, x, y)
+						window.spells.sortBy("name");
+						return true;
+					end        
+				</script>
+			</npc_labeltop>
+			<npc_labeltop>
+				<anchored>
+					<to>spells</to>
+					<position>aboveleft</position>
+					<offset>200,5</offset>
+				</anchored>
+				<static>Level</static>
+				<tooltip><text>Click to sort by level</text></tooltip>
+				<script>
+					function onInit()
+						if super and super.onInit then super.onInit(); end
+					end
+					function onClickDown(button, x, y)
+						return true;
+					end
+					function onClickRelease(button, x, y)
+						window.spells.sortBy("maxlevel");
+						return true;
+					end        
+				</script>
+			</npc_labeltop>      
+		  
+			<npc_heading name="lblskills">
+				<anchored>
+					<to>spells</to>
+					<position>belowleft</position>
+					<offset>0,10</offset>
+					<size><width>225</width></size>
+				</anchored>
+				<static>SKILLS</static>
+			</npc_heading>
+			<sortablelist name="skills">
+				<allowcreate/>
+				<allowdelete/>
+				<noscroll/>
+				<class>npc_skilllist_item</class>
+				<datasource>.skills</datasource>
+				<anchored>
+					<to>lblskills</to>
+					<position>belowleft</position>
+					<offset>0,20</offset>
+					<size><width>225</width></size>
+				</anchored>
+				<sortfield><fieldname>name</fieldname><menuname>Name</menuname></sortfield>
+				<sortfield><fieldname>bonus</fieldname><menuname>Bonus</menuname></sortfield>
+				<sortfield><fieldname>ranks</fieldname><menuname>Ranks</menuname></sortfield>
+				<defaultsort><fieldname>name</fieldname></defaultsort>
+				<tabtarget next="spells" prev="profession" />
+				<script>
+					function addItem(source)
+						local newentry = createWindow();
+						local newnode = newentry.getDatabaseNode();
+						
+						--[[ Descriptive fields ]]
+						if source.getChild("name") then
+							newentry.name.setValue(source.getChild("name").getValue());
+						end
+						
+						--[[ Shortcut ]]
+						newentry.open.setValue("skill",source.getNodeName());
+						newentry.open.setVisible(true);
+						
+						--[[ re-initialise 
+						newentry.onInit(); ]]
+						
+						return newentry;
+					end
+
+					function onDrop(x, y, draginfo)
+						if draginfo.isType("skill") then
+							local win = draginfo.getCustomData();
+							local source = win.getDatabaseNode();
+							addItem(source);
+							return true;
+						elseif draginfo.isType("shortcut") then
+							local class = draginfo.getShortcutData();
+							local source = draginfo.getDatabaseNode();
+							if source and class == "skill" then
+								addItem(source);
+								return true;
+							end
+						end
+						return false;
+					end
+				  
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						setAnchoredHeight((#getWindows()+1)*17);
+					end
+				</script>
+			</sortablelist>  
+			<npc_labeltop>
+				<anchored>
+					<to>skills</to>
+					<position>aboveleft</position>
+					<offset>20,5</offset>
+				</anchored>
+				<static>Skill</static>
+				<tooltip><text>Click to sort by skill name</text></tooltip>
+				<script>
+					function onInit()
+						if super and super.onInit then super.onInit(); end
+					end
+					function onClickDown(button, x, y)
+						return true;
+					end
+					function onClickRelease(button, x, y)
+						window.skills.sortBy("name");
+						return true;
+					end        
+				</script>
+			</npc_labeltop>
+			<npc_labeltop>
+				<anchored>
+					<to>skills</to>
+					<position>aboveleft</position>
+					<offset>156,5</offset>
+				</anchored>
+				<static>Ranks</static>
+				<tooltip><text>Click to sort by skill ranks</text></tooltip>
+				<script>
+					function onInit()
+						if super and super.onInit then super.onInit(); end
+					end
+					function onClickDown(button, x, y)
+						return true;
+					end
+					function onClickRelease(button, x, y)
+						window.skills.sortBy("ranks");
+						return true;
+					end        
+				</script>
+		  </npc_labeltop>
+		  <npc_labeltop>
+				<anchored>
+					<to>skills</to>
+					<position>aboveleft</position>
+					<offset>195,5</offset>
+				</anchored>
+				<static>Bonus</static>
+				<tooltip><text>Click to sort by skill bonus</text></tooltip>
+				<script>
+					function onInit()
+						if super and super.onInit then super.onInit(); end
+					end
+					function onClickDown(button, x, y)
+						return true;
+					end
+					function onClickRelease(button, x, y)
+						window.skills.sortBy("bonus");
+						return true;
+					end        
+				</script>
+			</npc_labeltop>
+		  
+		</sheetdata>
+	</windowclass>
+
+	<windowclass name="npc_archetype">
+		<sheetdata>
+			<npc_strfield name="archetype">
+				<center/>
+				<anchored>
+					<position>insidetopleft</position>
+					<offset>75,4</offset>
+					<size><width>150</width></size>
+				</anchored>
+				<tabtarget next="baseAg" prev="baseSt" />
+				<script>
+					function onValueChanged()
+						local node = window.getDatabaseNode()
+						Rules_Archetypes.Apply(node);
+					end
+					
+					function onInit()
+						if getValue()~="" and window.getDatabaseNode().getChild("level").getValue() &gt; 0 then
+							onValueChanged();
+						end
+					end
+				</script>
+			</npc_strfield>
+			<DropDown name="archetypedropdown">
+				<target>archetype</target>
+				<position>0,3</position>
+				<script>				
+					function onInit()
+						super.onInit();
+						addItems(Rules_Archetypes.List());
+					end
+				</script>
+			</DropDown>
+			<npc_label name="lblarchetype">
+				<anchored>
+					<to>archetype</to>
+					<offset>10,4</offset>
+					<size><width>60</width></size>
+				</anchored>
+				<static>Archetype</static>
+			</npc_label>
+			
+			<npc_multitext name="powerlvl">
+				<center/>
+				<anchored>
+					<position>insidetopleft</position>
+					<offset>75,30</offset>
+					<size><width>150</width></size>
+				</anchored>
+				<statelabels>
+					<state>Average</state>
+					<state>Superior</state> 
+					<state>Heroic</state>
+					<state>Legendary</state>
+					<state>Epic</state>
+				</statelabels>
+				<tooltip><text>Power Level</text></tooltip>
+				<script>
+					function onValueChanged()
+						local node = window.getDatabaseNode()
+						Rules_Archetypes.Apply(node);
+					end
+					
+					function onInit()
+						if super and super.onInit then
+						  super.onInit();
+						end
+						if getState() &lt; 1 or getState() &gt; 5 then 
+							setState(2); 
+						end
+						onValueChanged();
+					end
+				</script>
+			</npc_multitext>
+			<npc_label name="lblpwrlvl">
+				<anchored>
+					<to>powerlvl</to>
+					<offset>10,4</offset>
+					<size><width>60</width></size>
+				</anchored>
+				<static>Pow. Lvl.</static>
+			</npc_label>
+		  
+			<npc_heading name="lblbasestats">
+				<anchored>
+					<position>insidetopleft</position>
+					<offset>0,60</offset>
+					<size><width>225</width></size>
+				</anchored>
+				<static>Base Stats</static>
+			</npc_heading>
+		  
+			<npc_numfield name="baseAg">
+				<anchored>
+					<position>insidetopleft</position>
+					<offset>60,85</offset>
+				</anchored>
+				<tabtarget next="BaseCo" prev="archetype" />
+				<script>
+					function onValueChanged()
+						if getValue() &lt; 0 then 
+							setInvalid(); 
+						else 
+							setValid(); 
+							local node = window.getDatabaseNode()
+							Rules_Archetypes.Apply(node);
+						end
+					end
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						onValueChanged();
+					end
+				</script>
+			</npc_numfield>
+			<npc_label>
+				<anchored><to>baseAg</to></anchored>
+				<static>Ag</static>
+			</npc_label>
+
+			<npc_numfield name="baseCo">
+				<anchored>
+					<to>baseAg</to>
+				</anchored>
+				<tabtarget next="baseEm" prev="baseAg" />
+				<script>
+					function onValueChanged()
+						if getValue() &lt; 0 then 
+							setInvalid(); 
+						else 
+							setValid(); 
+							local node = window.getDatabaseNode()
+							Rules_Archetypes.Apply(node);
+						end
+					end
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						onValueChanged();
+					end
+				</script>
+			</npc_numfield>
+			<npc_label>
+				<anchored><to>baseCo</to></anchored>
+				<static>Co</static>
+			</npc_label>
+
+			<npc_numfield name="baseEm">
+				<anchored>
+					<to>baseCo</to>
+				</anchored>
+				<tabtarget next="baseIn" prev="baseCo" />
+				<script>
+					function onValueChanged()
+						if getValue() &lt; 0 then 
+							setInvalid(); 
+						else 
+							setValid(); 
+							local node = window.getDatabaseNode()
+							Rules_Archetypes.Apply(node);
+						end
+					end
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						onValueChanged();
+					end
+				</script>
+			</npc_numfield>
+			<npc_label>
+				<anchored><to>baseEm</to></anchored>
+				<static>Em</static>
+			</npc_label>
+			
+			<npc_numfield name="baseIn">
+				<anchored>
+					<to>baseEm</to>
+				</anchored>
+				<tabtarget next="baseMe" prev="baseEm" />
+				<script>
+					function onValueChanged()
+						if getValue() &lt; 0 then 
+							setInvalid(); 
+						else 
+							setValid(); 
+							local node = window.getDatabaseNode()
+							Rules_Archetypes.Apply(node);
+						end
+					end
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						onValueChanged();
+					end
+				</script>
+			</npc_numfield>
+			<npc_label>
+				<anchored><to>baseIn</to></anchored>
+				<static>In</static>
+			</npc_label>
+	  
+			<npc_numfield name="baseMe">
+				<anchored>
+					<to>baseIn</to>
+				</anchored>
+				<tabtarget next="basePr" prev="baseIn" />
+				<script>
+					function onValueChanged()
+						if getValue() &lt; 0 then 
+							setInvalid(); 
+						else 
+							setValid(); 
+							local node = window.getDatabaseNode()
+							Rules_Archetypes.Apply(node);
+						end
+					end
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						onValueChanged();
+					end
+				</script>
+			</npc_numfield>
+			<npc_label>
+				<anchored><to>baseMe</to></anchored>
+				<static>Me</static>
+			</npc_label>
+			
+			<npc_numfield name="basePr">
+				<anchored>
+					<position>insidetopleft</position>
+					<offset>190,85</offset>
+				</anchored>
+				<tabtarget next="baseQu" prev="baseMe" />
+				<script>
+					function onValueChanged()
+						if getValue() &lt; 0 then 
+							setInvalid(); 
+						else 
+							setValid(); 
+							local node = window.getDatabaseNode()
+							Rules_Archetypes.Apply(node);
+						end
+					end
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						onValueChanged();
+					end
+				</script>
+			</npc_numfield>
+			<npc_label>
+				<anchored><to>basePr</to></anchored>
+				<static>Pr</static>
+			</npc_label>
+			
+			<npc_numfield name="baseQu">
+				<anchored>
+					<to>basePr</to>
+				</anchored>
+				<tabtarget next="baseRe" prev="basePr" />
+				<script>
+					function onValueChanged()
+						if getValue() &lt; 0 then 
+							setInvalid(); 
+						else 
+							setValid(); 
+							local node = window.getDatabaseNode()
+							Rules_Archetypes.Apply(node);
+						end
+					end
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						onValueChanged();
+					end
+				</script>
+			</npc_numfield>
+			<npc_label>
+				<anchored><to>baseQu</to></anchored>
+				<static>Qu</static>
+			</npc_label>
+			
+			<npc_numfield name="baseRe">
+				<anchored>
+					<to>baseQu</to>
+				</anchored>
+				<tabtarget next="baseSD" prev="baseQu" />
+				<script>
+					function onValueChanged()
+						if getValue() &lt; 0 then 
+							setInvalid(); 
+						else 
+							setValid(); 
+							local node = window.getDatabaseNode()
+							Rules_Archetypes.Apply(node);
+						end
+					end
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						onValueChanged();
+					end
+				</script>
+			</npc_numfield>
+			<npc_label>
+				<anchored><to>baseRe</to></anchored>
+				<static>Re</static>
+			</npc_label>
+	  
+			<npc_numfield name="baseSD">
+				<anchored>
+					<to>baseRe</to>
+				</anchored>
+				<tabtarget next="baseRe" prev="baseSt" />
+				<script>
+					function onValueChanged()
+						if getValue() &lt; 0 then 
+							setInvalid(); 
+						else 
+							setValid(); 
+							local node = window.getDatabaseNode()
+							Rules_Archetypes.Apply(node);
+						end
+					end
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						onValueChanged();
+					end
+				</script>
+			</npc_numfield>
+			<npc_label>
+				<anchored><to>baseSD</to></anchored>
+				<static>SD</static>
+			</npc_label>
+			
+			<npc_numfield name="baseSt">
+				<anchored>
+					<to>baseSD</to>
+				</anchored>
+				<tabtarget next="baseHits" prev="baseSD" />
+				<script>
+					function onValueChanged()
+						if getValue() &lt; 0 then 
+							setInvalid(); 
+						else 
+							setValid(); 
+							local node = window.getDatabaseNode()
+							Rules_Archetypes.Apply(node);
+						end
+					end
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						onValueChanged();
+					end
+				</script>
+			</npc_numfield>
+			<npc_label>
+				<anchored><to>baseSt</to></anchored>
+				<static>St</static>
+			</npc_label>
+			
+			<npc_heading name="lblbasehits">
+				<anchored>
+					<position>insidetopleft</position>
+					<offset>0,210</offset>
+					<size><width>225</width></size>
+				</anchored>
+				<static>Base Hits</static>
+			</npc_heading>
+			
+			<npc_numfield name="baseHits">
+				<anchored>
+					<position>insidetopleft</position>
+					<offset>60,235</offset>
+				</anchored>
+				<tabtarget next="BaseEnd" prev="baseSt" />
+				<script>
+					function onValueChanged()
+						if getValue() &lt; 0 then 
+							setInvalid(); 
+						else 
+							setValid(); 
+							local node = window.getDatabaseNode()
+							Rules_Archetypes.Apply(node);
+						end
+					end
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						onValueChanged();
+					end
+				</script>
+			</npc_numfield>
+			<npc_label>
+				<anchored><to>baseHits</to></anchored>
+				<static>Hits</static>
+			</npc_label>
+			
+			<npc_numfield name="baseEnd">
+				<anchored>
+					<position>insidetopleft</position>
+					<offset>190,235</offset>
+				</anchored>
+				<tabtarget next="baseDB" prev="baseHits" />
+				<script>
+					function onValueChanged()
+						if getValue() &lt; 0 then 
+							setInvalid(); 
+						else 
+							setValid(); 
+							local node = window.getDatabaseNode()
+							Rules_Archetypes.Apply(node);
+						end
+					end
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						onValueChanged();
+					end
+				</script>
+			</npc_numfield>
+			<npc_label>
+				<anchored><to>baseEnd</to></anchored>
+				<static>Endurance</static>
+			</npc_label>
+			
+			<npc_numfield name="baseDB">
+				<anchored>
+					<position>insidetopleft</position>
+					<offset>60,260</offset>
+				</anchored>
+				<tabtarget next="baseRRC" prev="baseEnd" />
+				<script>
+					function onValueChanged()
+						if getValue() &lt; 0 then 
+							setInvalid(); 
+						else 
+							setValid(); 
+							local node = window.getDatabaseNode()
+							Rules_Archetypes.Apply(node);
+						end
+					end
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						onValueChanged();
+					end
+				</script>
+			</npc_numfield>
+			<npc_label>
+				<anchored><to>baseDB</to></anchored>
+				<static>Def. Bon.</static>
+			</npc_label>
+			
+			<npc_heading name="lblbaseRRs">
+				<anchored>
+					<position>insidetopleft</position>
+					<offset>0,290</offset>
+					<size><width>225</width></size>
+				</anchored>
+				<static>Base RRs</static>
+			</npc_heading>
+			
+			<npc_numfield name="baseRRC">
+				<anchored>
+					<position>insidetopleft</position>
+					<offset>60,315</offset>
+				</anchored>
+				<tabtarget next="BaseRRE" prev="baseDB" />
+				<script>
+					function onValueChanged()
+						if getValue() &lt; 0 then 
+							setInvalid(); 
+						else 
+							setValid(); 
+							local node = window.getDatabaseNode()
+							Rules_Archetypes.Apply(node);
+						end
+					end
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						onValueChanged();
+					end
+				</script>
+			</npc_numfield>
+			<npc_label>
+				<anchored><to>baseRRC</to></anchored>
+				<static>Channel</static>
+			</npc_label>
+			
+			<npc_numfield name="baseRRE">
+				<anchored>
+					<to>baseRRC</to>
+				</anchored>
+				<tabtarget next="baseRRM" prev="baseRRC" />
+				<script>
+					function onValueChanged()
+						if getValue() &lt; 0 then 
+							setInvalid(); 
+						else 
+							setValid(); 
+							local node = window.getDatabaseNode()
+							Rules_Archetypes.Apply(node);
+						end
+					end
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						onValueChanged();
+					end
+				</script>
+			</npc_numfield>
+			<npc_label>
+				<anchored><to>baseRRE</to></anchored>
+				<static>Essence</static>
+			</npc_label>
+			
+			<npc_numfield name="baseRRM">
+				<anchored>
+					<to>baseRRE</to>
+				</anchored>
+				<tabtarget next="baseRRP" prev="baseRRE" />
+				<script>
+					function onValueChanged()
+						if getValue() &lt; 0 then 
+							setInvalid(); 
+						else 
+							setValid(); 
+							local node = window.getDatabaseNode()
+							Rules_Archetypes.Apply(node);
+						end
+					end
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						onValueChanged();
+					end
+				</script>
+			</npc_numfield>
+			<npc_label>
+				<anchored><to>baseRRM</to></anchored>
+				<static>Mentalism</static>
+			</npc_label>
+			
+			<npc_numfield name="baseRRP">
+				<anchored>
+					<position>insidetopleft</position>
+					<offset>190,315</offset>
+				</anchored>
+				<tabtarget next="baseRRF" prev="baseRRM" />
+				<script>
+					function onValueChanged()
+						if getValue() &lt; 0 then 
+							setInvalid(); 
+						else 
+							setValid(); 
+							local node = window.getDatabaseNode()
+							Rules_Archetypes.Apply(node);
+						end
+					end
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						onValueChanged();
+					end
+				</script>
+			</npc_numfield>
+			<npc_label>
+				<anchored><to>baseRRP</to></anchored>
+				<static>Physical</static>
+			</npc_label>
+			
+			<npc_numfield name="baseRRF">
+				<anchored>
+					<to>baseRRP</to>
+				</anchored>
+				<tabtarget next="archetype" prev="baseRRP" />
+				<script>
+					function onValueChanged()
+						if getValue() &lt; 0 then 
+							setInvalid(); 
+						else 
+							setValid(); 
+							local node = window.getDatabaseNode()
+							Rules_Archetypes.Apply(node);
+						end
+					end
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						onValueChanged();
+					end
+				</script>
+			</npc_numfield>
+			<npc_label>
+				<anchored><to>baseRRF</to></anchored>
+				<static>Fear</static>
+			</npc_label>
+			
+		</sheetdata>
+	</windowclass>
+
+	
+	<windowclass name="npc_combat">
+		<script file="campaign/scripts/npc_creature.lua"></script>
+		<sheetdata>
+			<!-- IQ -->
+			<multitext name="iq">
+				<anchored>
+					<position>insidetopleft</position>
+					<offset>60,5</offset>
+					<size>
+						<width>150</width>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						if getState() &lt; 1 then
+							setState(1);
+						elseif getState() &gt; 12 then
+							setState(12);
+						end
+					end
+				</script>
+				<statelabels>
+					<state>-</state>
+					<state>None (animal instincts)</state>
+					<state>Very Low (1-5)</state>
+					<state>Low (3-12)</state>
+					<state>Little (7-25)</state>
+					<state>Inferior (13-40)</state>
+					<state>Mediocre (23-50)</state>
+					<state>Average (36-65)</state>
+					<state>Above Average (50-77)</state>
+					<state>Superior (60-86)</state>
+					<state>High (80-98)</state>
+					<state>Very High (94-99)</state>
+					<state>Exceptional (100-102)</state>
+				</statelabels>
+				<frame>
+					<name>textlinesmall</name>
+					<offset>0,-1,0,0</offset>
+				</frame>
+			</multitext>
+			<npc_label>
+				<anchored>
+					<to>iq</to>
+				</anchored>
+				<static>IQ</static>
+			</npc_label>   
+		
+		</sheetdata>  
+	</windowclass>
+
+
+	<!-- List Classes -->
+	<windowclass name="npc_weaponlist_item">
+		<!--
+          Weapon type:
+          1 = 1HS one-handed slashing
+          2 = 1HC one-handed concussion
+          3 = 2H  two-handed
+          4 = PA  polearm
+          5 = MIS missile weapon
+          6 = TH  thrown weapon
+          7 = SH  shield
+          8 = NAT natural weapon, such as a claw
+          9 = EL  elemental attack, such as bolts and balls
+          10= SP  special attack
+		-->
+		<sizelimits>
+			<maximum>
+				<height>17</height>
+			</maximum>
+			<minimum>
+				<height>17</height>
+			</minimum>
+		</sizelimits>
+		<script>
+			function onInit()
+				if super and super.onInit then
+					super.onInit();
+				end
+			end
+		</script>
+		<sheetdata>
+			  <!-- Hidden field: weapon order -->
+			  <!--<npc_numfield name="order">
+				<invisible>true</invisible>
+			  </npc_numfield>-->
+			  <!-- Hidden field: weapon type -->
+			  <!--<npc_numfield name="type">
+				<invisible>true</invisible>
+			  </npc_numfield>-->
+			  <!-- Hidden field: attack table -->
+			  <!--<npc_numfield name="table">
+				<invisible>true</invisible>
+			  </npc_numfield>-->
+
+			<windowreferencecontrol name="open">
+				<bounds>0,2,15,15</bounds>
+				<icon>
+					<normal>button_openwindow</normal>
+					<pressed>button_openwindow</pressed>
+				</icon>
+				<class>weapon</class>
+				<description>
+					<field>name</field>
+				</description>
+			</windowreferencecontrol>
+		  
+			<npc_strfield name="name">
+				<anchored>
+					<to>open</to>
+					<position>right</position>
+					<offset>5</offset>
+					<size><width>125</width></size>
+				</anchored>
+				<tabtarget next="ob" prev="chance" />
+			</npc_strfield>
+		  
+			<npc_numfield name="ob">
+				<anchored>
+					<to>name</to>
+					<position>right</position>
+					<offset>5,0</offset>
+					<size><width>20</width></size>
+				</anchored>
+					<frame>
+						<name>textlinesmall</name>
+						<offset>0,-1,0,0</offset>
+					</frame>
+				<keyeditframe>
+					<name>shadelinesmall</name>
+					<offset>0,-1,0,0</offset>
+				</keyeditframe>
+				<tabtarget next="chance" prev="name" />
+			</npc_numfield>
+		  
+			<npc_strfield name="chance">
+				<center/>
+				<anchored>
+					<to>ob</to>
+					<position>right</position>
+					<offset>5,0</offset>
+					<size><width>55</width></size>
+				</anchored>
+				<tabtarget next="name" prev="ob" />
+			</npc_strfield>
+		</sheetdata>
+	</windowclass>
+
+	<windowclass name="npc_defencelist_item">
+		<sizelimits>
+			<maximum>
+				<height>17</height>
+			</maximum>
+			<minimum>
+				<height>17</height>
+			</minimum>
+		</sizelimits>
+		<script>
+			function onInit()
+				if super and super.onInit then
+					super.onInit();
+				end
+				local numwin = #windowlist.getWindows();
+				windowlist.setAnchoredHeight(17*(numwin+1));
+			end
+		</script>
+		<sheetdata>
+			  <!--<windowreferencecontrol name="open">
+				<bounds>0,2,15,15</bounds>
+				<icon>
+				  <normal>button_openwindow</normal>
+				  <pressed>button_openwindow</pressed>
+				</icon>
+				<class>weapon</class>
+				<description>
+				  <field>name</field>
+				</description>
+			  </windowreferencecontrol>-->
+		  
+			<npc_strfield name="name">
+				<anchored>
+					<position>insidetopleft</position>
+					<offset>20</offset>
+					<size><width>150</width></size>
+				</anchored>
+				<tabtarget next="meleebonus" prev="missilebonus" />
+			</npc_strfield>
+		  
+			<npc_numfield name="meleebonus">
+				<anchored>
+					<to>name</to>
+					<position>right</position>
+					<offset>5,0</offset>
+					<size><width>30</width></size>
+				</anchored>
+				<frame>
+					<name>textlinesmall</name>
+					<offset>0,-1,0,0</offset>
+				</frame>
+				<keyeditframe>
+					<name>shadelinesmall</name>
+					<offset>0,-1,0,0</offset>
+				</keyeditframe>
+				<tabtarget next="missilebonus" prev="name" />
+			</npc_numfield>
+		  
+			<npc_numfield name="missilebonus">
+				<anchored>
+					<to>meleebonus</to>
+					<position>right</position>
+					<offset>5,0</offset>
+					<size><width>30</width></size>
+				</anchored>
+				<frame>
+					<name>textlinesmall</name>
+					<offset>0,-1,0,0</offset>
+				</frame>
+				<keyeditframe>
+					<name>shadelinesmall</name>
+					<offset>0,-1,0,0</offset>
+				</keyeditframe>
+				<tabtarget next="name" prev="meleebonus" />
+			</npc_numfield>
+		</sheetdata>
+	</windowclass>
+
+	<windowclass name="npc_skilllist_item">
+		<sizelimits>
+			<maximum>
+				<height>17</height>
+			</maximum>
+			<minimum>
+				<height>17</height>
+			</minimum>
+		</sizelimits>
+		<script>
+			function onInit()
+				if super and super.onInit then
+					super.onInit();
+				end
+				windowlist.setAnchoredHeight( (#windowlist.getWindows()+1)*17 );
+				local node = getDatabaseNode();    
+				if node.getChild("locked") then
+					locked.setValue(node.getChild("locked").getValue());
+				end
+				if not open.getValue() then
+					open.setValue("skill",node.getNodeName());
+				end
+				open.setVisible(true);
+			end
+			function rollSkill()
+				local node = getDatabaseNode();
+				local nodeName = node.getNodeName();
+				local actorNode = node.getParent().getParent();
+				local customData = Rules_CustomData.NPCSkill(nodeName); 
+				if customData then
+					ChatManager.throwDice("dice",{"d100","d10"},0,"",customData);
+				end
+			end
+
+			function dragSkill(button, x, y, draginfo)
+				local node = getDatabaseNode();
+				local nodeName = node.getNodeName();
+				local skill = name.getValue();
+				draginfo.setDescription(skill);
+				draginfo.setType("Hotkey:NPCSkillRoll");
+				draginfo.setStringData(nodeName);
+				draginfo.setDieList({"d100","d10"});
+				return true;
+			end
+		</script>
+		<sheetdata>
+			<numberfieldX name="locked">
+				<bounds>0,0,0,0</bounds>
+				<invisible/>
+				<script>
+					function onValueChanged()
+						if getValue() == 0 then
+							window.name.setReadOnly(false);
+							window.name.setFrame("textline",0,1,0,0);
+						else
+							window.name.setReadOnly(true);
+							window.name.setFrame(nil);
+						end
+					end
+				</script>
+			</numberfieldX>
+			<windowreferencefield name="open">
+				<bounds>0,2,15,15</bounds>
+				<icon>
+					<normal>button_openwindow</normal>
+					<pressed>button_openwindow</pressed>
+				</icon>
+				<description>
+					<field>name</field>
+				</description>
+			</windowreferencefield>      
+			<genericcontrol name="initdiceholder">
+				<anchored>
+					<to>open</to>
+					<position>right</position>
+					<offset>0,0</offset>
+					<size><width>135</width></size>
+				</anchored>
+				<frame>
+				  <name>ghostdice</name>
+				  <offset>0,1,0,0</offset>
+				</frame>
+				<script>
+				</script>
+			</genericcontrol>
+
+			<npc_strfield name="name">
+				<anchored>
+					<to>open</to>
+					<position>righthigh</position>
+					<offset>0,0</offset>
+					<size><width>135</width></size>
+				</anchored>
+				<tabtarget next="ranks" prev="bonus" />
+				<script>
+					function onDoubleClick()
+						window.rollSkill();
+					end
+
+					function onDragStart(button, x, y, dragData)
+						return window.dragSkill(button, x, y, dragData);
+					end
+				</script>
+			</npc_strfield>
+			<npc_numfield name="ranks">
+				<anchored>
+					<to>name</to>
+					<position>righthigh</position>
+					<offset>5,0</offset>
+					<size><width>30</width></size>
+				</anchored>
+				<frame>
+					<name>textlinesmall</name>
+					<offset>0,-1,0,0</offset>
+				</frame>
+				<keyeditframe>
+					<name>shadelinesmall</name>
+					<offset>0,-1,0,0</offset>
+				</keyeditframe>
+				<tabtarget next="bonus" prev="name" />
+			</npc_numfield>
+			<npc_numfield name="bonus">
+				<displaysign/>
+				<anchored>
+					<to>ranks</to>
+					<position>righthigh</position>
+					<offset>5,0</offset>
+					<size><width>40</width></size>
+				</anchored>
+				<frame>
+					<name>textlinesmall</name>
+					<offset>0,-1,0,0</offset>
+				</frame>
+				<keyeditframe>
+					<name>shadelinesmall</name>
+					<offset>0,-1,0,0</offset>
+				</keyeditframe>
+				<tabtarget next="name" prev="ranks" />
+			</npc_numfield>
+		</sheetdata>
+	</windowclass>
+
+	<windowclass name="npc_spelllist_item">
+		<sizelimits>
+			<maximum>
+				<height>17</height>
+			</maximum>
+			<minimum>
+				<height>17</height>
+			</minimum>
+		</sizelimits>
+		<script>
+			function onInit()
+				if super and super.onInit then
+					super.onInit();
+				end
+				windowlist.setAnchoredHeight(17*(#windowlist.getWindows()+1));   
+				local node = getDatabaseNode();
+				if node.getChild("custom") and node.getChild("custom").getValue()~=0 then
+					custom.setState(true);
+				else
+					custom.setState(false);
+				end
+				if not open.getValue() then
+					open.setValue("spelllist", node.getNodeName());
+				end
+				open.setVisible(true); 
+			end
+		</script>
+		<sheetdata>
+			<checkbox name="custom">
+				<bounds>0,0,0,0</bounds>
+				<invisible/>
+				<script>
+					function onValueChanged()
+						if getState() then
+							window.name.setReadOnly(false);
+							window.name.setFrame("textline",0,1,0,0);
+						else
+							window.name.setReadOnly(true);
+							window.name.setFrame(nil);
+						end
+					end
+				</script>
+			</checkbox>
+			<windowreferencefield name="open">
+				<bounds>0,2,15,15</bounds>
+				<icon>
+					<normal>button_openwindow</normal>
+					<pressed>button_openwindow</pressed>
+				</icon>
+				<description>
+					<field>name</field>
+				</description>
+			</windowreferencefield>    
+			<npc_strfield name="name">
+				<anchored>
+					<to>open</to>
+					<position>righthigh</position>
+					<offset>0,0</offset>
+					<size><width>180</width></size>
+				</anchored>
+				<tabtarget next="maxlevel" prev="maxlevel" />
+			</npc_strfield>
+			<npc_numfield name="maxlevel">
+				<anchored>
+					<to>name</to>
+					<position>righthigh</position>
+					<offset>5,0</offset>
+					<size><width>30</width></size>
+				</anchored>
+				<frame>
+					<name>textlinesmall</name>
+					<offset>0,-1,0,0</offset>
+				</frame>
+				<keyeditframe>
+					<name>shadelinesmall</name>
+					<offset>0,-1,0,0</offset>
+				</keyeditframe>
+				<tabtarget next="name" prev="name" />
+			</npc_numfield>
+		</sheetdata>
+	</windowclass>
+
+
+	<windowclass name="npcsmall">
+		<sizelimits>
+			<minimum>
+				<height>10</height>
+			</minimum>
+		</sizelimits>
+		<script>
+			function onInit()
+				local source = nil;
+				local target = nil;
+				if super and super.onInit then
+					super.onInit();
+				end
+				if windowlist.getSource then
+					source = windowlist.getSource();
+				end
+				target = getDatabaseNode();
+				if not source or not target then
+					return;
+				end
+
+				--[[ copy skill entries ]]
+				if source.getChild("skills") then
+					for k,node in pairs(source.getChild("skills").getChildren()) do
+						local newnode = target.createChild("skills." .. k);
+						if node then
+							if node.getChild("name") then
+								newnode.createChild("name","string").setValue(node.getChild("name").getValue());
+							end
+							if node.getChild("ranks") then
+								newnode.createChild("ranks","number").setValue(node.getChild("ranks").getValue());
+							end
+							if node.getChild("bonus") then
+								newnode.createChild("bonus","number").setValue(node.getChild("bonus").getValue());
+							end
+							if node.getChild("open") then
+								newnode.createChild("open","windowreference").setValue(node.getChild("open").getValue());
+							end
+						end
+					end
+				end
+				--[[ copy spell entries ]]
+				if source.getChild("spells") then
+					for k,node in pairs(source.getChild("spells").getChildren()) do
+						local newnode = target.createChild("spells." .. k);
+						if node then
+							if node.getChild("name") then
+								newnode.createChild("name","string").setValue(node.getChild("name").getValue());
+							end
+							if node.getChild("maxlevel") then
+								newnode.createChild("maxlevel","number").setValue(node.getChild("maxlevel").getValue());
+							end
+							if node.getChild("custom") then
+								newnode.createChild("custom","number").setValue(node.getChild("custom").getValue());
+							end
+							if node.getChild("open") then
+								newnode.createChild("open","windowreference").setValue(node.getChild("open").getValue());
+							end
+						end
+					end
+				end
+				--[[ need to create the weapons and defences from the source node ]]
+				if source.getChild("weapons") then
+					for k,node in pairs(source.getChild("weapons").getChildren()) do
+						local newnode = target.createChild("weapons." .. k);
+						if node then
+							Utilities.copyWeapon(node,newnode);
+							--[[ set a default ordering, if an explicit order isn't present ]]
+							if not newnode.getChild("order") then
+								local num = tonumber(string.sub(node.getName(),-3)) or 0;
+								if num &gt; 0 then
+									newnode.createChild("order","number").setValue(num);
+								end
+							end
+						end
+				  end
+				end
+				if source.getChild("defences") then
+					for k,node in pairs(source.getChild("defences").getChildren()) do
+						local newnode = target.createChild("defences." .. k);
+						if node then
+							Utilities.copyWeapon(node,newnode);
+						end
+					end
+				end
+			end
+		</script>
+		<sheetdata>
+			<windowreferencecontrol name="open">
+				<bounds>0,0,20,20</bounds>
+				<icon>
+					<normal>button_openwindow</normal>
+					<pressed>button_emptytarget</pressed>
+				</icon>
+				<class>npc</class>
+				<description>
+					<field>name</field>
+				</description>
+			</windowreferencecontrol>
+			<linkstringfield name="name">
+				<bounds>25,1,-1,20</bounds>
+				<empty>&#171; New Personality &#187;</empty>
+				<selectioncolor>#90ffffff</selectioncolor>
+				<font>sheettext</font>
+				<linktarget>open</linktarget>
+			</linkstringfield>
+		</sheetdata>
+	</windowclass>
+
+	<windowclass name="npclist">
+		<frame>scrollbox</frame>
+		<placement>
+			<size>
+				<width>275</width>
+				<height>350</height>
+			</size>
+		</placement>
+		<sizelimits>
+			<dynamic />
+			<minimum>
+				<width>200</width>
+				<height>310</height>
+			</minimum>
+		</sizelimits>
+		<softclose />
+		<nodelete />
+		<sheetdata>
+			<buttongroup_tabs_long name="tabs">
+				<anchored>
+					<right><offset>-5</offset></right>
+				</anchored>
+				<tab>
+					<icon>tab_npcs</icon>
+					<subwindow>banner_npc,list_npcs,category_npc</subwindow>
+				</tab>
+				<tab>
+					<icon>tab_battles</icon>
+					<subwindow>banner_battle,list_battles,category_battle</subwindow>
+				</tab>
+			</buttongroup_tabs_long>
+
+			<banner_campaign name="banner_npc">
+				<icon>title_npcs</icon>
+				<invisible />
+			</banner_campaign>
+			<banner_campaign name="banner_battle">
+				<icon>title_encounters</icon>
+				<invisible />
+			</banner_campaign>
+
+			<list_campaign_tabbed name="list_npcs">
+				<datasource>.</datasource>
+				<class>npcsmall</class>
+				<acceptdrop>
+					<class>npc</class>
+					<field>*</field>
+				</acceptdrop>
+				<invisible />
+				<script>
+					local dropnode = nil;
+          
+					function onDrop(x, y, draginfo)
+						local source = nil;
+						if draginfo.isType("npc") then
+							local win = draginfo.getCustomData();
+							source = win.getDatabaseNode();
+						elseif draginfo.isType("shortcut") then
+							local class = draginfo.getShortcutData();
+							source = draginfo.getDatabaseNode();
+							if class ~= "npc" then
+								source = nil;
+							end
+						end
+						--[[ cache the source database node ]]
+						dropnode = source;
+						--[[ allow normal (acceptdrop) processing to continue ]]
+						return nil;
+					end
+
+					function onSortCompare(w1, w2)
+						return w1.name.getValue() &gt; w2.name.getValue();
+					end;
+				  
+					function onFilter(w)
+						local f = string.lower(window.filter.getValue());
+					
+						if f == "" then
+							return true;
+						end
+					
+						if string.find(string.lower(w.name.getValue()), f, 0, true) then
+							return true;
+						end
+					
+						return false;
+					end
+				  
+					function getSource()
+						local node = dropnode;
+						dropnode = nil;
+						return node;
+					end
+				</script>
+			</list_campaign_tabbed>
+			<scrollbar_campaign_tabbed>
+				<target>list_npcs</target>
+			</scrollbar_campaign_tabbed>
+
+			<list_campaign_tabbed name="list_battles">
+				<datasource>..battle</datasource>
+				<class>battlesmall</class>
+				<invisible />
+				<script>
+					function onSortCompare(w1, w2)
+						return w1.name.getValue() &gt; w2.name.getValue();
+					end
+					
+					function onFilter(w)
+						local f = string.lower(window.filter.getValue());
+						
+						if f == "" then
+							return true;
+						end
+						
+						if string.find(string.lower(w.name.getValue()), f, 0, true) then
+							return true;
+						end
+						
+						return false;
+					end
+				</script>
+			</list_campaign_tabbed>
+			<scrollbar_campaign_tabbed>
+				<target>list_battles</target>
+			</scrollbar_campaign_tabbed>
+
+			<categories name="category_npc">
+				<targetcontrol>list_npcs</targetcontrol>
+				<invisible />
+			</categories>
+			<categories name="category_battle">
+				<targetcontrol>list_battles</targetcontrol>
+				<invisible />
+			</categories>
+
+			<button_new name="button_new">
+				<script>
+					function onButtonPress()
+						if User.isHost() then
+							local nIndex = window.tabs.getIndex();
+
+							local node = window.getDatabaseNode();
+							local sClass = "npc";
+							if nIndex == 2 then
+								node = DB.getRoot().getChild("battle");
+								sClass = "battle";
+							end
+
+							local nodeChild = nil;
+							if node then
+								nodeChild = node.createChild();
+							end
+							if nodeChild then
+								local w = Interface.openWindow(sClass, nodeChild.getNodeName());
+								if w and w.name then
+									w.name.setFocus();
+								end
+							end
+						end
+					end
+				</script>
+			</button_new>
+
+			<filter_campaign name="filter" />
+			<filtertrigger_campaign name="filtertrigger" />
+			
+			<resize_scrollboxfortabs />
+			<close_scrollbox />	  
+		</sheetdata>
+	</windowclass>
+
+</root>

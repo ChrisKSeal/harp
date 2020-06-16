@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root version="2.0">
+
+  <windowclass name="combatpanel_effect">
+    <sizelimits>
+      <minimum>
+        <height>22</height>
+      </minimum>
+    </sizelimits>
+    <script file="ct/scripts/ct_effect.lua" />
+    <sheetdata>
+      <numberfieldX name="summary">
+        <bounds>0,0,0,0</bounds>
+        <invisible/>
+      </numberfieldX>
+      <stringfieldX name="description">
+        <bounds>0,4,240,17</bounds>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+		<tooltip />
+        <script>
+			function onInit()
+				setTooltipText(getValue());
+			end
+
+			function onValueChanged()
+				setTooltipText(getValue());
+			end
+			
+          function onDeleteDown()
+            window.deleteDown();
+          end
+          
+          function onDeleteUp()
+            window.deleteUp();
+          end
+
+          function onEnter()
+            window.testNew();
+          end
+          
+          function onDrop(x, y, draginfo)
+            return window.onDrop(x, y, draginfo);
+          end
+        </script>
+      </stringfieldX>
+      <numberfieldX name="penalty">
+        <anchored>
+          <to>description</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>40</width>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+        <script>
+          function onDrop(x, y, draginfo)
+            return window.onDrop(x, y, draginfo);
+          end
+		  function onValueChanged()
+			window.injury_level.update();
+		  end
+        </script>
+      </numberfieldX>
+      <numberfieldX name="duration">
+        <anchored>
+          <to>penalty</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>40</width>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+        <script>
+          function onDrop(x, y, draginfo)
+            return window.onDrop(x, y, draginfo);
+          end
+        </script>
+      </numberfieldX>
+      <numberfieldX name="bleeding">
+        <anchored>
+          <to>duration</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>40</width>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+        <script>
+          function onDrop(x, y, draginfo)
+            return window.onDrop(x, y, draginfo);
+          end
+		  function onValueChanged()
+			window.injury_level.update();
+		  end
+        </script>
+      </numberfieldX>
+      <numberfieldX name="stunned">
+        <anchored>
+          <to>bleeding</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>40</width>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+        <script>
+          function onDrop(x, y, draginfo)
+            return window.onDrop(x, y, draginfo);
+          end
+		  
+		  function onValueChanged()
+			if getValue() &gt; 0 then
+				if window.staminarr.getValue() == 0 then
+					window.staminarr.setValue(90+getValue()*10);
+				end
+			else
+				window.staminarr.setValue(0);
+			end
+		end
+        </script>
+      </numberfieldX>
+	  <numberfieldX name="staminarr">
+        <anchored>
+          <to>stunned</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>30</width>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>textlinedice</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+        <script>
+          function onDoubleClick()
+			local stamina = window.windowlist.window.windowlist.window.link.getTargetDatabaseNode().getChild("stamina").getValue()
+			local customData = {type=Rules_Constants.DataType.DieRoll,tableType=Rules_Constants.TableType.Other,modifiers={}};
+			customData.tableID = "";
+			customData.dieType = Rules_Constants.DieType.HighOpenEnded;
+			table.insert(customData.modifiers, {description="Stamina RR", value=stamina});
+			customData.ctNodeStunRR = getDatabaseNode().getParent();
+		    ChatManager.throwDice("dice", {"d100","d10"}, 0, "Stamina Resistance Roll: Stun resistance", customData);
+		  end
+        </script>
+      </numberfieldX>
+	  <numberfieldX name="stunroll">
+	  <bounds>0,0,0,0</bounds>
+	  <invisible />
+	  <script>
+	  function onValueChanged()
+		local roll = getValue();
+		local target = window.staminarr.getValue();
+		if target &lt; roll then
+			window.stunned.setValue(0);
+		end
+		setValue(0);
+	  end
+	  </script>
+	  </numberfieldX>
+	  
+	  <multitext name="injury_level">
+	    <anchored>
+          <to>staminarr</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>50</width>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+		<script>
+			function onInit()
+				update();
+				setEnabled(false);
+			end
+			
+			function update()
+				local pen = window.penalty.getValue();
+				local bld = window.bleeding.getValue();
+				local pensev = 0;
+				local bldsev = 0;
+				if pen &lt; -50 then
+					pensev = 3;
+				elseif pen &lt; -25 then
+					pensev = 2;
+				elseif pen &lt; 0 then
+					pensev = 1;
+				end
+				if bld &gt; 10 then
+					bldsev = 3;
+				elseif bld &gt; 5 then
+					bldsev = 2;
+				elseif bld &gt; 0 then
+					bldsev = 1;
+				end
+				local sev = 0;
+				if pensev &gt; bldsev then
+					sev = pensev;
+				else
+					sev = bldsev;
+				end
+				if sev == 0 then
+					setState(1);
+				elseif sev == 1 then
+					setState(2);
+				elseif sev == 2 then
+					setState(3);
+				else
+					setState(4);
+				end
+			end
+		</script>
+		<statelabels>
+          <state>None</state>
+          <state>Light</state>
+          <state>Medium</state>
+          <state>Severe</state>
+        </statelabels>
+	</multitext>
+    </sheetdata>
+  </windowclass>
+  
+</root>

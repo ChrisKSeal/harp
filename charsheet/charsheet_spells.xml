@@ -1,0 +1,732 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<root version="2.0">
+
+	<windowclass name="charsheet_spells">
+		<placement>
+			<size>
+				<width>525</width>
+				<height>611</height>
+			</size>
+		</placement>
+		<nodelete />
+		<sheetdata>
+			<!-- Melee -->
+			<genericcontrol name="spell_list_frame">
+				<bounds>15,20,240,500</bounds>
+				<frame>
+					<name>sheetgroup</name>
+				</frame>
+			</genericcontrol>
+			<stringcontrolX name="spell_list_frame_label">
+				<anchored>
+					<to>spell_list_frame</to>
+					<position>insidetopleft</position>
+					<offset>15,10</offset>
+				</anchored>
+				<font>sheetlabel</font>
+				<static>Spells</static>
+			</stringcontrolX>
+			<sortablelist name="spell_list">
+				<anchored>
+					<top>
+						<parent>spell_list_frame_label</parent>
+						<anchor>bottom</anchor>
+						<offset>10</offset>
+					</top>
+					<bottom>
+						<parent>spell_list_frame</parent>
+						<anchor>bottom</anchor>
+						<offset>-15</offset>
+					</bottom>
+					<left>
+						<parent>spell_list_frame</parent>
+						<anchor>left</anchor>
+						<offset>15</offset>
+					</left>
+					<right>
+						<parent>spell_list_frame</parent>
+						<anchor>right</anchor>
+						<offset>-15</offset>
+					</right>
+				</anchored>
+				<class>charsheet_spellwindow</class>
+				<datasource>.magic.spells</datasource>
+				<allowdelete />
+				<defaultsort>
+					<fieldname>name</fieldname>
+				</defaultsort>
+				<script file="charsheet/scripts/charsheet_spell_list.lua" />
+			</sortablelist>
+			<scrollbar>
+				<anchored>
+					<to>spell_list</to>
+					<position>right</position>
+					<offset>1,-4</offset>
+				</anchored>
+				<target>spell_list</target>
+			</scrollbar>
+			
+			<genericcontrol name="casting_summary_frame">
+				<bounds>15,520,240,75</bounds>
+				<frame>
+					<name>sheetgroup</name>
+				</frame>
+			</genericcontrol>
+			<stringcontrolX name="casting_summary_frame_label">
+				<anchored>
+					<to>casting_summary_frame</to>
+					<position>insidetopleft</position>
+					<offset>15,10</offset>
+				</anchored>
+				<font>sheetlabel</font>
+				<static>Casting Summary</static>
+			</stringcontrolX>
+			<numberfieldX name="armour_pen" source="modifiers.armour_cast_penalty">
+				<anchored>
+					<left>
+						<parent>casting_summary_frame_label</parent>
+						<anchor>left</anchor>
+						<offset>10</offset>
+					</left>
+					<top>
+						<parent>casting_summary_frame_label</parent>
+						<anchor>bottom</anchor>
+						<offset>15</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						setVisible(true);
+						setEnabled(true);
+					end
+					
+					function onValueChanged()
+						window.total_mod.updateValue();
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>armour_pen</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Arm Pen.</static>
+			</stringcontrolX>
+			<numberfieldX name="pp_add" source="magic.current_pp_adder.id-00001.pp_adder">
+				<anchored>
+					<left>
+						<parent>armour_pen</parent>
+						<anchor>right</anchor>
+						<offset>10</offset>
+					</left>
+					<top>
+						<parent>armour_pen</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						setVisible(true);
+						setEnabled(true);
+					end
+					
+					function onValueChanged()
+						window.total_mod.updateValue();
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>pp_add</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>PP Add.</static>
+			</stringcontrolX>
+			<numberfieldX name="spell_add" source="magic.current_spell_adder.id-00001.spell_adder">
+				<anchored>
+					<left>
+						<parent>pp_add</parent>
+						<anchor>right</anchor>
+						<offset>10</offset>
+					</left>
+					<top>
+						<parent>armour_pen</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						setVisible(true);
+						setEnabled(true);
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>spell_add</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Spl. Add.</static>
+			</stringcontrolX>
+			<numberfieldX name="total_mod" source="modifiers.base_casting_modifier">
+				<anchored>
+					<left>
+						<parent>spell_add</parent>
+						<anchor>right</anchor>
+						<offset>10</offset>
+					</left>
+					<top>
+						<parent>armour_pen</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						updateValue()
+					end
+					
+					function updateValue()
+						setValue(window.armour_pen.getValue()-window.pp_add.getValue());
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>total_mod</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>PP mod.</static>
+			</stringcontrolX>
+			
+			<genericcontrol name="powerpoint_adders_frame">
+				<bounds>255,20,240,115</bounds>
+				<frame>
+					<name>sheetgroup</name>
+				</frame>
+			</genericcontrol>
+			<stringcontrolX name="powerpoint_adders_frame_label">
+				<anchored>
+					<to>powerpoint_adders_frame</to>
+					<position>insidetopleft</position>
+					<offset>15,10</offset>
+				</anchored>
+				<font>sheetlabel</font>
+				<static>Power Point Adders</static>
+			</stringcontrolX>
+			<sortablelist name="current_pp_adder">
+				<anchored>
+					<top>
+						<parent>powerpoint_adders_frame_label</parent>
+						<anchor>bottom</anchor>
+						<offset>10</offset>
+					</top>
+					<left>
+						<parent>powerpoint_adders_frame</parent>
+						<anchor>left</anchor>
+						<offset>15</offset>
+					</left>
+					<right>
+						<parent>powerpoint_adders_frame</parent>
+						<anchor>right</anchor>
+						<offset>-15</offset>
+					</right>
+					<size>
+						<height>18</height>
+					</size>
+				</anchored>
+				<class>charsheet_powerpoint_adder</class>
+				<datasource>.magic.current_pp_adder</datasource>
+				<allowdelete />
+				<defaultsort>
+					<fieldname>name</fieldname>
+				</defaultsort>
+				<script>
+					function onInit()
+						if getWindowCount() &lt; 1 then
+							local newentry = createWindow();
+						end
+					end
+				</script>
+			</sortablelist>
+			<stringcontrolX>
+				<anchored>
+					<to>current_pp_adder</to>
+					<position>aboveleft</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Currently Attuned</static>
+			</stringcontrolX>
+			<sortablelist name="pp_adders_list">
+				<anchored>
+					<top>
+						<parent>current_pp_adder</parent>
+						<anchor>bottom</anchor>
+						<offset>10</offset>
+					</top>
+					<bottom>
+						<parent>powerpoint_adders_frame</parent>
+						<anchor>bottom</anchor>
+						<offset>-15</offset>
+					</bottom>
+					<left>
+						<parent>powerpoint_adders_frame</parent>
+						<anchor>left</anchor>
+						<offset>15</offset>
+					</left>
+					<right>
+						<parent>powerpoint_adders_frame</parent>
+						<anchor>right</anchor>
+						<offset>-15</offset>
+					</right>
+				</anchored>
+				<class>charsheet_powerpoint_adder</class>
+				<datasource>.magic.pp_adders</datasource>
+				<allowdelete />
+				<defaultsort>
+					<fieldname>name</fieldname>
+				</defaultsort>
+				<script file="charsheet/scripts/charsheet_spell_pp_adder.lua" />
+			</sortablelist>
+			<scrollbar>
+				<anchored>
+					<to>pp_adders_list</to>
+					<position>right</position>
+					<offset>1,-4</offset>
+				</anchored>
+				<target>pp_adders_list</target>
+			</scrollbar>
+			<stringcontrolX>
+				<anchored>
+					<to>pp_adders_list</to>
+					<position>aboveleft</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Identified PP Adders</static>
+			</stringcontrolX>
+			
+			<genericcontrol name="spell_adders_frame">
+				<bounds>255,135,240,115</bounds>
+				<frame>
+					<name>sheetgroup</name>
+				</frame>
+			</genericcontrol>
+			<stringcontrolX name="spell_adders_frame_label">
+				<anchored>
+					<to>spell_adders_frame</to>
+					<position>insidetopleft</position>
+					<offset>15,10</offset>
+				</anchored>
+				<font>sheetlabel</font>
+				<static>Spell Adders</static>
+			</stringcontrolX>
+			<sortablelist name="current_spell_adder">
+				<anchored>
+					<top>
+						<parent>spell_adders_frame_label</parent>
+						<anchor>bottom</anchor>
+						<offset>10</offset>
+					</top>
+					<left>
+						<parent>spell_adders_frame</parent>
+						<anchor>left</anchor>
+						<offset>15</offset>
+					</left>
+					<right>
+						<parent>spell_adders_frame</parent>
+						<anchor>right</anchor>
+						<offset>-15</offset>
+					</right>
+					<size>
+						<height>18</height>
+					</size>
+				</anchored>
+				<class>charsheet_spell_adder</class>
+				<datasource>.magic.current_spell_adder</datasource>
+				<allowdelete />
+				<defaultsort>
+					<fieldname>name</fieldname>
+				</defaultsort>
+				<script>
+					function onInit()
+						if getWindowCount() &lt; 1 then
+							local newentry = createWindow();
+						end
+					end
+				</script>
+			</sortablelist>
+			<stringcontrolX>
+				<anchored>
+					<to>current_spell_adder</to>
+					<position>aboveleft</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Currently Attuned</static>
+			</stringcontrolX>
+			<sortablelist name="spell_adders_list">
+				<anchored>
+					<top>
+						<parent>current_spell_adder</parent>
+						<anchor>bottom</anchor>
+						<offset>10</offset>
+					</top>
+					<bottom>
+						<parent>spell_adders_frame</parent>
+						<anchor>bottom</anchor>
+						<offset>-15</offset>
+					</bottom>
+					<left>
+						<parent>spell_adders_frame</parent>
+						<anchor>left</anchor>
+						<offset>15</offset>
+					</left>
+					<right>
+						<parent>spell_adders_frame</parent>
+						<anchor>right</anchor>
+						<offset>-15</offset>
+					</right>
+				</anchored>
+				<class>charsheet_spell_adder</class>
+				<datasource>.magic.spell_adders</datasource>
+				<allowdelete />
+				<defaultsort>
+					<fieldname>name</fieldname>
+				</defaultsort>
+				<script file="charsheet/scripts/charsheet_spell_spell_adder.lua" />
+			</sortablelist>
+			<scrollbar>
+				<anchored>
+					<to>spell_adders_list</to>
+					<position>right</position>
+					<offset>1,-4</offset>
+				</anchored>
+				<target>spell_adders_list</target>
+			</scrollbar>
+			<stringcontrolX>
+				<anchored>
+					<to>spell_adders_list</to>
+					<position>aboveleft</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Identified Spell Adders</static>
+			</stringcontrolX>
+			
+			<genericcontrol name="runes_frame">
+				<bounds>255,250,240,115</bounds>
+				<frame>
+					<name>sheetgroup</name>
+				</frame>
+			</genericcontrol>
+			<stringcontrolX name="runes_frame_label">
+				<anchored>
+					<to>runes_frame</to>
+					<position>insidetopleft</position>
+					<offset>15,10</offset>
+				</anchored>
+				<font>sheetlabel</font>
+				<static>Runes</static>
+			</stringcontrolX>
+			<sortablelist name="runes_list">
+				<anchored>
+					<top>
+						<parent>runes_frame_label</parent>
+						<anchor>bottom</anchor>
+						<offset>10</offset>
+					</top>
+					<bottom>
+						<parent>runes_frame</parent>
+						<anchor>bottom</anchor>
+						<offset>-15</offset>
+					</bottom>
+					<left>
+						<parent>runes_frame</parent>
+						<anchor>left</anchor>
+						<offset>15</offset>
+					</left>
+					<right>
+						<parent>runes_frame</parent>
+						<anchor>right</anchor>
+						<offset>-15</offset>
+					</right>
+				</anchored>
+				<class>charsheet_spell_adder</class>
+				<datasource>.magic.runes</datasource>
+				<allowdelete />
+				<defaultsort>
+					<fieldname>name</fieldname>
+				</defaultsort>
+			</sortablelist>
+			<scrollbar>
+				<anchored>
+					<to>runes_list</to>
+					<position>right</position>
+					<offset>1,-4</offset>
+				</anchored>
+				<target>runesl_list</target>
+			</scrollbar>
+			<stringcontrolX>
+				<anchored>
+					<to>runes_list</to>
+					<position>aboveleft</position>
+					<offset>170,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Cost/PPs</static>
+			</stringcontrolX>
+			
+			<genericcontrol name="spell_item_frame">
+				<bounds>255,365,240,230</bounds>
+				<frame>
+					<name>sheetgroup</name>
+				</frame>
+			</genericcontrol>
+			<stringcontrolX name="spell_item_frame_label">
+				<anchored>
+					<to>spell_item_frame</to>
+					<position>insidetopleft</position>
+					<offset>15,10</offset>
+				</anchored>
+				<font>sheetlabel</font>
+				<static>Spell Items</static>
+			</stringcontrolX>
+			<sortablelist name="daily_spell_list">
+				<anchored>
+					<top>
+						<parent>spell_item_frame_label</parent>
+						<anchor>bottom</anchor>
+						<offset>10</offset>
+					</top>
+					<bottom>
+						<parent>spell_item_frame</parent>
+						<anchor>bottom</anchor>
+						<offset>-120</offset>
+					</bottom>
+					<left>
+						<parent>spell_item_frame</parent>
+						<anchor>left</anchor>
+						<offset>15</offset>
+					</left>
+					<right>
+						<parent>spell_item_frame</parent>
+						<anchor>right</anchor>
+						<offset>-15</offset>
+					</right>
+				</anchored>
+				<class>charsheet_spell_adder</class>
+				<datasource>.magic.daily_spells</datasource>
+				<allowdelete />
+				<defaultsort>
+					<fieldname>name</fieldname>
+				</defaultsort>
+			</sortablelist>
+			<scrollbar>
+				<anchored>
+					<to>daily_spell_list</to>
+					<position>right</position>
+					<offset>1,-4</offset>
+				</anchored>
+				<target>daily_spell_list</target>
+			</scrollbar>
+			<stringcontrolX>
+				<anchored>
+					<to>daily_spell_list</to>
+					<position>aboveleft</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Daily Spells</static>
+			</stringcontrolX>
+			<stringcontrolX>
+				<anchored>
+					<to>daily_spell_list</to>
+					<position>aboveleft</position>
+					<offset>100,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Item</static>
+			</stringcontrolX>
+			<stringcontrolX>
+				<anchored>
+					<to>daily_spell_list</to>
+					<position>aboveleft</position>
+					<offset>170,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Uses/Day</static>
+			</stringcontrolX>
+			<sortablelist name="charged_item_spell_list">
+				<anchored>
+					<top>
+						<parent>daily_spell_list</parent>
+						<anchor>bottom</anchor>
+						<offset>10</offset>
+					</top>
+					<bottom>
+						<parent>spell_item_frame</parent>
+						<anchor>bottom</anchor>
+						<offset>-15</offset>
+					</bottom>
+					<left>
+						<parent>spell_item_frame</parent>
+						<anchor>left</anchor>
+						<offset>15</offset>
+					</left>
+					<right>
+						<parent>spell_item_frame</parent>
+						<anchor>right</anchor>
+						<offset>-15</offset>
+					</right>
+				</anchored>
+				<class>charsheet_charged_spell</class>
+				<datasource>.magic.charged_item_spells</datasource>
+				<allowdelete />
+				<defaultsort>
+					<fieldname>name</fieldname>
+				</defaultsort>
+			</sortablelist>
+			<scrollbar>
+				<anchored>
+					<to>charged_item_spell_list</to>
+					<position>right</position>
+					<offset>1,-4</offset>
+				</anchored>
+				<target>charged_item_spell_list</target>
+			</scrollbar>
+			<stringcontrolX>
+				<anchored>
+					<to>charged_item_spell_list</to>
+					<position>aboveleft</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Spells</static>
+			</stringcontrolX>
+			<stringcontrolX>
+				<anchored>
+					<to>charged_item_spell_list</to>
+					<position>aboveleft</position>
+					<offset>100,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Item</static>
+			</stringcontrolX>
+			<stringcontrolX>
+				<anchored>
+					<to>charged_item_spell_list</to>
+					<position>aboveleft</position>
+					<offset>170,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Charges</static>
+			</stringcontrolX>
+		</sheetdata>
+	</windowclass>
+</root>

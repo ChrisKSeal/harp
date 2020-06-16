@@ -1,0 +1,1090 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root version="2.0">
+  
+	<windowclass name="combatpanel_attack">
+		<sizelimits>
+			<minimum>
+				<height>100</height>
+			</minimum>
+		</sizelimits>
+		<script file="ct/scripts/ct_attack.lua" />
+		<sheetdata>
+			<stringcontrolX name="melee_label">
+				<anchored>
+					<left>
+						<anchor>left</anchor>
+						<offset>58</offset>
+					</left>
+					<top>
+						<anchor>top</anchor>
+						<offset>5</offset>
+					</top>
+					<size>
+						<width>100</width>
+						<height>21</height>
+					</size>
+				</anchored>
+				<font>sheetlabel</font>
+				<static>Melee Attacks:</static>
+			</stringcontrolX>
+			<stringcontrolX name="name_label">
+				<anchored>
+					<left>
+						<parent>melee_label</parent>
+						<anchor>left</anchor>
+						<offset>20</offset>
+					</left>
+					<top>
+						<parent>melee_label</parent>
+						<anchor>bottom</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>30</width>
+						<height>13</height>
+					</size>
+				</anchored>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Attacks</static>
+			</stringcontrolX>
+			<stringcontrolX name="target_label">
+				<anchored>
+					<left>
+						<parent>melee_label</parent>
+						<anchor>left</anchor>
+						<offset>125</offset>
+					</left>
+					<top>
+						<parent>melee_label</parent>
+						<anchor>bottom</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>75</width>
+						<height>13</height>
+					</size>
+				</anchored>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Attack vs</static>
+			</stringcontrolX>
+			<stringcontrolX name="ob_label">
+				<anchored>
+					<left>
+						<parent>target_label</parent>
+						<anchor>right</anchor>
+						<offset>5</offset>
+					</left>
+					<top>
+						<parent>melee_label</parent>
+						<anchor>bottom</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>25</width>
+						<height>13</height>
+					</size>
+				</anchored>
+				<center />
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>OB</static>
+			</stringcontrolX>
+			<stringcontrolX name="mod_ob_label">
+				<anchored>
+					<left>
+						<parent>ob_label</parent>
+						<anchor>right</anchor>
+						<offset>5</offset>
+					</left>
+					<top>
+						<parent>melee_label</parent>
+						<anchor>bottom</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>13</height>
+					</size>
+				</anchored>
+				<center />
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Mod. OB</static>
+			</stringcontrolX>
+			<stringcontrolX name="size_table_label">
+				<anchored>
+					<left>
+						<parent>mod_ob_label</parent>
+						<anchor>right</anchor>
+						<offset>5</offset>
+					</left>
+					<top>
+						<parent>melee_label</parent>
+						<anchor>bottom</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>55</width>
+						<height>13</height>
+					</size>
+				</anchored>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Size/Table</static>
+			</stringcontrolX>
+			<stringcontrolX name="notes_label">
+				<anchored>
+					<left>
+						<parent>size_table_label</parent>
+						<anchor>right</anchor>
+						<offset>5</offset>
+					</left>
+					<top>
+						<parent>melee_label</parent>
+						<anchor>bottom</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>75</width>
+						<height>13</height>
+					</size>
+				</anchored>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Notes</static>
+			</stringcontrolX>
+			<windowlist name="melee_attacks_panel">
+				<anchored>
+					<top>
+						<parent>melee_label</parent>
+						<anchor>bottom</anchor>
+						<offset>5</offset>
+					</top>
+					<left>
+						<parent>melee_label</parent>
+						<anchor>left</anchor>
+						<offset>0</offset>
+					</left>
+					<right>
+						<anchor>right</anchor>
+					</right>
+				</anchored>
+				<class>subpanel_attacks_melee</class>
+				<datasource>.melee</datasource>
+				<noscroll/>
+				<skipempty />
+				<script>
+					function onInit()
+						if getWindowCount() &lt; 1 then
+							local win = createWindow();
+						end
+					end
+				</script>
+			</windowlist>
+			<stringcontrolX name="ranged_label">
+				<anchored>
+					<left>
+						<anchor>left</anchor>
+						<offset>58</offset>
+					</left>
+					<top>
+						<parent>melee_attacks_panel</parent>
+						<anchor>bottom</anchor>
+						<offset>10</offset>
+					</top>
+					<size>
+						<width>100</width>
+						<height>21</height>
+					</size>
+				</anchored>
+				<font>sheetlabel</font>
+				<static>Ranged Attacks:</static>
+			</stringcontrolX>
+			<stringcontrolX name="ranged_name_label">
+				<anchored>
+					<left>
+						<parent>ranged_label</parent>
+						<anchor>left</anchor>
+						<offset>20</offset>
+					</left>
+					<top>
+						<parent>ranged_label</parent>
+						<anchor>bottom</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>30</width>
+						<height>13</height>
+					</size>
+				</anchored>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Attacks</static>
+			</stringcontrolX>
+			<stringcontrolX name="ranged_target_label">
+				<anchored>
+					<left>
+						<parent>ranged_label</parent>
+						<anchor>left</anchor>
+						<offset>125</offset>
+					</left>
+					<top>
+						<parent>ranged_label</parent>
+						<anchor>bottom</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>75</width>
+						<height>13</height>
+					</size>
+				</anchored>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Attack vs</static>
+			</stringcontrolX>
+			<stringcontrolX name="ranged_ob_label">
+				<anchored>
+					<left>
+						<parent>ranged_target_label</parent>
+						<anchor>right</anchor>
+						<offset>5</offset>
+					</left>
+					<top>
+						<parent>ranged_label</parent>
+						<anchor>bottom</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>25</width>
+						<height>13</height>
+					</size>
+				</anchored>
+				<center />
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>OB</static>
+			</stringcontrolX>
+			<stringcontrolX name="ranged_mod_ob_label">
+				<anchored>
+					<left>
+						<parent>ranged_ob_label</parent>
+						<anchor>right</anchor>
+						<offset>5</offset>
+					</left>
+					<top>
+						<parent>ranged_label</parent>
+						<anchor>bottom</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>13</height>
+					</size>
+				</anchored>
+				<center />
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Mod. OB</static>
+			</stringcontrolX>
+			<stringcontrolX name="ranged_size_table_label">
+				<anchored>
+					<left>
+						<parent>ranged_mod_ob_label</parent>
+						<anchor>right</anchor>
+						<offset>5</offset>
+					</left>
+					<top>
+						<parent>ranged_label</parent>
+						<anchor>bottom</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>55</width>
+						<height>13</height>
+					</size>
+				</anchored>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Size/Table</static>
+			</stringcontrolX>
+			<stringcontrolX name="ranged_range_label">
+				<anchored>
+					<left>
+						<parent>ranged_size_table_label</parent>
+						<anchor>right</anchor>
+						<offset>5</offset>
+					</left>
+					<top>
+						<parent>ranged_label</parent>
+						<anchor>bottom</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>30</width>
+						<height>13</height>
+					</size>
+				</anchored>
+				<center />
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Range</static>
+			</stringcontrolX>
+			<stringcontrolX name="ranged_reload_label">
+				<anchored>
+					<left>
+						<parent>ranged_range_label</parent>
+						<anchor>right</anchor>
+						<offset>5</offset>
+					</left>
+					<top>
+						<parent>ranged_label</parent>
+						<anchor>bottom</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>30</width>
+						<height>13</height>
+					</size>
+				</anchored>
+				<center />
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Reload</static>
+			</stringcontrolX>
+			<stringcontrolX name="ranged_ammunition_label">
+				<anchored>
+					<left>
+						<parent>ranged_reload_label</parent>
+						<anchor>right</anchor>
+						<offset>5</offset>
+					</left>
+					<top>
+						<parent>ranged_label</parent>
+						<anchor>bottom</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>30</width>
+						<height>13</height>
+					</size>
+				</anchored>
+				<center />
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Ammo</static>
+			</stringcontrolX>
+			<windowlist name="ranged_attacks_panel">
+				<anchored>
+					<top>
+						<parent>ranged_label</parent>
+						<anchor>bottom</anchor>
+						<offset>5</offset>
+					</top>
+					<left>
+						<parent>ranged_label</parent>
+						<anchor>left</anchor>
+						<offset>0</offset>
+					</left>
+					<right>
+						<anchor>right</anchor>
+					</right>
+				</anchored>
+				<class>subpanel_attacks_ranged</class>
+				<datasource>.ranged</datasource>
+				<noscroll/>
+				<skipempty />
+				<script>
+					function onInit()
+						if getWindowCount() &lt; 1 then
+							local win = createWindow();
+						end
+					end
+				</script>
+			</windowlist>
+		</sheetdata>
+	</windowclass>
+	
+	<windowclass name="subpanel_attacks_melee">
+		<sizelimits>
+			<minimum>
+				<height>35</height>
+			</minimum>
+		</sizelimits>
+		<sheetdata>
+			<windowreferencefield name="open">
+        <bounds>2,3,16,16</bounds>
+        <icon>
+          <normal>button_openwindow</normal>
+        </icon>
+        <description>
+          <field>name</field>
+        </description>
+      </windowreferencefield>
+      <stringfieldX name="name">
+        <bounds>20,4,100,17</bounds>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+        <script>
+          function onDeleteDown()
+            window.testDelete();
+          end
+          
+          function onDeleteUp()
+            window.testDelete();
+          end
+
+          function onEnter()
+            window.testNew();
+          end
+
+		  function onLinkUpdated(source)
+            setValue(source.getValue());
+          end
+
+          function setLink(dbnode)
+            if dbnode then
+              linknode = dbnode;
+              linknode.onUpdate = onLinkUpdated;
+              onLinkUpdated(linknode);
+              local linkWidget = addBitmapWidget("indicator_linked");
+			  linkWidget.setPosition("bottomright", -5, -5);
+			  linkWidget.setSize(9,9);
+            end
+          end
+		  
+		  function onDoubleClick()
+			local topnode = window.windowlist.window.getDatabaseNode().getChild("link");
+			local split = "";
+			local token = nil;
+			local name, node = topnode.getValue();
+			local charnode = DB.findNode(node);
+			local attacknode = charnode.createChild("current_attack");
+			local exWin = Interface.openWindow("attack_selector",attacknode);
+			local type, linknode = window.open.getValue();
+			exWin.attackorspell.setValue(1);
+			exWin.attacknode.setValue(linknode);
+		  end
+        </script>
+        <tabtarget>
+          <next>ob</next>
+          <prev>attack</prev>
+        </tabtarget>
+      </stringfieldX>
+      <!-- Target -->
+      <stringfieldX name="targetnode">
+        <bounds>0,0,0,0</bounds>
+        <invisible/>
+        <script>
+          function Updated()
+            local nodename = getValue();
+            node = DB.findNode(nodename);
+            if nodename~="" and node then
+              window.targetname.setLink(node.getChild("label"));
+            else
+              window.targetname.setLink(nil);
+            end
+          end
+
+          function onInit()
+            if super and super.onInit then
+              super.onInit();
+            end
+            getDatabaseNode().onUpdate = Updated;
+            Updated();
+          end
+        </script>
+      </stringfieldX>
+      <stringcontrolX name="targetname">
+        <anchored>
+          <to>name</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>75</width>
+          </size>
+        </anchored>
+        <static />
+        <empty>(none)</empty>
+        <font>sheettextsmall</font>
+        <script>
+          local linknode = nil;
+          
+          function onInit()
+            if super and super.onInit then
+              super.onInit();
+            end
+            registerMenuItem("Clear target","cleartarget",6);
+          end
+
+          function onDrop(x, y, draginfo)
+            if draginfo.isType("combattrackerentry") then
+              window.setTarget(draginfo.getCustomData());
+              return true;
+            end
+            return false;
+          end
+
+          function onMenuSelection(item)
+            if item==6 then
+              window.setTarget(nil);
+            end
+          end
+
+          function onLinkUpdated(source)
+            setValue(source.getValue());
+          end
+          
+          function doNothing()
+            --[[ used as an empty value for clearing event handlers]]
+          end
+
+          function setLink(srcnode)
+            if linknode then
+              linknode.onUpdate = doNothing;
+            end
+            linknode = srcnode;
+            if linknode then
+              linknode.onUpdate = onLinkUpdated;
+              onLinkUpdated(linknode);
+            else
+              setValue("");
+            end
+          end
+        </script>
+      </stringcontrolX>
+	  <numberfieldX name="ob">
+				<anchored>
+					<left>
+						<parent>targetname</parent>
+						<anchor>right</anchor>
+						<relation>relative</relation>
+						<offset>5</offset>
+					</left>
+					<bottom>
+						<parent>targetname</parent>
+						<anchor>bottom</anchor>
+						<offset>0</offset>
+					</bottom>
+					<size>
+						<width>30</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>textline</name>
+					<offset>0,1,0,0</offset>
+				</frame>
+				<keyeditframe>
+					<name>shadeline</name>
+					<offset>0,1,0,0</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit() then
+							super.onInit();
+						end
+					end
+				</script>
+			</numberfieldX>
+			<numberfieldX name="mod_ob">
+				<anchored>
+					<to>ob</to>
+					<position>right</position>
+					<offset>5</offset>
+					<size>
+						<width>30</width>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>textlinedice</name>
+					<offset>0,1,0,0</offset>
+				</frame>
+				<keyeditframe>
+					<name>shadeline</name>
+					<offset>0,1,0,0</offset>
+				</keyeditframe>
+			</numberfieldX>
+			<multitext name="attack_size">
+				<anchored>
+					<left>
+						<parent>mod_ob</parent>
+						<anchor>right</anchor>
+						<offset>10</offset>
+						<relation>relative</relation>
+					</left>
+					<bottom>
+						<parent>targetname</parent>
+						<anchor>bottom</anchor>
+						<offset>0</offset>
+					</bottom>
+					<size>
+						<width>40</width>
+					</size>
+				</anchored>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<statelabels>
+					<state>Tiny</state>
+					<state>Small</state>
+					<state>Medium</state>
+					<state>Large</state>
+					<state>Huge</state>
+				</statelabels>
+			</multitext>
+			<tablefield name="attacktable">
+				<bounds>0,0,0,0</bounds>
+				<invisible/>
+				<allowDrag/>
+			</tablefield>
+			<genericcontrol name="tableicon">
+				<anchored>
+					<left>
+						<parent>attack_size</parent>
+						<anchor>right</anchor>
+						<offset>4</offset>
+						<relation>relative</relation>
+					</left>
+					<bottom>
+						<parent>targetname</parent>
+						<anchor>bottom</anchor>
+						<offset>0</offset>
+					</bottom>
+					<size>
+						<width>14</width>
+						<height>14</height>
+					</size>
+				</anchored>
+				<icon>icon_notable</icon>
+				<tooltip>
+					<text></text>
+				</tooltip>
+				<script>
+					function onDragStart(...)
+						local id,name = window.attacktable.getValue();
+						if id~="" then
+							return window.attacktable.onDragStart(...);
+						else
+							return false;
+						end
+					end
+          
+					function onDrop(x,y,dragdata)
+						local customData = dragdata.getCustomData();
+						if not customData or not customData.type or customData.type~="RMCTable" then
+							return false;
+						end
+						window.attacktable.setValue(customData.tableID,customData.tableName);
+						window.updateNotes();
+						return true;
+					end
+				</script>
+			</genericcontrol>
+	  
+		</sheetdata>
+	</windowclass>
+	
+	<windowclass name="subpanel_attacks_ranged">
+		<sizelimits>
+			<minimum>
+				<height>35</height>
+			</minimum>
+		</sizelimits>
+		<sheetdata>
+			<windowreferencefield name="open">
+        <bounds>2,3,16,16</bounds>
+        <icon>
+          <normal>button_openwindow</normal>
+        </icon>
+        <description>
+          <field>name</field>
+        </description>
+      </windowreferencefield>
+      <stringfieldX name="name">
+        <bounds>20,4,100,17</bounds>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+        <script>
+          function onDeleteDown()
+            window.testDelete();
+          end
+          
+          function onDeleteUp()
+            window.testDelete();
+          end
+
+          function onEnter()
+            window.testNew();
+          end
+
+		  function onLinkUpdated(source)
+            setValue(source.getValue());
+          end
+
+          function setLink(dbnode)
+            if dbnode then
+              linknode = dbnode;
+              linknode.onUpdate = onLinkUpdated;
+              onLinkUpdated(linknode);
+              local linkWidget = addBitmapWidget("indicator_linked");
+			  linkWidget.setPosition("bottomright", -5, -5);
+			  linkWidget.setSize(9,9);
+            end
+          end
+		  
+		  function onDoubleClick()
+			local topnode = window.windowlist.window.getDatabaseNode().getChild("link");
+			local split = "";
+			local token = nil;
+			local name, node = topnode.getValue();
+			local charnode = DB.findNode(node);
+			local attacknode = charnode.createChild("current_attack");
+			local exWin = Interface.openWindow("attack_selector",attacknode);
+			local type, linknode = window.open.getValue();
+			exWin.attackorspell.setValue(1);
+			exWin.attacknode.setValue(linknode);
+		  end
+        </script>
+        <tabtarget>
+          <next>ob</next>
+          <prev>attack</prev>
+        </tabtarget>
+      </stringfieldX>
+      <!-- Target -->
+      <stringfieldX name="targetnode">
+        <bounds>0,0,0,0</bounds>
+        <invisible/>
+        <script>
+          function Updated()
+            local nodename = getValue();
+            node = DB.findNode(nodename);
+            if nodename~="" and node then
+              window.targetname.setLink(node.getChild("label"));
+            else
+              window.targetname.setLink(nil);
+            end
+          end
+
+          function onInit()
+            if super and super.onInit then
+              super.onInit();
+            end
+            getDatabaseNode().onUpdate = Updated;
+            Updated();
+          end
+        </script>
+      </stringfieldX>
+      <stringcontrolX name="targetname">
+        <anchored>
+          <to>name</to>
+          <position>right</position>
+          <offset>5</offset>
+          <size>
+            <width>75</width>
+          </size>
+        </anchored>
+        <static />
+        <empty>(none)</empty>
+        <font>sheettextsmall</font>
+        <script>
+          local linknode = nil;
+          
+          function onInit()
+            if super and super.onInit then
+              super.onInit();
+            end
+            registerMenuItem("Clear target","cleartarget",6);
+          end
+
+          function onDrop(x, y, draginfo)
+            if draginfo.isType("combattrackerentry") then
+              window.setTarget(draginfo.getCustomData());
+              return true;
+            end
+            return false;
+          end
+
+          function onMenuSelection(item)
+            if item==6 then
+              window.setTarget(nil);
+            end
+          end
+
+          function onLinkUpdated(source)
+            setValue(source.getValue());
+          end
+          
+          function doNothing()
+            --[[ used as an empty value for clearing event handlers]]
+          end
+
+          function setLink(srcnode)
+            if linknode then
+              linknode.onUpdate = doNothing;
+            end
+            linknode = srcnode;
+            if linknode then
+              linknode.onUpdate = onLinkUpdated;
+              onLinkUpdated(linknode);
+            else
+              setValue("");
+            end
+          end
+        </script>
+      </stringcontrolX>
+	  <numberfieldX name="ob">
+				<anchored>
+					<left>
+						<parent>targetname</parent>
+						<anchor>right</anchor>
+						<relation>relative</relation>
+						<offset>5</offset>
+					</left>
+					<bottom>
+						<parent>targetname</parent>
+						<anchor>bottom</anchor>
+						<offset>0</offset>
+					</bottom>
+					<size>
+						<width>30</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>textline</name>
+					<offset>0,1,0,0</offset>
+				</frame>
+				<keyeditframe>
+					<name>shadeline</name>
+					<offset>0,1,0,0</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit() then
+							super.onInit();
+						end
+					end
+				</script>
+			</numberfieldX>
+			<numberfieldX name="mod_ob">
+				<anchored>
+					<to>ob</to>
+					<position>right</position>
+					<offset>5</offset>
+					<size>
+						<width>30</width>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>textlinedice</name>
+					<offset>0,1,0,0</offset>
+				</frame>
+				<keyeditframe>
+					<name>shadeline</name>
+					<offset>0,1,0,0</offset>
+				</keyeditframe>
+			</numberfieldX>
+			<multitext name="attack_size">
+				<anchored>
+					<left>
+						<parent>mod_ob</parent>
+						<anchor>right</anchor>
+						<offset>10</offset>
+						<relation>relative</relation>
+					</left>
+					<bottom>
+						<parent>targetname</parent>
+						<anchor>bottom</anchor>
+						<offset>0</offset>
+					</bottom>
+					<size>
+						<width>40</width>
+					</size>
+				</anchored>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<statelabels>
+					<state>Tiny</state>
+					<state>Small</state>
+					<state>Medium</state>
+					<state>Large</state>
+					<state>Huge</state>
+				</statelabels>
+			</multitext>
+			<tablefield name="attacktable">
+				<bounds>0,0,0,0</bounds>
+				<invisible/>
+				<allowDrag/>
+			</tablefield>
+			<genericcontrol name="tableicon">
+				<anchored>
+					<left>
+						<parent>attack_size</parent>
+						<anchor>right</anchor>
+						<offset>4</offset>
+						<relation>relative</relation>
+					</left>
+					<bottom>
+						<parent>targetname</parent>
+						<anchor>bottom</anchor>
+						<offset>0</offset>
+					</bottom>
+					<size>
+						<width>14</width>
+						<height>14</height>
+					</size>
+				</anchored>
+				<icon>icon_notable</icon>
+				<tooltip>
+					<text></text>
+				</tooltip>
+				<script>
+					function onDragStart(...)
+						local id,name = window.attacktable.getValue();
+						if id~="" then
+							return window.attacktable.onDragStart(...);
+						else
+							return false;
+						end
+					end
+          
+					function onDrop(x,y,dragdata)
+						local customData = dragdata.getCustomData();
+						if not customData or not customData.type or customData.type~="RMCTable" then
+							return false;
+						end
+						window.attacktable.setValue(customData.tableID,customData.tableName);
+						window.updateNotes();
+						return true;
+					end
+				</script>
+			</genericcontrol>
+			<numberfieldX name="range">
+				<anchored>
+					<left>
+						<parent>tableicon</parent>
+						<anchor>right</anchor>
+						<relation>relative</relation>
+						<offset>5</offset>
+					</left>
+					<bottom>
+						<parent>targetname</parent>
+						<anchor>bottom</anchor>
+						<offset>0</offset>
+					</bottom>
+					<size>
+						<width>30</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>textline</name>
+					<offset>0,1,0,0</offset>
+				</frame>
+				<keyeditframe>
+					<name>shadeline</name>
+					<offset>0,1,0,0</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit() then
+							super.onInit();
+						end
+					end
+				</script>
+			</numberfieldX>
+			<numberfieldX name="reload">
+				<anchored>
+					<left>
+						<parent>range</parent>
+						<anchor>right</anchor>
+						<relation>relative</relation>
+						<offset>5</offset>
+					</left>
+					<bottom>
+						<parent>targetname</parent>
+						<anchor>bottom</anchor>
+						<offset>0</offset>
+					</bottom>
+					<size>
+						<width>30</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>textline</name>
+					<offset>0,1,0,0</offset>
+				</frame>
+				<keyeditframe>
+					<name>shadeline</name>
+					<offset>0,1,0,0</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit() then
+							super.onInit();
+						end
+					end
+				</script>
+			</numberfieldX>
+			<numberfieldX name="ammunition">
+				<anchored>
+					<left>
+						<parent>reload</parent>
+						<anchor>right</anchor>
+						<relation>relative</relation>
+						<offset>5</offset>
+					</left>
+					<bottom>
+						<parent>targetname</parent>
+						<anchor>bottom</anchor>
+						<offset>0</offset>
+					</bottom>
+					<size>
+						<width>30</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>textline</name>
+					<offset>0,1,0,0</offset>
+				</frame>
+				<keyeditframe>
+					<name>shadeline</name>
+					<offset>0,1,0,0</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit() then
+							super.onInit();
+						end
+					end
+				</script>
+			</numberfieldX>
+	  
+		</sheetdata>
+	</windowclass>
+	
+</root>

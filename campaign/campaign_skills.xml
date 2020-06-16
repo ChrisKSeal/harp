@@ -1,0 +1,499 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<root version="2.0">
+  
+  <windowclass name="skill">
+    <!--
+          Skill type:
+          1 = Skill    normal skill
+          2 = Spell    add to spell list
+		  
+		  Groups: (categories)
+		  1 = Artistic
+		  2 = Athletic
+		  3 = Combat
+		  4 = Concentration
+		  5 = General
+		  6 = Influence
+		  7 = Mystical Arts
+		  8 = Outdoor
+		  9 = Physical
+		  10 = Spells
+		  11 = Subterfuge
+		  
+    -->
+    <frame>charsheet</frame>
+    <placement>
+      <size>
+        <width>370</width>
+        <height>470</height>
+      </size>
+    </placement>
+    <sizelimits>
+      <minimum>
+        <width>370</width>
+        <height>470</height>
+      </minimum>
+      <maximum>
+        <width>370</width>
+        <height>470</height>
+      </maximum>
+    </sizelimits>
+    <minimize>minimized_reference</minimize>
+    <tooltip>
+      <field>name</field>
+    </tooltip>
+    <nodelete/>
+	<sharable />
+    <script>
+      function isStatic()
+        node = getDatabaseNode();
+        return (node and node.isStatic());
+      end
+      
+      function onInit()
+        if super and super.onInit then
+          super.onInit();
+        end
+        if isStatic() then
+          stats.setFrame(nil);
+          specialization.setFrame(nil);
+		  group.setFrame(nil);
+          notes.setFrame(nil);
+          armorfactor.setFrame(nil);
+          --[[ hide the lock, it isn't meaningful for static content ]]
+          locked.setVisible(false);
+          --[[ disable controls ]]
+          name.setReadOnly(true);
+          group.setEnabled(false);
+          stats.setReadOnly(true);
+          specialization.setReadOnly(true);
+		  specializationdropdown.setVisible(false);
+          armorfactor.setReadOnly(true);
+          notes.setReadOnly(true);
+          description.setEnabled(false);
+        end
+      end
+    </script>
+    <sheetdata>
+      <!-- NAME -->
+      <genericcontrol name="nameframe">
+        <bounds>10,20,-15,35</bounds>
+        <frame>
+          <name>sheetgroup</name>
+        </frame>
+      </genericcontrol>
+      <windowopencontrol>
+        <anchored>
+          <to>nameframe</to>
+          <position>insidetopleft</position>
+          <offset>13,8</offset>
+          <size>
+            <width>20</width>
+            <height>20</height>
+          </size>
+        </anchored>
+        <icon>
+          <normal>button_openwindow</normal>
+          <pressed>button_emptytarget</pressed>
+        </icon>
+        <class>skill</class>
+        <description>
+          <field>name</field>
+        </description>
+      </windowopencontrol>
+      <stringfieldX name="name">
+        <anchored>
+          <top>
+            <parent>nameframe</parent>
+            <anchor>top</anchor>
+            <offset>9</offset>
+          </top>
+          <left>
+            <parent>nameframe</parent>
+            <anchor>left</anchor>
+            <offset>35</offset>
+          </left>
+          <right>
+            <parent>nameframe</parent>
+            <anchor>right</anchor>
+            <offset>-35</offset>
+          </right>
+        </anchored>
+        <empty>&#171; New Skill &#187;</empty>
+        <font>sheettext</font>
+      </stringfieldX>
+      <checkbox name="locked">
+        <anchored>
+          <to>nameframe</to>
+          <position>insidetopright</position>
+          <offset>9,11</offset>
+          <size>
+            <width>16</width>
+            <height>16</height>
+          </size>
+        </anchored>
+        <stateicons>
+          <on>locked</on>
+          <off>unlocked</off>
+        </stateicons>
+        <script>
+          function onValueChanged()
+            local state = getState();
+            window.name.setReadOnly(state);
+            window.group.setEnabled(not state);
+            window.specialization.setReadOnly(state);
+            window.stats.setReadOnly(state);
+            window.armorfactor.setReadOnly(state);
+            window.notes.setReadOnly(state);
+            window.description.setEnabled(not state);
+            if state then
+              window.specialization.setFrame(nil);
+			  window.specializationdropdown.setVisible(false);
+              window.stats.setFrame(nil);
+              window.armorfactor.setFrame(nil);
+              window.notes.setFrame(nil);
+            else
+              window.specialization.setFrame("textlinesmall",0,-1,0,0);
+              window.specializationdropdown.setVisible(true);
+			  window.stats.setFrame("textlinesmall",0,-1,0,0);
+              window.armorfactor.setFrame("textlinesmall",0,-1,0,0);
+              window.notes.setFrame("textlinechat",0,-1,0,0);
+            end
+          end
+        </script>
+      </checkbox>
+      <!-- FRAME -->
+      <genericcontrol name="contentframe">
+        <bounds>10,54,-15,-13</bounds>
+        <frame>
+          <name>sheetgroup</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+      </genericcontrol>
+      <!-- PROPERTIES -->
+      <multitext name="group">
+        <anchored>
+          <to>contentframe</to>
+          <position>insidetopleft</position>
+          <offset>105,10</offset>
+          <size>
+            <width>130</width>
+            <height>17</height>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+        <statelabels>
+		  <state>Artistic</state>
+		  <state>Athletic</state>
+		  <state>Combat</state>
+		  <state>Concentration</state>
+		  <state>General</state>
+		  <state>Influence</state>
+		  <state>Mystical Arts</state>
+		  <state>Outdoor</state>
+		  <state>Physical</state>
+		  <state>Spells</state>
+		  <state>Subterfuge</state>
+        </statelabels>
+		<script>
+			function onInit()
+				if getState() &lt; 1 then
+					setState(5);
+				elseif getState() &gt; 11 then
+					setState(5);
+				end
+			end
+		</script>
+      </multitext>
+      <stringcontrolX>
+        <anchored>
+          <to>group</to>
+          <position>lefthigh</position>
+          <offset>5,4</offset>
+          <size>
+            <width>85</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <font>sheetlabelsmallbold</font>
+        <static>Group</static>
+      </stringcontrolX>
+      <stringfieldX name="specialization">
+        <anchored>
+          <to>group</to>
+          <position>belowleft</position>
+          <offset>0,5</offset>
+          <size>
+            <width>130</width>
+            <height>17</height>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>textlinesmall</name>
+          <offset>0,-1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadelinesmall</name>
+          <offset>0,-1,0,0</offset>
+        </keyeditframe>
+        <empty>(no specialization)</empty>
+      </stringfieldX>
+		<DropDown name="specializationdropdown">
+			<target>specialization</target>
+			<position>0,3</position>
+			<script>
+				function onInit()
+					super.onInit();
+					addItems(Rules_Skills.SpecializationList(window.name.getValue()));
+				end
+			</script>
+		</DropDown>
+      <stringcontrolX>
+        <anchored>
+          <to>specialization</to>
+          <position>lefthigh</position>
+          <offset>5,4</offset>
+          <size>
+            <width>85</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <font>sheetlabelsmallbold</font>
+        <static>Specialization</static>
+      </stringcontrolX>
+      <stringfieldX name="stats">
+        <anchored>
+          <to>specialization</to>
+          <position>belowleft</position>
+          <offset>0,5</offset>
+          <size>
+            <width>130</width>
+            <height>17</height>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>textlinesmall</name>
+          <offset>0,-1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadelinesmall</name>
+          <offset>0,-1,0,0</offset>
+        </keyeditframe>
+      </stringfieldX>
+      <stringcontrolX>
+        <anchored>
+          <to>stats</to>
+          <position>lefthigh</position>
+          <offset>5,4</offset>
+          <size>
+            <width>85</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <font>sheetlabelsmallbold</font>
+        <static>Stats</static>
+      </stringcontrolX>
+      <numberfieldX name="armorfactor">
+        <anchored>
+          <to>stats</to>
+          <position>belowleft</position>
+          <offset>0,5</offset>
+          <size>
+            <width>20</width>
+            <height>17</height>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+        <frame>
+          <name>textlinesmall</name>
+          <offset>0,-1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadelinesmall</name>
+          <offset>0,-1,0,0</offset>
+        </keyeditframe>
+      </numberfieldX>
+      <stringcontrolX>
+        <anchored>
+          <to>armorfactor</to>
+          <position>righthigh</position>
+          <offset>3,0</offset>
+          <size>
+            <width>85</width>
+            <height>17</height>
+          </size>
+        </anchored>
+        <font>sheettextsmall</font>
+        <static/>
+        <script>
+          function onInit()
+            if super and super.onInit then
+              super.onInit();
+            end
+            window.armorfactor.getDatabaseNode().onUpdate = update;
+            update();
+          end
+          
+          function update()
+            local val = window.armorfactor.getValue();
+            setValid();
+            if val &lt; 0 then
+              setValue("ERROR");
+              setInvalid();
+            elseif val &gt; 0 then
+              setValue("times");
+            else
+              setValue("(none)");
+            end
+          end
+        </script>
+      </stringcontrolX>
+      <stringcontrolX>
+        <anchored>
+          <to>armorfactor</to>
+          <position>lefthigh</position>
+          <offset>5,4</offset>
+          <size>
+            <width>85</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <font>sheetlabelsmallbold</font>
+        <static>Armor Pen.</static>
+      </stringcontrolX>
+	  <checkbox name="gmonlyskill">
+		<anchored>
+          <to>armorfactor</to>
+          <position>belowleft</position>
+          <offset>0,5</offset>
+          <size>
+            <width>20</width>
+            <height>17</height>
+          </size>
+        </anchored>
+		<script>
+			function onInit()
+				if super and super.onInit then
+					super.onInit()
+				end
+				if getState() then
+					Debug.chat(getDatabaseNode());
+					Debug.chat(getDatabaseNode().getValue());
+					Debug.chat(getState());
+				end
+			end
+		</script>
+		</checkbox>
+	  <stringcontrolX>
+        <anchored>
+          <to>gmonlyskill</to>
+          <position>lefthigh</position>
+          <offset>5,4</offset>
+          <size>
+            <width>85</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <font>sheetlabelsmallbold</font>
+        <static>Hide Roll.</static>
+      </stringcontrolX>
+      <!-- NOTES -->
+      <stringfieldX name="notes">
+        <anchored>
+          <to>gmonlyskill</to>
+          <position>belowleft</position>
+          <offset>-90,20</offset>
+          <size>
+            <width>220</width>
+          </size>
+        </anchored>
+        <font>chatfont</font>
+        <frame>
+          <name>textlinechat</name>
+          <offset>0,-1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadelinechat</name>
+          <offset>0,-1,0,0</offset>
+        </keyeditframe>
+        <multilinespacing>13</multilinespacing>
+      </stringfieldX>
+      <stringcontrolX>
+        <anchored>
+          <to>notes</to>
+          <position>aboveleft</position>
+          <offset>0,-2</offset>
+          <size>
+            <width>85</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <font>sheetlabelsmallbold</font>
+        <static>Notes</static>
+      </stringcontrolX>
+      <!-- DESCRIPTION -->
+      <formattedtextfield name="description">
+        <anchored>
+          <left>
+            <parent>contentframe</parent>
+            <anchor>left</anchor>
+            <offset>15</offset>
+          </left>
+          <right>
+            <parent>contentframe</parent>
+            <anchor>right</anchor>
+            <offset>-15</offset>
+          </right>
+          <top>
+            <parent>notes</parent>
+            <anchor>bottom</anchor>
+            <offset>20</offset>
+          </top>
+          <bottom>
+            <parent>contentframe</parent>
+            <anchor>bottom</anchor>
+            <offset>-15</offset>
+          </bottom>
+        </anchored>
+        <font>
+          <normal>chatfont</normal>
+          <bold>narratorfont</bold>
+          <italic>chatitalicfont</italic>
+          <bolditalic>chatbolditalicfont</bolditalic>
+          <title>defaultstringcontrol</title>
+        </font>
+        <linkicon>
+          <link>button_openwindow</link>
+          <emptylink>button_emptytarget</emptylink>
+        </linkicon>
+        <footer>footer_narrow</footer>
+        <selectioncolor>#FFD296</selectioncolor>
+      </formattedtextfield>
+      <stringcontrolX name="descLabel">
+        <anchored>
+          <to>description</to>
+          <position>aboveleft</position>
+          <offset>0,-2</offset>
+          <size>
+            <width>65</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <font>sheetlabelsmallbold</font>
+        <static>Description</static>
+      </stringcontrolX>
+ 		<scrollbar>
+			<anchored>
+				<to>description</to>
+				<position>right</position>
+				<offset>1,-4</offset>
+			</anchored>
+			<target>description</target>
+		</scrollbar>
+		<close_adventure />
+    </sheetdata>
+  </windowclass>
+
+</root>

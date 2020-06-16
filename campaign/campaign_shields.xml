@@ -1,0 +1,501 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<root version="2.0">
+  
+  <windowclass name="shield">
+
+    <frame>charsheet</frame>
+    <placement>
+      <size>
+        <width>270</width>
+        <height>370</height>
+      </size>
+    </placement>
+    <sizelimits>
+      <minimum>
+        <width>270</width>
+        <height>370</height>
+      </minimum>
+      <maximum>
+        <width>270</width>
+        <height>370</height>
+      </maximum>
+    </sizelimits>
+    <minimize>minimized_reference</minimize>
+    <tooltip>
+      <field>name</field>
+    </tooltip>
+    <nodelete/>
+	<sharable />
+    <script>
+      function isStatic()
+        node = getDatabaseNode();
+		Debug.chat(node);
+        return (node and node.isStatic());
+      end
+      
+      function onInit()
+        if super and super.onInit then
+          super.onInit();
+        end
+        if isStatic() then
+          --[[ hide the lock, it isn't meaningful for static content ]]
+          locked.setVisible(false);
+          --[[ disable controls ]]
+          name.setReadOnly(true);
+          notes.setReadOnly(true);
+          description.setEnabled(false);
+        end
+      end
+    </script>
+    <sheetdata>
+      <!-- NAME -->
+      <genericcontrol name="nameframe">
+        <bounds>10,20,250,35</bounds>
+        <frame>
+          <name>sheetgroup</name>
+        </frame>
+      </genericcontrol>
+      <windowopencontrol>
+        <anchored>
+          <to>nameframe</to>
+          <position>insidetopleft</position>
+          <offset>13,8</offset>
+          <size>
+            <width>20</width>
+            <height>20</height>
+          </size>
+        </anchored>
+        <icon>
+          <normal>button_openwindow</normal>
+          <pressed>button_emptytarget</pressed>
+        </icon>
+        <class>talent</class>
+        <description>
+          <field>name</field>
+        </description>
+      </windowopencontrol>
+      <stringfieldX name="name">
+        <anchored>
+          <top>
+            <parent>nameframe</parent>
+            <anchor>top</anchor>
+            <offset>9</offset>
+          </top>
+          <left>
+            <parent>nameframe</parent>
+            <anchor>left</anchor>
+            <offset>35</offset>
+          </left>
+          <right>
+            <parent>nameframe</parent>
+            <anchor>right</anchor>
+            <offset>-35</offset>
+          </right>
+        </anchored>
+        <empty>&#171; New Shield &#187;</empty>
+        <font>sheettext</font>
+      </stringfieldX>
+      <checkbox name="locked">
+        <anchored>
+          <to>nameframe</to>
+          <position>insidetopright</position>
+          <offset>9,11</offset>
+          <size>
+            <width>16</width>
+            <height>16</height>
+          </size>
+        </anchored>
+        <stateicons>
+          <on>locked</on>
+          <off>unlocked</off>
+        </stateicons>
+        <script>
+          function onValueChanged()
+            local state = getState();
+            window.name.setReadOnly(state);
+            window.description.setEnabled(not state);
+          end
+        </script>
+      </checkbox>
+      <!-- FRAME -->
+      <genericcontrol name="contentframe">
+        <bounds>10,54,250,-13</bounds>
+        <frame>
+          <name>sheetgroup</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+      </genericcontrol>
+      <!-- PROPERTIES -->
+      
+      <!-- NOTES -->
+	  <stringcontrolX>
+				<anchored>
+					<to>contentframe</to>
+					<position>insidetopleft</position>
+					<offset>10,14</offset>
+					<size>
+						<width>65</width>
+						<height>13</height>
+					</size>
+				</anchored>
+				<font>sheetlabelsmallbold</font>
+				<static>Type</static>
+			</stringcontrolX>
+	  <multitext name="type">
+				<anchored>
+				  <to>contentframe</to>
+				  <position>insidetopleft</position>
+				  <offset>115,10</offset>
+				  <size>
+					<width>150</width>
+					<height>17</height>
+				  </size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<script>
+				  function onInit()
+					if super and super.onInit then
+					  super.onInit();
+					end
+					if getState() &lt; 1 then
+					  setState(1);
+					elseif getState() &gt; 6 then
+					  setState(1);
+					end
+				  end
+				</script>
+				<statelabels>
+					<state>Wall Shield</state>
+					<state>Full Shield</state>
+					<state>Normal Shield</state>
+					<state>Target Shield</state>
+					<state>Buckler</state>
+					<state>Shield Weapon</state>
+				</statelabels>
+			</multitext>
+      <stringcontrolX>
+				<anchored>
+					<to>contentframe</to>
+					<position>insidetopleft</position>
+					<offset>15,56</offset>
+					<size>
+						<width>90</width>
+						<height>13</height>
+					</size>
+				</anchored>
+				<font>sheetlabelsmallbold</font>
+				<static>General Stats</static>
+			</stringcontrolX>
+			<stringcontrolX>
+				<anchored>
+					<to>contentframe</to>
+					<position>insidetopleft</position>
+					<offset>95,41</offset>
+					<size>
+						<width>40</width>
+						<height>13</height>
+					</size>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<static>Weight</static>
+			</stringcontrolX>
+			<numberfieldX name="weight">
+				<anchored>
+					<to>contentframe</to>
+					<position>insidetopleft</position>
+					<offset>95,52</offset>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>contentframe</to>
+					<position>insidetopleft</position>
+					<offset>140,41</offset>
+					<size>
+						<width>40</width>
+						<height>13</height>
+					</size>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<static>Trained</static>
+			</stringcontrolX>
+			<numberfieldX name="trained">
+				<anchored>
+					<to>contentframe</to>
+					<position>insidetopleft</position>
+					<offset>140,52</offset>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>contentframe</to>
+					<position>insidetopleft</position>
+					<offset>185,41</offset>
+					<size>
+						<width>50</width>
+						<height>13</height>
+					</size>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<static>Untrained</static>
+			</stringcontrolX>
+			<numberfieldX name="untrained">
+				<anchored>
+					<to>contentframe</to>
+					<position>insidetopleft</position>
+					<offset>185,52</offset>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>contentframe</to>
+					<position>insidetopleft</position>
+					<offset>15,78</offset>
+					<size>
+						<width>90</width>
+						<height>13</height>
+					</size>
+				</anchored>
+				<font>sheetlabelsmallbold</font>
+				<static>Magic/Quality</static>
+			</stringcontrolX>			
+			<stringcontrolX>
+				<anchored>
+					<to>contentframe</to>
+					<position>insidetopleft</position>
+					<offset>90,99</offset>
+					<size>
+						<width>50</width>
+						<height>13</height>
+					</size>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<static>Def. Bon.</static>
+			</stringcontrolX>
+			<numberfieldX name="magicbonus">
+				<anchored>
+					<to>contentframe</to>
+					<position>insidetopleft</position>
+					<offset>95,110</offset>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+		  			function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+					end
+				</script>
+			</numberfieldX>
+			
+			<!-- Magic Info -->
+			<stringcontrolX>
+				<anchored>
+					<to>contentframe</to>
+					<position>insidetopleft</position>
+					<offset>135,99</offset>
+					<size>
+						<width>50</width>
+						<height>13</height>
+					</size>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<static>Spell Add</static>
+			</stringcontrolX>
+			<numberfieldX name="spadd">
+				<anchored>
+					<to>contentframe</to>
+					<position>insidetopleft</position>
+					<offset>140,110</offset>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<gmonly/>
+				<script>
+		  			function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>contentframe</to>
+					<position>insidetopleft</position>
+					<offset>180,99</offset>
+					<size>
+						<width>50</width>
+						<height>13</height>
+					</size>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<static>PP Add</static>
+			</stringcontrolX>
+			<numberfieldX name="ppadd">
+				<anchored>
+					<to>contentframe</to>
+					<position>insidetopleft</position>
+					<offset>185,110</offset>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+					end
+				</script>
+			</numberfieldX>
+      <!-- DESCRIPTION -->
+      <formattedtextfield name="description">
+        <anchored>
+					<to>contentframe</to>
+					<position>insidetopleft</position>
+					<offset>15,140</offset>
+					<size>
+						<width>210</width>
+						<height>150</height>
+					</size>
+				</anchored>
+        <font>
+          <normal>chatfont</normal>
+          <bold>narratorfont</bold>
+          <italic>chatitalicfont</italic>
+          <bolditalic>chatbolditalicfont</bolditalic>
+          <title>defaultstringcontrol</title>
+        </font>
+        <linkicon>
+          <link>button_openwindow</link>
+          <emptylink>button_emptytarget</emptylink>
+        </linkicon>
+        <footer>footer_narrow</footer>
+        <selectioncolor>#FFD296</selectioncolor>
+      </formattedtextfield>
+      <stringcontrolX name="descLabel">
+        <anchored>
+          <to>description</to>
+          <position>aboveleft</position>
+          <offset>0,-2</offset>
+          <size>
+            <width>65</width>
+            <height>13</height>
+          </size>
+        </anchored>
+        <font>sheetlabelsmallbold</font>
+        <static>Description</static>
+      </stringcontrolX>
+ 		<scrollbar>
+			<anchored>
+				<to>description</to>
+				<position>right</position>
+				<offset>1,-4</offset>
+			</anchored>
+			<target>description</target>
+		</scrollbar>
+		<close_adventure />
+    </sheetdata>
+  </windowclass>
+
+</root>

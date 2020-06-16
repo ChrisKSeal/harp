@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<root version="2.0">
+  <windowclass name="charsheet_defence_window">
+    <!--
+          Armour type:
+          1 = None
+          2 = Soft Leather
+          3 = Rigid Leather
+          4 = Chain
+          5 = Plate & Chain
+          6 = Plate
+    -->
+    <sizelimits>
+      <maximum>
+        <height>18</height>
+      </maximum>
+      <minimum>
+        <height>18</height>
+      </minimum>
+    </sizelimits>
+    <script>
+	  function onInit()
+		if super and super.onInit then
+		  super.onInit();
+		end
+	  end
+	
+      function isEquipped()
+        return isequipped.getState();
+      end
+	
+	  function isFitted()
+	    return isFitted.getState();
+	  end
+
+      
+      function testDelete()
+        local win = windowlist.getPrevWindow(self);
+        if name.getValue()~="" then
+          return;
+        end
+        if #(windowlist.getWindows())==1 then
+          return;
+        end
+        if not win then
+          win = windowlist.getNextWindow(self);
+        end
+        win.name.setFocus();
+        getDatabaseNode().delete();
+      end
+      
+      function testNew()
+        local win = windowlist.getNextWindow(self);
+        if name.getValue()=="" then
+          return;
+        end
+        if not win then
+          win = windowlist.createWindow();
+        end
+		win.type.setState(1);
+        win.name.setFocus();
+      end
+    </script>
+    <sheetdata>
+		<windowreferencecontrol name="open">
+			<bounds>0,2,14,14</bounds>
+			<icon>
+				<normal>button_openwindow</normal>
+				<pressed>button_openwindow</pressed>
+			</icon>
+			<class>item_defence</class>
+			<description>
+				<field>name</field>
+			</description>
+		</windowreferencecontrol>
+		<textlistitemvalue name="name">
+			<bounds>15,0,140,17</bounds>
+			<frame>
+				<name>textline</name>
+				<offset>0,1,0,0</offset>
+			</frame>
+			<keyeditframe>
+				<name>shadeline</name>
+				<offset>0,1,0,0</offset>
+			</keyeditframe>
+			<font>sheettextsmall</font>
+			<script>
+				function onDeleteDown()
+					window.testDelete();
+				end
+         
+				function onDeleteUp()
+					window.testDelete();
+				end
+         
+				function onEnter()
+					window.testNew();
+				end
+			</script>
+		</textlistitemvalue>
+		<checkbox name="isfitted">
+			<bounds>165,4,12,12</bounds>
+			<tooltip>
+				<text>fitted?</text>
+			</tooltip>
+		</checkbox>
+		<checkbox name="isequipped">
+			<bounds>190,4,12,12</bounds>
+			<tooltip>
+				<text>Equipped?</text>
+			</tooltip>
+		</checkbox>
+    </sheetdata>
+  </windowclass>
+	
+	<windowclass name="charsheet_melee_window">
+		<sizelimits>
+			<maximum>
+				<height>18</height>
+			</maximum>
+			<minimum>
+				<height>18</height>
+			</minimum>
+		</sizelimits>
+		<script>
+			function onInit()
+				local node = getDatabaseNode();
+				if node.getChild("primary_category") then
+					return;
+				else
+					node.createChild("primary_category","number").setValue(1);
+				end
+			end
+		</script>
+		<sheetdata>
+			<stringfieldX name="link">
+				<bounds>0,0,0,0</bounds>
+				<invisible />
+			</stringfieldX>
+			<windowreferencecontrol name="open">
+				<bounds>0,2,14,14</bounds>
+				<icon>
+					<normal>button_openwindow</normal>
+					<pressed>button_openwindow</pressed>
+				</icon>
+				<class>item_weapon</class>
+				<description>
+					<field>name</field>
+				</description>
+			</windowreferencecontrol>
+			<textlistitemvalue name="name">
+				<bounds>15,0,140,17</bounds>
+				<frame>
+					<name>textline</name>
+					<offset>0,1,0,0</offset>
+				</frame>
+				<keyeditframe>
+					<name>shadeline</name>
+					<offset>0,1,0,0</offset>
+				</keyeditframe>
+				<font>sheettextsmall</font>
+				<script>
+					function onDeleteDown()
+						window.testDelete();
+					end
+         
+					function onDeleteUp()
+						window.testDelete();
+					end
+         
+					function onEnter()
+						window.testNew();
+					end
+				</script>
+			</textlistitemvalue>
+		</sheetdata>
+	</windowclass>
+	
+	<windowclass name="charsheet_ranged_window">
+		<sizelimits>
+			<maximum>
+				<height>18</height>
+			</maximum>
+			<minimum>
+				<height>18</height>
+			</minimum>
+		</sizelimits>
+		<script>
+			function onInit()
+				local node = getDatabaseNode();
+				if node.getChild("primary_category") then
+					return;
+				else
+					node.createChild("primary_category","number").setValue(7);
+				end
+			end
+		</script>
+		<sheetdata>
+			<stringfieldX name="link">
+				<bounds>0,0,0,0</bounds>
+				<invisible />
+			</stringfieldX>
+			<windowreferencecontrol name="open">
+				<bounds>0,2,14,14</bounds>
+				<icon>
+					<normal>button_openwindow</normal>
+					<pressed>button_openwindow</pressed>
+				</icon>
+				<class>item_weapon</class>
+				<description>
+					<field>name</field>
+				</description>
+			</windowreferencecontrol>
+			<textlistitemvalue name="name">
+				<bounds>15,0,140,17</bounds>
+				<frame>
+					<name>textline</name>
+					<offset>0,1,0,0</offset>
+				</frame>
+				<keyeditframe>
+					<name>shadeline</name>
+					<offset>0,1,0,0</offset>
+				</keyeditframe>
+				<font>sheettextsmall</font>
+				<script>					
+					function onDeleteDown()
+						window.testDelete();
+					end
+         
+					function onDeleteUp()
+						window.testDelete();
+					end
+         
+					function onEnter()
+						window.testNew();
+					end
+				</script>
+			</textlistitemvalue>
+			<multitext name="ammunition_type">
+				<anchored>
+					<left>
+						<parent>name</parent>
+						<anchor>right</anchor>
+						<offset>5</offset>
+					</left>
+					<top>
+						<parent>name</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>50</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<center />
+				<statelabels>
+					<state>None</state>
+					<state>Arrow</state>
+					<state>Bolt</state>
+					<state>Bullet</state>
+				</statelabels>
+			</multitext>
+		</sheetdata>
+	</windowclass>
+</root>

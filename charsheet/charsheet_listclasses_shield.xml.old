@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<root version="2.0">
+  <windowclass name="charsheet_shieldwindow">
+  <sizelimits>
+      <maximum>
+        <height>18</height>
+      </maximum>
+      <minimum>
+        <height>18</height>
+      </minimum>
+    </sizelimits>
+	<script>
+	  function onInit()
+		if super and super.onInit then
+		  super.onInit();
+		end
+		local node = getDatabaseNode().getParent().getParent();
+		node.createChild("combatSheetChgFlg").setValue(-1);
+	  end
+	
+      function isEquipped()
+        return isequipped.getState();
+      end
+      
+      function testDelete()
+        local win = windowlist.getPrevWindow(self);
+        if name.getValue()~="" then
+          return;
+        end
+        if #(windowlist.getWindows())==1 then
+          return;
+        end
+        if not win then
+          win = windowlist.getNextWindow(self);
+        end
+        win.name.setFocus();
+        getDatabaseNode().delete();
+      end
+      
+      function testNew()
+        local win = windowlist.getNextWindow(self);
+        if name.getValue()=="" then
+          return;
+        end
+        if not win then
+          win = windowlist.createWindow();
+        end
+		win.type.setState(1);
+        win.name.setFocus();
+      end
+    </script>
+	<sheetdata>
+	<stringfieldX name="table">
+        <bounds>0,0,0,0</bounds>
+        <invisible/>
+      </stringfieldX>
+	  <multitext name="type">
+        <bounds>0,0,0,0</bounds>
+        <invisible/>
+        <statelabels>
+		<state>Wall Shield</state>
+		<state>Full Shield</state>
+		<state>Normal Shield</state>
+		<state>Target Shield</state>
+		<state>Buckler</state>
+		<state>Shield Weapon</state>
+		</statelabels>
+	</multitext>
+	<windowreferencecontrol name="open">
+        <bounds>0,2,14,14</bounds>
+        <icon>
+          <normal>button_openwindow</normal>
+          <pressed>button_openwindow</pressed>
+        </icon>
+        <class>shield</class>
+        <description>
+          <field>name</field>
+        </description>
+      </windowreferencecontrol>
+	  <textlistitemvalue name="name">
+        <bounds>15,0,140,17</bounds>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+        <font>sheettextsmall</font>
+        <script>
+          function onDeleteDown()
+            window.testDelete();
+          end
+          
+          function onDeleteUp()
+            window.testDelete();
+          end
+          
+          function onEnter()
+            window.testNew();
+          end
+        </script>
+      </textlistitemvalue>
+  <checkbox name="isequipped">
+        <bounds>190,4,12,12</bounds>
+        <tooltip>
+          <text>Equipped?</text>
+        </tooltip>
+		<script>
+			function onValueChanged()
+				local node = window.getDatabaseNode().getParent().getParent();
+				node.createChild("combatSheetChgFlg").setValue(-1);
+			end
+		</script>
+      </checkbox>
+    </sheetdata>
+  </windowclass>
+  
+</root>

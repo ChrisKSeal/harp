@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<root version="2.0">
+
+<windowclass name="attack_selection">
+	<frame>charsheet</frame>
+	<placement>
+		<size>
+			<width>500</width>
+			<height>350</height>
+		</size>
+	</placement>
+	<sizelimits>
+		<minimum>
+			<width>500</width>
+			<height>350</height>
+		</minimum>
+		<maximum>
+			<width>500</width>
+			<height>350</height>
+		</maximum>
+	</sizelimits>
+	<minimize>minimized_item</minimize>
+	<sharable/>
+	<nodelete/>
+	<tooltip>
+		<field>name</field>
+	</tooltip>
+	<nodelete/>
+	<sharable />
+	<sheetdata>
+		<close_adventure />
+		<numberfieldX name="changeFlg">
+			<bounds>0,0,0,0</bounds>
+			<invisible />
+			<script>
+				function onInit()
+					local node = DB.getPath(getDatabaseNode());
+					DB.addHandler(node, "onUpdate", refresh);
+					setValue(0);
+				end
+		
+				function refresh()
+					--[[window.rectime.refresh();]]
+					--[[window.modbon.refresh();]]
+					setValue(0);
+				end
+			</script>
+		</numberfieldX>
+		<genericcontrol name="charframe">
+			<bounds>10,20,-15,-15</bounds>
+			<frame>
+				<name>sheetgroup</name>
+				<offset>0,1,0,0</offset>
+			</frame>
+		</genericcontrol>
+		<stringcontrolX name="attacklabel">
+			<anchored>
+				<to>charframe</to>
+				<position>insidetopleft</position>
+				<offset>10,34</offset>
+				<size>
+					<width>45</width>
+					<height>13</height>
+				</size>
+			</anchored>
+			<font>sheetlabelsmallbold</font>
+			<static>Name</static>
+		</stringcontrolX>
+		<stringfieldX name="attack">
+			<anchored>
+				<to>charframe</to>
+				<position>insidetopleft</position>
+				<offset>60,30</offset>
+				<size>
+					<width>150</width>
+					<height>17</height>
+				</size>
+			</anchored>
+			<font>sheettextsmall</font>
+			<center />
+			<frame>
+				<name>modifier</name>
+				<offset>4,4,4,4</offset>
+			</frame>
+			<keyeditframe>
+				<name>sheetfocus</name>
+				<offset>4,4,4,4</offset>
+			</keyeditframe>
+			<script>
+				function onInit()
+				  if super and super.onInit then
+				    super.onInit();
+				  end
+				  onValueChanged();
+				end
+					
+				function onValueChanged()
+					Debug.chat("Attack has changed");
+					window.optsdropdown.refresh();
+					local node = window.getDatabaseNode();
+					if AttackManager.isWeapon(node, getValue()) then
+						local weaponTab = AttackManager.getWeapon(node, getValue());
+						Debug.chat("weaponTab");
+					end
+				end
+			</script>
+		</stringfieldX>
+		<DropDown name="attackdropdown">
+			<target>attack</target>
+			<position>0,3</position>
+			<script>
+				function onInit()
+					super.onInit();
+					local node = window.getDatabaseNode();
+					local attackList = AttackManager.getList(node);
+					if #attackList &gt; 0 then
+						addItems(attackList);
+						setValue("Brawl");
+					else
+						window.attacklabel.setVisible(false);
+						window.attack.setVisible(false);
+						setVisible(false);
+					end
+				end
+			</script>
+		</DropDown>
+		<stringcontrolX name="optslabel">
+			<anchored>
+				<to>charframe</to>
+				<position>insidetopleft</position>
+				<offset>220,34</offset>
+				<size>
+					<width>60</width>
+					<height>13</height>
+				</size>
+			</anchored>
+			<font>sheetlabelsmallbold</font>
+			<static>Attack Type:</static>
+		</stringcontrolX>
+		<stringfieldX name="opts">
+			<anchored>
+				<to>charframe</to>
+				<position>insidetopleft</position>
+				<offset>300,30</offset>
+				<size>
+					<width>150</width>
+					<height>17</height>
+				</size>
+			</anchored>
+			<font>sheettextsmall</font>
+			<center />
+			<frame>
+				<name>modifier</name>
+				<offset>4,4,4,4</offset>
+			</frame>
+			<keyeditframe>
+				<name>sheetfocus</name>
+				<offset>4,4,4,4</offset>
+			</keyeditframe>
+			<script>
+				function onInit()
+				  if super and super.onInit then
+				    super.onInit();
+				  end
+				end
+				
+				function onValueChanged()
+					Debug.chat("options changed");
+					local node = window.getDatabaseNode();
+					Debug.chat(node);
+					local optsTab = AttackManager.getOpts(getValue());
+					Debug.chat(optsTab);
+				end
+			</script>
+		</stringfieldX>
+		<DropDown name="optsdropdown">
+			<target>opts</target>
+			<position>0,3</position>
+			<script>
+				function onInit()
+					super.onInit();
+					refresh();
+				end
+				
+				function refresh()
+					local node = window.getDatabaseNode();
+					local name = window.attack.getValue();
+					Debug.chat(name);
+					if name == "Brawl" then
+						clear();
+						addItems({"Basic Attack"});
+						window.optslabel.setVisible(true);
+						window.opts.setVisible(true);
+						setVisible(true);
+					elseif AttackManager.isWeapon(node, name) then
+						--[[TODO get the class and ranks]]
+						Debug.chat("Weapon but not brawl");
+						clear();
+						local optsList = AttackManager.getOptsList(1, 5);
+						if #optsList &gt; 0 then
+							addItems(optsList);
+							window.optslabel.setVisible(true);
+							window.opts.setVisible(true);
+							setVisible(true);
+						else
+							clear();
+							window.optslabel.setVisible(false);
+							window.opts.setVisible(false);
+							setVisible(false);
+						end
+					else
+						clear();
+						window.optslabel.setVisible(false);
+						window.opts.setVisible(false);
+						setVisible(false);
+					end
+				end
+			</script>
+		</DropDown>
+		
+	</sheetdata>
+</windowclass>
+
+</root>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<root version="2.0">
+
+<windowclass name="attack_selection">
+	<frame>charsheet</frame>
+	<placement>
+		<size>
+			<width>500</width>
+			<height>350</height>
+		</size>
+	</placement>
+	<sizelimits>
+		<minimum>
+			<width>500</width>
+			<height>350</height>
+		</minimum>
+		<maximum>
+			<width>500</width>
+			<height>350</height>
+		</maximum>
+	</sizelimits>
+	<minimize>minimized_item</minimize>
+	<sharable/>
+	<nodelete/>
+	<tooltip>
+		<field>name</field>
+	</tooltip>
+	<nodelete/>
+	<sharable />
+	<sheetdata>
+		<close_adventure />
+	</sheetdata>
+</windowclass>
+
+</root>

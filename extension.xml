@@ -1,0 +1,115 @@
+<root version="2.9">
+  	<properties>
+    	<name>HARP</name>
+    	<version>0.1</version>
+    	<author>Dakadin and Chris_Seal</author>
+    	<description>HARP Ruleset Extension</description>
+    	<ruleset>
+     		<name>RolemasterClassic</name>
+   		</ruleset>
+  	</properties>
+ 
+  	<base>	
+<!-- Include Files -->	
+
+		<!--includefile source="graphics/graphics_frames.xml" /-->
+		
+		<includefile source="desktop/desktop_classes.xml" />
+		<includefile source="desktop/desktop_panels.xml" />
+		<includefile source="graphics/graphics_misc.xml" />
+		
+		<includefile source="graphics/graphics_misc.xml" />
+		<includefile source="graphics/graphics_custom_frames.xml" />
+		<includefile source="graphics/graphics_desktop.xml" />
+		<!--
+		<includefile source="graphics/graphics_radial.xml" />
+
+		<includefile source="utility/template_tables.xml" />-->
+		<includefile source="utility/utility_tables.xml" />
+		<includefile source="common/template_linkeddropdown.xml" />
+		<!--
+		
+		<includefile source="ref/ref_races.xml" />-->
+		<includefile source="ref/ref_skills.xml" />
+		<!--<includefile source="ref/ref_talents.xml" />-->
+
+		<includefile source="campaign/campaign_npcs.xml" />
+		<includefile source="campaign/campaign_items.xml" />
+		<includefile source="campaign/campaign_items_magic.xml" />
+		<includefile source="campaign/campaign_items_spell.xml" />
+		<!--<includefile source="campaign/campaign_shields.xml"/>-->
+		<includefile source="campaign/campaign_skills.xml" />
+		<!--<includefile source="campaign/campaign_spelllists.xml" />-->
+		<includefile source="campaign/campaign_defence_item.xml" />
+		<includefile source="campaign/campaign_general_item.xml" />
+		<includefile source="campaign/campaign_consumable_item.xml" />
+		<includefile source="campaign/campaign_weapon_item.xml" />
+		<includefile source="campaign/campaign_talents.xml" />		
+		<!--<includefile source="campaign/campaign_armour.xml" />-->
+		<includefile source="campaign/campaign_spells.xml" />
+		<includefile source="campaign/campaign_bound_spells.xml" />
+		<includefile source="campaign/campaign_spell_casting.xml" />
+		<includefile source="campaign/campaign_attack_selection.xml" />
+		
+		<!--<script name="CharManager" file="charsheet/scripts/manager_char.lua" />-->
+		<includefile source="charsheet/charsheet_listclasses.xml" />
+		<includefile source="charsheet/charsheet_listclasses_combat.xml" />
+		<includefile source="charsheet/charsheet_listclasses_coinwindow.xml" />
+		<includefile source="charsheet/charsheet_listclasses_inventory.xml" />
+		<includefile source="charsheet/charsheet_listclasses_skills.xml" />
+		<includefile source="charsheet/charsheet_listclasses_spellwindow.xml" />
+		<includefile source="charsheet/charsheet_main.xml" />
+		<includefile source="charsheet/charsheet_combat.xml" />
+		<includefile source="charsheet/charsheet_skills.xml" />
+		<includefile source="charsheet/charsheet_spells.xml" />
+		<includefile source="charsheet/charsheet_inventory.xml" />
+		<includefile source="charsheet/charsheet_toplevel.xml" />
+		
+		<!-- Attack/Spell selector 
+		<includefile source="attackselector/attackwindows.xml" />-->
+
+		<!-- COMBAT TRACKER -->
+		<script name="CT_Utility" file="ct/scripts/ct_utils.lua" />
+		<script name="CTManager" file="ct/scripts/manager_ct.lua" />
+		<includefile source="ct/ct_combattracker.xml" />
+		<includefile source="ct/ct_combatpanels.xml" />
+		<includefile source="ct/ct_defencepanel.xml" />
+		<includefile source="ct/ct_effectpanel.xml" />
+		<includefile source="ct/ct_attackpanel.xml" />
+		<includefile source="ct/ct_spellpanel.xml" />
+		<includefile source="ct/ct_itempanel.xml" />
+  
+<!-- Scripts -->	<!--
+		<script name="RMU" file="scripts/rmu.lua" />-->
+		<script name="Rules_Constants" file="rules/scripts/rules_constants.lua" />
+		<script name="Rules_CustomData" file="rules/scripts/rules_customdata.lua" />
+		<script name="Rules_Armour" file="rules/scripts/rules_armour.lua" />
+		<script name="Rules_Weapons" file="rules/scripts/rules_weapons.lua" />
+		<script name="Rules_Items" file="rules/scripts/rules_items.lua" />
+		<script name="Rules_Modifiers" file="rules/scripts/rules_modifiers.lua" />
+		<script name="Rules_PC" file="rules/scripts/rules_pc.lua" /><!--
+		<script name="Rules_Cultures" file="rules/scripts/rules_cultures.lua" />-->
+		<script name="Rules_Stats" file="rules/scripts/rules_stats.lua" />
+		<script name="Rules_RR" file="rules/scripts/rules_rr.lua" /><!--
+		<script name="Rules_Fatigue" file="rules/scripts/rules_fatigue.lua" />-->
+		<script name="Rules_Professions" file="rules/scripts/rules_professions.lua" /><!--
+		<script name="Rules_Archetypes" file="rules/scripts/rules_archetypes.lua" />-->
+		<script name="Rules_Skills" file="rules/scripts/rules_skills.lua" />
+		<script name="Rules_Talents" file="rules/scripts/rules_talents.lua" />
+		<script name="Rules_Spells" file="rules/scripts/rules_spells.lua" />
+		<script name="Rules_Move" file="rules/scripts/rules_move.lua" /><!--
+		<script name="Rules_ArmorTypes" file="rules/scripts/rules_armortypes.lua" />
+		<script name="Rules_DamageAdjustment" file="rules/scripts/rules_adjustdamage.lua" />
+
+		<script name="OptionManager" file="scripts/manager_options.lua" />
+		<script name="Options" file="scripts/options.lua" />-->
+		<script name="Utilities" file="scripts/manager_utilities.lua" />
+		<script name="ItemManager" file="scripts/manager_items.lua" />
+		<script name="StackManager" file="scripts/manager_stack.lua" />
+		<script name="AttackManager" file="scripts/manager_attacksel.lua" />
+		
+		<script name="Dice" file="scripts/manager_dice.lua" />
+		<script name="ChatManager" file="scripts/manager_chat.lua" />
+
+	</base>
+</root>

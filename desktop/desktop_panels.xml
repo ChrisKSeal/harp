@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- 
+  Please see the license.html file included with this distribution for 
+  attribution and copyright information.
+-->
+
+<root>
+	<panel name="Modifiers" modes="host,client,local">
+		<class>HARPModifiers</class>
+		<bounds>
+			<anchored>
+				<bottom>
+					<anchor>bottom</anchor>
+					<offset>-50</offset>
+				</bottom>
+				<left>
+					<anchor>left</anchor>
+					<offset>420</offset>
+				</left>
+				<size>
+					<height>75</height>
+					<width>495</width>
+				</size>
+			</anchored>
+		</bounds>
+		<dynamic />
+		<locked />
+	</panel>
+</root>

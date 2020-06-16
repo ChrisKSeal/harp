@@ -1,0 +1,1530 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<root version="2.0">
+
+	<windowclass name="item_defence">
+		<frame>charsheet</frame>
+			<placement>
+				<size>
+					<width>320</width>
+					<height>450</height>
+				</size>
+			</placement>
+			<sizelimits>
+				<dynamic />
+				<minimum>
+					<width>320</width>
+					<height>450</height>
+				</minimum>
+			</sizelimits>
+			<minimize>minimized_item</minimize>
+			<sharable>
+				<shareas>item_defence_client</shareas>
+			</sharable>
+			<tooltip>
+				<field>name</field>
+			</tooltip>
+			<nodelete/>
+			<sheetdata>
+			<!-- NAME -->
+				<genericcontrol name="nameframe">
+					<bounds>10,20,-20,35</bounds>
+					<frame>
+						<name>sheetgroup</name>
+					</frame>
+				</genericcontrol>
+				<windowopencontrol>
+					<anchored>
+						<to>nameframe</to>
+						<position>insidetopleft</position>
+						<offset>13,8</offset>
+						<size>
+							<width>20</width>
+							<height>20</height>
+						</size>
+					</anchored>
+					<icon>
+						<normal>button_openwindow</normal>
+						<pressed>button_emptytarget</pressed>
+					</icon>
+					<class>item_defence</class>
+					<description>
+						<field>name</field>
+					</description>
+				</windowopencontrol>
+				<stringfieldX name="name">
+					<anchored>
+						<top>
+							<parent>nameframe</parent>
+							<anchor>top</anchor>
+							<offset>9</offset>
+						</top>
+						<left>
+							<parent>nameframe</parent>
+							<anchor>left</anchor>
+							<offset>35</offset>
+						</left>
+						<right>
+							<parent>nameframe</parent>
+							<anchor>right</anchor>
+							<offset>-15</offset>
+						</right>
+					</anchored>
+					<empty>&#171; New Defence &#187;</empty>
+					<font>sheettext</font>
+				</stringfieldX>
+
+				<!-- Frame -->    
+				<genericcontrol name="contentframe">
+					<bounds>10,54,-25,-13</bounds>
+					<frame>
+						<name>sheetgroup</name>
+						<offset>0,1,0,0</offset>
+					</frame>
+				</genericcontrol>
+
+
+				<!-- Subwindows -->
+				<subwindow name="main">
+					<bounds>22,64,-35,-23</bounds>
+					<class>item_defence_main</class>
+				</subwindow>
+				<scrollbar name="main_scroller">
+					<anchored>
+						<to>main</to>
+						<position>right</position>
+						<offset>-5,-4</offset>
+					</anchored>
+					<target>main</target>
+				</scrollbar>
+
+				<subwindow name="magic">
+					<bounds>22,64,-35,-23</bounds>
+					<class>item_magic</class>
+				</subwindow>
+				<scrollbar name="magic_scroller">
+					<anchored>
+						<to>magic</to>
+						<position>right</position>
+						<offset>-5,-4</offset>
+					</anchored>
+					<target>magic</target>
+				</scrollbar>
+				
+				<subwindow name="spells">
+					<bounds>22,64,-35,-23</bounds>
+					<class>item_spells</class>
+				</subwindow>
+				<scrollbar name="spell_scroller">
+					<anchored>
+						<to>spells</to>
+						<position>right</position>
+						<offset>-5,-4</offset>
+					</anchored>
+					<target>spells</target>
+				</scrollbar>
+
+			<!-- Tabs -->
+			<tabcontrol name="tabs">
+				<bounds>-22,50,18,220</bounds>
+				<tab>
+					<icon>tab_main</icon>
+					<subwindow>main</subwindow>
+					<scroller>main_scroller</scroller>
+				</tab>
+				<tab>
+					<icon>tab_magic</icon>
+					<subwindow>magic</subwindow>
+					<scroller>magic_scroller</scroller>
+				</tab>
+				<tab>
+					<icon>tab_spells</icon>
+					<subwindow>spells</subwindow>
+					<scroller>spell_scroller</scroller>
+				</tab>
+				<activate>1</activate>
+			</tabcontrol>
+		
+			<close_adventure />
+		</sheetdata>
+	</windowclass>
+	
+	<windowclass name="item_defence_client">
+		<frame>charsheet</frame>
+			<placement>
+				<size>
+					<width>320</width>
+					<height>450</height>
+				</size>
+			</placement>
+			<sizelimits>
+				<dynamic />
+				<minimum>
+					<width>320</width>
+					<height>450</height>
+				</minimum>
+			</sizelimits>
+			<minimize>minimized_item</minimize>
+			<sharable>
+				<shareas>item_defence_client</shareas>
+			</sharable>
+			<tooltip>
+				<field>name</field>
+			</tooltip>
+			<nodelete/>
+			<sheetdata>
+			<!-- NAME -->
+				<genericcontrol name="nameframe">
+					<bounds>10,20,-20,35</bounds>
+					<frame>
+						<name>sheetgroup</name>
+					</frame>
+				</genericcontrol>
+				<windowopencontrol>
+					<anchored>
+						<to>nameframe</to>
+						<position>insidetopleft</position>
+						<offset>13,8</offset>
+						<size>
+							<width>20</width>
+							<height>20</height>
+						</size>
+					</anchored>
+					<icon>
+						<normal>button_openwindow</normal>
+						<pressed>button_emptytarget</pressed>
+					</icon>
+					<class>item_defence_client</class>
+					<description>
+						<field>name</field>
+					</description>
+				</windowopencontrol>
+				<stringfieldX name="name">
+					<anchored>
+						<top>
+							<parent>nameframe</parent>
+							<anchor>top</anchor>
+							<offset>9</offset>
+						</top>
+						<left>
+							<parent>nameframe</parent>
+							<anchor>left</anchor>
+							<offset>35</offset>
+						</left>
+						<right>
+							<parent>nameframe</parent>
+							<anchor>right</anchor>
+							<offset>-15</offset>
+						</right>
+					</anchored>
+					<empty>&#171; New Defence &#187;</empty>
+					<font>sheettext</font>
+				</stringfieldX>
+
+				<!-- Frame -->    
+				<genericcontrol name="contentframe">
+					<bounds>10,54,-25,-13</bounds>
+					<frame>
+						<name>sheetgroup</name>
+						<offset>0,1,0,0</offset>
+					</frame>
+				</genericcontrol>
+
+
+				<!-- Subwindows -->
+				<subwindow name="main">
+					<bounds>22,64,-35,-23</bounds>
+					<class>item_defence_main</class>
+				</subwindow>
+				<scrollbar name="main_scroller">
+					<anchored>
+						<to>main</to>
+						<position>right</position>
+						<offset>-5,-4</offset>
+					</anchored>
+					<target>main</target>
+				</scrollbar>
+
+				<subwindow name="magic">
+					<bounds>22,64,-35,-23</bounds>
+					<class>item_magic</class>
+				</subwindow>
+				<scrollbar name="magic_scroller">
+					<anchored>
+						<to>magic</to>
+						<position>right</position>
+						<offset>-5,-4</offset>
+					</anchored>
+					<target>magic</target>
+				</scrollbar>
+				
+				<subwindow name="spells">
+					<bounds>22,64,-35,-23</bounds>
+					<class>item_spells</class>
+				</subwindow>
+				<scrollbar name="spell_scroller">
+					<anchored>
+						<to>spells</to>
+						<position>right</position>
+						<offset>-5,-4</offset>
+					</anchored>
+					<target>spells</target>
+				</scrollbar>
+
+			<!-- Tabs -->
+			<tabcontrol name="tabs">
+				<bounds>-22,50,18,230</bounds>
+				<tab>
+					<icon>tab_main</icon>
+					<subwindow>main</subwindow>
+					<scroller>main_scroller</scroller>
+				</tab>
+				<tab>
+					<icon>tab_magic</icon>
+					<subwindow>magic</subwindow>
+					<scroller>magic_scroller</scroller>
+				</tab>
+				<tab>
+					<icon>tab_spells</icon>
+					<subwindow>spells</subwindow>
+					<scroller>spell_scroller</scroller>
+				</tab>
+				<activate>1</activate>
+				<script>
+					local identifynode = nil;
+
+					function capture()
+						identifynode = getDatabaseNode().createChild("isidentified","number");
+						if identifynode then
+							getDatabaseNode().onChildUpdate = function () end;
+							identifynode.onUpdate = identifyUpdated;
+							identifyUpdated();
+						end
+					end
+
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						getDatabaseNode().onChildUpdate = capture;
+						capture();
+					end
+
+					function identifyUpdated()
+						if identifynode.getValue() ~= 0 then
+							nonidentified.setVisible(false);
+							identified.setVisible(true);
+							setVisible(true);
+						else
+							nonidentified.setVisible(true);
+							identified.setVisible(false);
+							setVisible(false);
+						end
+					end
+				</script>
+			</tabcontrol>
+		
+			<close_adventure />
+		</sheetdata>
+	</windowclass>
+
+	<windowclass name="item_defence_main">
+		<sheetdata>
+			<stringcontrolX name="general_label">
+				<anchored>
+					<left>
+						<anchor>left</anchor>
+						<offset>7</offset>
+					</left>
+					<right>
+						<anchor>right</anchor>
+						<offset>-7</offset>
+					</right>
+					<top>
+						<anchor>top</anchor>
+						<offset>15</offset>
+					</top>
+				</anchored>
+				<font>sheetlabelsmallbold</font>
+				<static>Stats</static>
+			</stringcontrolX>
+			
+			<numberfieldX name="item_weight">
+				<anchored>
+					<left>
+						<parent>general_label</parent>
+						<anchor>left</anchor>
+						<offset>40</offset>
+					</left>
+					<top>
+						<parent>general_label</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						setVisible(true);
+						setEnabled(true);
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>item_weight</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Weight</static>
+			</stringcontrolX>
+			<numberfieldX name="item_length">
+				<anchored>
+					<left>
+						<parent>item_weight</parent>
+						<anchor>right</anchor>
+						<offset>15</offset>
+					</left>
+					<top>
+						<parent>item_weight</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						setVisible(true);
+						setEnabled(true);
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>item_length</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Length</static>
+			</stringcontrolX>
+			<numberfieldX name="item_value">
+				<anchored>
+					<left>
+						<parent>item_length</parent>
+						<anchor>right</anchor>
+						<offset>15</offset>
+					</left>
+					<top>
+						<parent>item_weight</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>item_value</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Value</static>
+			</stringcontrolX>
+
+			<stringfieldX name="nonidentified">
+				<anchored>
+					<left>
+						<anchor>left</anchor>
+						<offset>7</offset>
+					</left>
+					<right>
+						<anchor>right</anchor>
+						<offset>-7</offset>
+					</right>
+					<top>
+						<parent>item_weight</parent>
+						<anchor>bottom</anchor>
+						<offset>25</offset>
+					</top>
+				</anchored>
+				<frame>
+					<name>modifier</name>
+					<offset>7,5,7,5</offset>
+				</frame>
+				<font>sheettextsmall</font>
+				<multilinespacing>15</multilinespacing>
+			</stringfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>nonidentified</to>
+					<position>aboveleft</position>
+					<offset>0,1</offset>
+				</anchored>
+				<font>sheetlabelsmall</font>
+				<static>At a glance</static>
+			</stringcontrolX>
+
+		  <!-- Identified -->  
+			<stringfieldX name="identified">
+				<anchored>
+					<left>
+						<anchor>left</anchor>
+						<offset>7</offset>
+					</left>
+					<right>
+						<anchor>right</anchor>
+						<offset>-7</offset>
+					</right>
+					<top>
+						<parent>nonidentified</parent>
+						<anchor>bottom</anchor>
+						<offset>19</offset>
+					</top>
+				</anchored>
+				<frame>
+					<name>modifier</name>
+					<offset>7,5,7,5</offset>
+				</frame>
+				<font>sheettextsmall</font>
+				<multilinespacing>15</multilinespacing>
+			</stringfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>identified</to>
+					<position>aboveleft</position>
+					<offset>0,1</offset>
+				</anchored>
+				<font>sheetlabelsmall</font>
+				<static>When identified</static>
+			</stringcontrolX>
+			<checkbox name="isidentified">
+				<anchored>
+					<to>identified</to>
+					<position>aboveright</position>
+					<offset>0,1</offset>
+					<size>
+						<width>12</width>
+						<height>12</height>
+					</size>
+				</anchored>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+					end
+				</script>
+			</checkbox>
+			
+			<numberfieldX name="item_db_base">
+				<anchored>
+					<left>
+						<parent>general_label</parent>
+						<anchor>left</anchor>
+						<offset>0</offset>
+					</left>
+					<top>
+						<parent>identified</parent>
+						<anchor>bottom</anchor>
+						<offset>20</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						setVisible(true);
+						setEnabled(false);
+						update();
+					end
+					
+					function update()
+						setValue(Rules_Armour.getBaseDB(window.item_head_armour.getState(), window.item_neck_armour.getState(), window.item_shoulder_armour.getState(), window.item_torso_armour.getState(), window.item_abdomen_armour.getState(), 
+								window.item_arm_armour.getState(), window.item_hand_armour.getState(), window.item_groin_armour.getState(), window.item_leg_armour.getState(), window.item_foot_armour.getState()));
+					end
+					
+				</script>
+			</numberfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>item_db_base</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Def. Bon.</static>
+			</stringcontrolX>
+			
+			<numberfieldX name="item_unfitted_max">
+				<anchored>
+					<left>
+						<parent>item_db_base</parent>
+						<anchor>right</anchor>
+						<offset>10</offset>
+					</left>
+					<top>
+						<parent>item_db_base</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						setVisible(true);
+						setEnabled(true);
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>item_unfitted_max</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>UF Max.</static>
+			</stringcontrolX>
+			
+			<numberfieldX name="item_unfitted_min">
+				<anchored>
+					<left>
+						<parent>item_unfitted_max</parent>
+						<anchor>right</anchor>
+						<offset>10</offset>
+					</left>
+					<top>
+						<parent>item_db_base</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						setVisible(true);
+						setEnabled(true);
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>item_unfitted_min</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>UF Min.</static>
+			</stringcontrolX>
+			
+			<numberfieldX name="item_fitted_max">
+				<anchored>
+					<left>
+						<parent>item_unfitted_min</parent>
+						<anchor>right</anchor>
+						<offset>10</offset>
+					</left>
+					<top>
+						<parent>item_db_base</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						setVisible(true);
+						setEnabled(true);
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>item_fitted_max</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Fit Max.</static>
+			</stringcontrolX>
+			
+			<numberfieldX name="item_fitted_min">
+				<anchored>
+					<left>
+						<parent>item_fitted_max</parent>
+						<anchor>right</anchor>
+						<offset>10</offset>
+					</left>
+					<top>
+						<parent>item_db_base</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						setVisible(true);
+						setEnabled(true);
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>item_fitted_min</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Fit Min.</static>
+			</stringcontrolX>
+			
+			<numberfieldX name="item_cast_penalty">
+				<anchored>
+					<left>
+						<parent>general_label</parent>
+						<anchor>left</anchor>
+						<offset>0</offset>
+					</left>
+					<top>
+						<parent>item_db_base</parent>
+						<anchor>bottom</anchor>
+						<offset>20</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						setVisible(true);
+						setEnabled(true);
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>item_cast_penalty</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Cast Pen.</static>
+			</stringcontrolX>
+			
+			<stringcontrolX name="item_shield_label">
+				<anchored>
+					<left>
+						<parent>item_cast_penalty</parent>
+						<anchor>right</anchor>
+						<offset>60</offset>
+					</left>
+					<top>
+						<parent>item_cast_penalty</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheetlabelsmallbold</font>
+				<static>Shield:</static>
+			</stringcontrolX>
+			
+			<numberfieldX name="item_shield_untrained">
+				<anchored>
+					<left>
+						<parent>item_shield_label</parent>
+						<anchor>right</anchor>
+						<offset>10</offset>
+					</left>
+					<top>
+						<parent>item_cast_penalty</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						setVisible(true);
+						setEnabled(true);
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>item_shield_untrained</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Untrain.</static>
+			</stringcontrolX>
+			
+			<numberfieldX name="item_shield_trained">
+				<anchored>
+					<left>
+						<parent>item_shield_untrained</parent>
+						<anchor>right</anchor>
+						<offset>10</offset>
+					</left>
+					<top>
+						<parent>item_cast_penalty</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						setVisible(true);
+						setEnabled(true);
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>item_shield_trained</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Trained</static>
+			</stringcontrolX>
+			
+			<stringcontrolX name="armour_label">
+				<anchored>	
+					<left>
+						<anchor>left</anchor>
+						<offset>7</offset>
+					</left>
+					<right>
+						<anchor>right</anchor>
+						<offset>-7</offset>
+					</right>
+					<top>
+						<parent>item_cast_penalty</parent>
+						<anchor>bottom</anchor>
+						<offset>10</offset>
+					</top>
+				</anchored>
+				<font>sheetlabelsmallbold</font>
+				<static>Armour Value</static>
+			</stringcontrolX>
+			
+			<multitext name="item_head_armour">
+				<anchored>
+					<left>
+						<parent>armour_label</parent>
+						<anchor>left</anchor>
+						<offset>20</offset>
+					</left>
+					<top>
+						<parent>armour_label</parent>
+						<anchor>bottom</anchor>
+						<offset>15</offset>
+					</top>
+					<size>
+						<width>95</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<statelabels>
+					<state>None</state>
+					<state>Soft Leather</state>
+					<state>Rigid Leather</state>
+					<state>Chain</state>
+					<state>Plate &amp; Chain</state>
+					<state>Plate</state>
+				</statelabels>
+				<script>
+					function onValueChanged()
+						window.item_db_base.update();
+					end
+				</script>
+			</multitext>
+			<stringcontrolX>
+				<anchored>
+					<to>item_head_armour</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Head</static>
+			</stringcontrolX>
+			
+			<multitext name="item_neck_armour">
+				<anchored>
+					<left>
+						<parent>item_head_armour</parent>
+						<anchor>right</anchor>
+						<offset>10</offset>
+					</left>
+					<top>
+						<parent>item_head_armour</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>95</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<statelabels>
+					<state>None</state>
+					<state>Soft Leather</state>
+					<state>Rigid Leather</state>
+					<state>Chain</state>
+					<state>Plate &amp; Chain</state>
+					<state>Plate</state>
+				</statelabels>
+				<script>
+					function onValueChanged()
+						window.item_db_base.update();
+					end
+				</script>
+			</multitext>
+			<stringcontrolX>
+				<anchored>
+					<to>item_neck_armour</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Neck</static>
+			</stringcontrolX>
+			
+			<multitext name="item_shoulder_armour">
+				<anchored>
+					<left>
+						<parent>armour_label</parent>
+						<anchor>left</anchor>
+						<offset>20</offset>
+					</left>
+					<top>
+						<parent>item_neck_armour</parent>
+						<anchor>bottom</anchor>
+						<offset>15</offset>
+					</top>
+					<size>
+						<width>95</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<statelabels>
+					<state>None</state>
+					<state>Soft Leather</state>
+					<state>Rigid Leather</state>
+					<state>Chain</state>
+					<state>Plate &amp; Chain</state>
+					<state>Plate</state>
+				</statelabels>
+				<script>
+					function onValueChanged()
+						window.item_db_base.update();
+					end
+				</script>
+			</multitext>
+			<stringcontrolX>
+				<anchored>
+					<to>item_shoulder_armour</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Shoulder</static>
+			</stringcontrolX>
+			
+			<multitext name="item_torso_armour">
+				<anchored>
+					<left>
+						<parent>item_shoulder_armour</parent>
+						<anchor>right</anchor>
+						<offset>10</offset>
+					</left>
+					<top>
+						<parent>item_shoulder_armour</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>95</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<statelabels>
+					<state>None</state>
+					<state>Soft Leather</state>
+					<state>Rigid Leather</state>
+					<state>Chain</state>
+					<state>Plate &amp; Chain</state>
+					<state>Plate</state>
+				</statelabels>
+				<script>
+					function onValueChanged()
+						window.item_db_base.update();
+					end
+				</script>
+			</multitext>
+			<stringcontrolX>
+				<anchored>
+					<to>item_torso_armour</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Torso</static>
+			</stringcontrolX>
+			
+			<multitext name="item_abdomen_armour">
+				<anchored>
+					<left>
+						<parent>armour_label</parent>
+						<anchor>left</anchor>
+						<offset>20</offset>
+					</left>
+					<top>
+						<parent>item_shoulder_armour</parent>
+						<anchor>bottom</anchor>
+						<offset>15</offset>
+					</top>
+					<size>
+						<width>95</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<statelabels>
+					<state>None</state>
+					<state>Soft Leather</state>
+					<state>Rigid Leather</state>
+					<state>Chain</state>
+					<state>Plate &amp; Chain</state>
+					<state>Plate</state>
+				</statelabels>
+				<script>
+					function onValueChanged()
+						window.item_db_base.update();
+					end
+				</script>
+			</multitext>
+			<stringcontrolX>
+				<anchored>
+					<to>item_abdomen_armour</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Abdomen</static>
+			</stringcontrolX>
+			
+			<multitext name="item_arm_armour">
+				<anchored>
+					<left>
+						<parent>item_abdomen_armour</parent>
+						<anchor>right</anchor>
+						<offset>10</offset>
+					</left>
+					<top>
+						<parent>item_abdomen_armour</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>95</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<statelabels>
+					<state>None</state>
+					<state>Soft Leather</state>
+					<state>Rigid Leather</state>
+					<state>Chain</state>
+					<state>Plate &amp; Chain</state>
+					<state>Plate</state>
+				</statelabels>
+				<script>
+					function onValueChanged()
+						window.item_db_base.update();
+					end
+				</script>
+			</multitext>
+			<stringcontrolX>
+				<anchored>
+					<to>item_arm_armour</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Arms</static>
+			</stringcontrolX>
+			
+			<multitext name="item_hand_armour">
+				<anchored>
+					<left>
+						<parent>armour_label</parent>
+						<anchor>left</anchor>
+						<offset>20</offset>
+					</left>
+					<top>
+						<parent>item_abdomen_armour</parent>
+						<anchor>bottom</anchor>
+						<offset>15</offset>
+					</top>
+					<size>
+						<width>95</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<statelabels>
+					<state>None</state>
+					<state>Soft Leather</state>
+					<state>Rigid Leather</state>
+					<state>Chain</state>
+					<state>Plate &amp; Chain</state>
+					<state>Plate</state>
+				</statelabels>
+				<script>
+					function onValueChanged()
+						window.item_db_base.update();
+					end
+				</script>
+			</multitext>
+			<stringcontrolX>
+				<anchored>
+					<to>item_hand_armour</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Hands</static>
+			</stringcontrolX>
+			
+			<multitext name="item_groin_armour">
+				<anchored>
+					<left>
+						<parent>item_hand_armour</parent>
+						<anchor>right</anchor>
+						<offset>10</offset>
+					</left>
+					<top>
+						<parent>item_hand_armour</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>95</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<statelabels>
+					<state>None</state>
+					<state>Soft Leather</state>
+					<state>Rigid Leather</state>
+					<state>Chain</state>
+					<state>Plate &amp; Chain</state>
+					<state>Plate</state>
+				</statelabels>
+				<script>
+					function onValueChanged()
+						window.item_db_base.update();
+					end
+				</script>
+			</multitext>
+			<stringcontrolX>
+				<anchored>
+					<to>item_groin_armour</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Groin</static>
+			</stringcontrolX>
+			
+			<multitext name="item_leg_armour">
+				<anchored>
+					<left>
+						<parent>armour_label</parent>
+						<anchor>left</anchor>
+						<offset>20</offset>
+					</left>
+					<top>
+						<parent>item_hand_armour</parent>
+						<anchor>bottom</anchor>
+						<offset>15</offset>
+					</top>
+					<size>
+						<width>95</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<statelabels>
+					<state>None</state>
+					<state>Soft Leather</state>
+					<state>Rigid Leather</state>
+					<state>Chain</state>
+					<state>Plate &amp; Chain</state>
+					<state>Plate</state>
+				</statelabels>
+				<script>
+					function onValueChanged()
+						window.item_db_base.update();
+					end
+				</script>
+			</multitext>
+			<stringcontrolX>
+				<anchored>
+					<to>item_leg_armour</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Legs</static>
+			</stringcontrolX>
+			
+			<multitext name="item_foot_armour">
+				<anchored>
+					<left>
+						<parent>item_leg_armour</parent>
+						<anchor>right</anchor>
+						<offset>10</offset>
+					</left>
+					<top>
+						<parent>item_leg_armour</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>95</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<statelabels>
+					<state>None</state>
+					<state>Soft Leather</state>
+					<state>Rigid Leather</state>
+					<state>Chain</state>
+					<state>Plate &amp; Chain</state>
+					<state>Plate</state>
+				</statelabels>
+				<script>
+					function onValueChanged()
+						window.item_db_base.update();
+					end
+				</script>
+			</multitext>
+			<stringcontrolX>
+				<anchored>
+					<to>item_foot_armour</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Feet</static>
+			</stringcontrolX>
+			
+		</sheetdata>
+	</windowclass>
+</root>

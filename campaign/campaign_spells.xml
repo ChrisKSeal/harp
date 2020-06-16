@@ -1,0 +1,939 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<root version="2.0">
+	<windowclass name="spell">
+		<frame>charsheet</frame>
+		<placement>
+			<size>
+				<width>320</width>
+				<height>450</height>
+			</size>
+		</placement>
+		<sizelimits>
+			<dynamic />
+			<minimum>
+				<width>320</width>
+				<height>450</height>
+			</minimum>
+		</sizelimits>
+		<minimize>minimized_reference</minimize>
+		<script>
+			function onInit()
+				local node = getDatabaseNode();
+				node.createChild("description","string");
+			end					
+		</script>
+		<sharable/>
+		<nodelete/>
+		<tooltip>
+			<field>name</field>
+		</tooltip>
+		<sheetdata>
+			<!-- NAME -->
+			<genericcontrol name="nameframe">
+				<bounds>10,20,-15,35</bounds>
+				<frame>
+					<name>sheetgroup</name>
+				</frame>
+			</genericcontrol>
+			<windowopencontrol>
+				<anchored>
+					<to>nameframe</to>
+					<position>insidetopleft</position>
+					<offset>13,8</offset>
+					<size>
+						<width>20</width>
+						<height>20</height>
+					</size>
+				</anchored>
+				<icon>
+					<normal>button_openwindow</normal>
+					<pressed>button_emptytarget</pressed>
+				</icon>
+				<class>spell</class>
+				<description>
+					<field>name</field>
+				</description>
+			</windowopencontrol>
+			<stringfieldX name="name">
+				<anchored>
+					<top>
+						<parent>nameframe</parent>
+						<anchor>top</anchor>
+						<offset>9</offset>
+					</top>
+					<left>
+						<parent>nameframe</parent>
+						<anchor>left</anchor>
+						<offset>35</offset>
+					</left>
+					<right>
+						<parent>nameframe</parent>
+						<anchor>right</anchor>
+						<offset>-35</offset>
+					</right>
+				</anchored>
+				<empty>&#171; New Spell &#187;</empty>
+				<font>sheettext</font>
+			</stringfieldX>
+			<checkbox name="locked">
+				<anchored>
+					<to>nameframe</to>
+					<position>insidetopright</position>
+					<offset>9,11</offset>
+					<size>
+						<width>16</width>
+						<height>16</height>
+					</size>
+				</anchored>
+				<stateicons>
+					<on>locked</on>
+					<off>unlocked</off>
+				</stateicons>
+				<!-- TODO -->
+				<script>
+					function onValueChanged()
+						local state = getState();
+						window.name.setReadOnly(state);
+						window.pp_cost.setReadOnly(state);
+						window.spell_type.setEnabled(not state);
+						window.skill.setReadOnly(state);
+						window.skill_dropdown.setEnabled(not state);
+						window.resolution_table.setEnabled(not state);
+						window.size.setEnabled(not state);
+						window.resistance_roll.setEnabled(not state);
+						window.range.setReadOnly(state);
+						window.duration.setReadOnly(state);
+						window.sphere.setReadOnly(state);
+						window.description.setReadOnly(state);
+						window.scalelist.setEnabled(not state);
+					end
+				</script>
+			</checkbox>
+
+			<!-- Frame -->    
+			<genericcontrol name="contentframe">
+				<bounds>10,54,-15,-13</bounds>
+				<frame>
+					<name>sheetgroup</name>
+					<offset>0,1,0,0</offset>
+				</frame>
+			</genericcontrol>
+
+			<stringcontrolX name="spell_label">
+				<anchored>
+					<left>
+						<parent>contentframe</parent>
+						<anchor>left</anchor>
+						<offset>15</offset>
+					</left>
+					<top>
+						<parent>contentframe</parent>
+						<anchor>top</anchor>
+						<offset>15</offset>
+					</top>
+					<size>
+						<width>90</width>
+						<height>13</height>
+					</size>
+				</anchored>
+				<font>sheetlabelsmallbold</font>
+				<static>Casting Stats</static>
+			</stringcontrolX>
+			
+			<numberfieldX name="pp_cost">
+				<anchored>
+					<left>
+						<parent>spell_label</parent>
+						<anchor>left</anchor>
+						<offset>8</offset>
+					</left>
+					<top>
+						<parent>spell_label</parent>
+						<anchor>bottom</anchor>
+						<offset>19</offset>
+					</top>
+					<size>
+						<width>40</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<gmonly/>
+				<script>
+		  			function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+					end
+				</script>
+			</numberfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>pp_cost</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>PP Cost</static>
+			</stringcontrolX>
+			
+			<multitext name="spell_type">
+				<anchored>
+					<left>
+						<parent>pp_cost</parent>
+						<anchor>right</anchor>
+						<offset>10</offset>
+					</left>
+					<top>
+						<parent>pp_cost</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>75</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<center />
+				<frame>
+					<name>modifier</name>
+					<offset>8,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>8,4,4,4</offset>
+				</keyeditframe>
+				<font>sheettextsmall</font>
+				<script>
+				  function onInit()
+					if super and super.onInit then
+					  super.onInit();
+					end
+					if getState() &lt; 1 then
+					  setState(1);
+					elseif getState() &gt; 3 then
+					  setState(1);
+					end
+				  end
+				</script>
+				<statelabels>
+					<state>Utility</state>
+					<state>Attack</state>
+					<state>Elemental</state>
+				</statelabels>
+			</multitext>
+			<stringcontrolX>
+				<anchored>
+					<to>spell_type</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Spell Type</static>
+			</stringcontrolX>
+			<stringfieldX name="skill">
+				<anchored>
+					<left>
+						<parent>spell_type</parent>
+						<anchor>right</anchor>
+						<offset>10</offset>
+					</left>
+					<top>
+						<parent>pp_cost</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>120</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<center />
+				<frame>
+					<name>modifier</name>
+					<offset>4,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>4,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+					  if super and super.onInit then
+					    super.onInit();
+					  end
+					end
+				</script>
+			</stringfieldX>
+			<DropDown name="skill_dropdown">
+				<target>skill</target>
+				<position>0,3</position>
+				<script>
+					function onInit()
+						super.onInit();
+						local charNode = window.getDatabaseNode().getParent().getParent().getParent();
+						if charNode then
+							local skillList = Rules_PC.SkillList(charNode);
+							if #skillList &gt; 0 then
+								addItems(skillList);
+							end
+						end
+					end
+				</script>
+			</DropDown>
+			<stringcontrolX name="skill_label">
+				<anchored>
+					<to>skill</to>
+					<position>above</position>
+					<offset>0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Associated Skill</static>
+			</stringcontrolX>
+			
+			<tablefield name="resolution_table">
+				<anchored>
+					<left>
+						<parent>pp_cost</parent>
+						<anchor>left</anchor>
+						<offset>0</offset>
+					</left>
+					<top>
+						<parent>pp_cost</parent>
+						<anchor>bottom</anchor>
+						<offset>15</offset>
+					</top>
+					<size>
+						<width>170</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<allowDrag/>
+				<empty>(none)</empty>
+				<center />
+				<frame>
+					<name>modifier</name>
+					<offset>8,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>8,4,4,4</offset>
+				</keyeditframe>
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						if window.getDatabaseNode() and window.getDatabaseNode().isStatic() then
+							setAllowDrop(false);
+						else
+							setAllowDrop(true);
+						end
+					end
+				</script>
+			</tablefield>
+			<stringcontrolX>
+				<anchored>
+					<to>resolution_table</to>
+					<position>above</position>
+					<offset>0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Resolution Table</static>
+			</stringcontrolX>
+			<multitext name="size">
+				<anchored>
+					<left>
+						<parent>resolution_table</parent>
+						<anchor>right</anchor>
+						<offset>10</offset>
+					</left>
+					<top>
+						<parent>resolution_table</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>75</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<center />
+				<frame>
+					<name>modifier</name>
+					<offset>8,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>8,4,4,4</offset>
+				</keyeditframe>
+				<font>sheettextsmall</font>
+				<script>
+				  function onInit()
+					if super and super.onInit then
+					  super.onInit();
+					end
+					if getState() &lt; 1 then
+					  setState(1);
+					elseif getState() &gt; 5 then
+					  setState(1);
+					end
+				  end
+				</script>
+				<statelabels>
+					<state>Tiny</state>
+					<state>Small</state>
+					<state>Medium</state>
+					<state>Large</state>
+					<state>Huge</state>
+				</statelabels>
+			</multitext>
+			<stringcontrolX>
+				<anchored>
+					<to>size</to>
+					<position>above</position>
+					<offset>0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Size</static>
+			</stringcontrolX>
+			
+			<multitext name="resistance_roll">
+				<anchored>
+					<left>
+						<parent>resolution_table</parent>
+						<anchor>left</anchor>
+						<offset>0</offset>
+					</left>
+					<top>
+						<parent>resolution_table</parent>
+						<anchor>bottom</anchor>
+						<offset>15</offset>
+					</top>
+					<size>
+						<width>75</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<center />
+				<frame>
+					<name>modifier</name>
+					<offset>8,4,4,4</offset>
+				</frame>
+				<keyeditframe>
+					<name>sheetfocus</name>
+					<offset>8,4,4,4</offset>
+				</keyeditframe>
+				<font>sheettextsmall</font>
+				<script>
+				  function onInit()
+					if super and super.onInit then
+					  super.onInit();
+					end
+					if getState() &lt; 1 then
+					  setState(1);
+					elseif getState() &gt; 4 then
+					  setState(1);
+					end
+				  end
+				</script>
+				<statelabels>
+					<state>---</state>
+					<state>Magic</state>
+					<state>Stamina</state>
+					<state>Will</state>
+				</statelabels>
+			</multitext>
+			<stringcontrolX>
+				<anchored>
+					<to>resistance_roll</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Resisted By</static>
+			</stringcontrolX>
+			
+			<stringfieldX name="range">
+				<anchored>
+					<left>
+						<parent>resistance_roll</parent>
+						<anchor>right</anchor>
+						<offset>10</offset>
+					</left>
+					<top>
+						<parent>resistance_roll</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>75</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<center />
+				<font>sheettextsmall</font>
+				<frame>
+					<name>textlinesmall</name>
+					<offset>0,0,0,0</offset>
+				</frame>
+				<keyeditframe>
+					<name>shadelinesmall</name>
+					<offset>0,0,0,0</offset>
+				</keyeditframe>
+			</stringfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>range</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Range</static>
+			</stringcontrolX>
+			
+			<stringfieldX name="duration">
+				<anchored>
+					<left>
+						<parent>range</parent>
+						<anchor>right</anchor>
+						<offset>10</offset>
+					</left>
+					<top>
+						<parent>resistance_roll</parent>
+						<anchor>top</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>85</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<center />
+				<font>sheettextsmall</font>
+				<frame>
+					<name>textlinesmall</name>
+					<offset>0,0,0,0</offset>
+				</frame>
+				<keyeditframe>
+					<name>shadelinesmall</name>
+					<offset>0,0,0,0</offset>
+				</keyeditframe>
+			</stringfieldX>
+			<stringcontrolX>
+				<anchored>
+					<to>duration</to>
+					<position>above</position>
+					<offset>0,0</offset>
+				</anchored>
+				<center/>
+				<font>sheetlabelsmall</font>
+				<color>#E0786147</color>
+				<static>Duration</static>
+			</stringcontrolX>
+			
+			<stringcontrolX name="sphere_label">
+				<anchored>
+					<left>
+						<parent>resistance_roll</parent>
+						<anchor>left</anchor>
+						<offset>0</offset>
+					</left>
+					<top>
+						<parent>resistance_roll</parent>
+						<anchor>bottom</anchor>
+						<offset>15</offset>
+					</top>
+					<size>
+						<width>45</width>
+						<height>13</height>
+					</size>
+				</anchored>
+				<font>sheetlabelsmallbold</font>
+				<static>Spheres:</static>
+			</stringcontrolX>
+			<stringfieldX name="sphere">
+				<anchored>
+					<left>
+						<parent>sphere_label</parent>
+						<anchor>right</anchor>
+						<offset>10</offset>
+					</left>
+					<top>
+						<parent>sphere_label</parent>
+						<anchor>top</anchor>
+						<offset>-3</offset>
+					</top>
+					<right>
+						<parent>duration</parent>
+						<anchor>right</anchor>
+						<offset>0</offset>
+					</right>
+					<size>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheettextsmall</font>
+				<frame>
+					<name>textlinesmall</name>
+					<offset>0,0,0,0</offset>
+				</frame>
+				<keyeditframe>
+					<name>shadelinesmall</name>
+					<offset>0,0,0,0</offset>
+				</keyeditframe>
+			</stringfieldX>
+			<stringfieldX name="description">
+				<anchored>
+					<left>
+						<parent>pp_cost</parent>
+						<anchor>left</anchor>
+						<offset>0</offset>
+					</left>
+					<right>
+						<parent>sphere</parent>
+						<anchor>right</anchor>
+						<offset>0</offset>
+					</right>
+					<top>
+						<parent>sphere</parent>
+						<anchor>bottom</anchor>
+						<offset>15</offset>
+					</top>
+					<bottom>
+						<anchor>bottom</anchor>
+						<offset>-135</offset>
+					</bottom>
+				</anchored>
+				<frame>
+					<name>modifier</name>
+					<offset>7,5,7,5</offset>
+				</frame>
+				<font>sheettextsmall</font>
+				<multilinespacing>15</multilinespacing>
+			</stringfieldX>
+			<scrollbar>
+				<anchored>
+					<to>description</to>
+					<position>right</position>
+					<offset>-4,-4</offset>
+				</anchored>
+				<target>description</target>
+			</scrollbar>
+			<stringcontrolX>
+				<anchored>
+					<to>description</to>
+					<position>aboveleft</position>
+					<offset>0,1</offset>
+				</anchored>
+				<font>sheetlabelsmall</font>
+				<static>Description</static>
+			</stringcontrolX>
+			
+			<stringcontrolX name="scaling_label">
+				<anchored>
+					<left>
+						<parent>spell_label</parent>
+						<anchor>left</anchor>
+						<offset>0</offset>
+					</left>
+					<top>
+						<parent>description</parent>
+						<anchor>bottom</anchor>
+						<offset>15</offset>
+					</top>
+					<size>
+						<width>150</width>
+						<height>17</height>
+					</size>
+				</anchored>
+				<font>sheetlabelsmallbold</font>
+				<static>Scaling Options</static>
+			</stringcontrolX>
+			<sortablelist name="scalelist">
+				<anchored>
+					<left>
+						<parent>description</parent>
+						<anchor>left</anchor>
+						<offset>0</offset>
+					</left>
+					<top>
+						<parent>scaling_label</parent>
+						<anchor>bottom</anchor>
+						<offset>15</offset>
+					</top>
+					<right>
+						<parent>description</parent>
+						<anchor>right</anchor>
+						<offset>0</offset>
+					</right>
+					<bottom>
+						<anchor>bottom</anchor>
+						<offset>-25</offset>
+					</bottom>
+				</anchored>
+				<class>scaling_option</class>
+				<datasource>.scaleopts</datasource>
+				<allowdelete />
+				<defaultsort>
+					<fieldname>name</fieldname>
+				</defaultsort>
+				<script file="charsheet/scripts/charsheet_spelloptlist.lua" />
+			</sortablelist>
+			<scrollbar>
+				<anchored>
+					<to>scalelist</to>
+					<position>right</position>
+					<offset>1,-4</offset>
+				</anchored>
+				<target>scalelist</target>
+			</scrollbar>
+			<stringcontrolX>
+				<anchored>
+					<left>
+						<parent>scalelist</parent>
+						<anchor>left</anchor>
+						<offset>15</offset>
+					</left>
+					<top>
+						<parent>scaling_label</parent>
+						<anchor>bottom</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>75</width>
+						<height>15</height>
+					</size>
+				</anchored>
+				<font>sheetlabelsmall</font>
+				<static>Name</static>
+				<tooltip >
+					<text >Click to sort by name?</text>
+					<anchor>control</anchor>
+					<align>topleft</align>
+					<position >  
+						<x>30</x>   
+						<y>-29</y>   
+					</position>
+				</tooltip>
+				<script>
+					function onClickDown(button, x, y)
+						return true;
+					end
+
+					function onClickRelease(button, x, y)
+						window.scalelist.sortBy("name");
+						return true;
+					end        
+				</script>
+			</stringcontrolX>
+			<stringcontrolX>
+				<anchored>
+					<left>
+						<parent>scalelist</parent>
+						<anchor>left</anchor>
+						<offset>157</offset>
+					</left>
+					<top>
+						<parent>scaling_label</parent>
+						<anchor>bottom</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>75</width>
+						<height>15</height>
+					</size>
+				</anchored>
+				<center />
+				<font>sheetlabelsmall</font>
+				<static>PP Cost</static>
+				<tooltip >
+					<text >Click to sort by cost?</text>
+					<anchor>control</anchor>
+					<align>topleft</align>
+					<position >  
+						<x>30</x>   
+						<y>-29</y>   
+					</position>
+				</tooltip>
+				<script>
+					function onClickDown(button, x, y)
+						return true;
+					end
+
+					function onClickRelease(button, x, y)
+						window.scalelist.sortBy("cost");
+						return true;
+					end        
+				</script>
+			</stringcontrolX>
+			<stringcontrolX>
+				<anchored>
+					<left>
+						<parent>scalelist</parent>
+						<anchor>left</anchor>
+						<offset>190</offset>
+					</left>
+					<top>
+						<parent>scaling_label</parent>
+						<anchor>bottom</anchor>
+						<offset>0</offset>
+					</top>
+					<size>
+						<width>75</width>
+						<height>15</height>
+					</size>
+				</anchored>
+				<center />
+				<font>sheetlabelsmall</font>
+				<static>Mult.</static>
+				<tooltip >
+					<text >Click to sort by multiple?</text>
+					<anchor>control</anchor>
+					<align>topleft</align>
+					<position >  
+						<x>30</x>   
+						<y>-29</y>   
+					</position>
+				</tooltip>
+				<script>
+					function onClickDown(button, x, y)
+						return true;
+					end
+
+					function onClickRelease(button, x, y)
+						window.scalelist.sortBy("cost");
+						return true;
+					end        
+				</script>
+			</stringcontrolX>
+			<close_adventure />
+		</sheetdata>
+	</windowclass>
+ 
+  
+  <windowclass name="scaling_option">
+      <sizelimits>
+      <maximum>
+        <height>18</height>
+      </maximum>
+      <minimum>
+        <height>18</height>
+      </minimum>
+    </sizelimits>
+	<script>
+	  function onInit()
+		if super and super.onInit then
+		  super.onInit();
+		end
+	  end
+	
+      function isMulitple()
+        return ismultiple.getState();
+      end
+      
+      function testDelete()
+        local win = windowlist.getPrevWindow(self);
+        if name.getValue()~="" then
+          return;
+        end
+        if #(windowlist.getWindows())==1 then
+          return;
+        end
+        if not win then
+          win = windowlist.getNextWindow(self);
+        end
+        win.name.setFocus();
+        getDatabaseNode().delete();
+      end
+      
+      function testNew()
+        local win = windowlist.getNextWindow(self);
+        if name.getValue()=="" then
+          return;
+        end
+        if not win then
+          win = windowlist.createWindow();
+        end
+        win.name.setFocus();
+      end
+    </script>
+	<sheetdata>
+	  <textlistitemvalue name="name">
+        <bounds>5,0,170,17</bounds>
+        <frame>
+          <name>textline</name>
+          <offset>0,1,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,1,0,0</offset>
+        </keyeditframe>
+        <font>sheettextsmall</font>
+        <script>
+          function onDeleteDown()
+            window.testDelete();
+          end
+          
+          function onDeleteUp()
+            window.testDelete();
+          end
+          
+          function onEnter()
+            window.testNew();
+          end
+        </script>
+      </textlistitemvalue>
+	  <numberfieldX name="cost">
+        <bounds>180,4,30,13</bounds>
+        <frame>
+          <name>textline</name>
+          <offset>0,5,0,0</offset>
+        </frame>
+        <keyeditframe>
+          <name>shadeline</name>
+          <offset>0,5,0,0</offset>
+        </keyeditframe>
+        <font>sheetlabelsmall</font>
+        <script>
+          function onInit()
+            if super and super.onInit then
+              super.onInit();
+            end
+          end
+        </script>
+      </numberfieldX>
+  <checkbox name="ismultiple">
+        <bounds>223,4,12,12</bounds>
+        <tooltip>
+          <text>Scale multiple times?</text>
+        </tooltip>
+      </checkbox>
+    </sheetdata>
+  </windowclass>
+  
+</root>
